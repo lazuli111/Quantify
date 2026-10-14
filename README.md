@@ -17,6 +17,8 @@ GitHub Actions 每天香港时间早上 7:00（美股收盘后）自动运行 `u
 2. 模拟交易：下一个交易日按开盘价成交，Luk 策略另有盘中止损，计入 0.05% 滑点和汇丰 Trade25 的费用与免佣额度；
 3. 把各策略的账户状态存到 `paper/<策略>.json`，网页数据存到 `docs/data.json`，并发布到 GitHub Pages。
 
+每次更新后会通过 Telegram 推送当晚的操作、上一个交易日的成交和账户现状（`uv run quantify notify`）；更新失败也会推送提醒。需要在 GitHub 仓库的 Secrets 里设置 `TELEGRAM_BOT_TOKEN` 和 `TELEGRAM_CHAT_ID`，本地测试则写在 `.env`。
+
 也可以在 GitHub 仓库的 Actions 页面手动点 **Run workflow** 立即更新。在本地运行前，先 `git pull` 拿到最新记录，避免和自动运行冲突。网页源文件是 `src/quantify/dashboard.html`。
 
 这是模拟记录，用来观察策略在真实行情中的表现，不是投资建议。

@@ -9,7 +9,7 @@ import pandas as pd
 from .backtest import benchmark_return, prepare, simulate
 from .config import data_dir, load_config
 from .data import get_source
-from . import noise, paper, swing, wide
+from . import noise, notify, paper, swing, wide
 from .strategies import STRATEGIES
 from .swing_strategies import SWING_STRATEGIES
 from .report import print_recent, print_report, print_yearly, summarize
@@ -314,6 +314,17 @@ def cmd_paper(cfg: dict, args) -> None:
     print("\n仪表盘数据已写入 docs/data.json")
 
 
+def cmd_notify(cfg: dict, args) -> None:
+    """Telegram push: the daily summary, a failure notice, or finding the chat id during setup."""
+    if args.find_chat:
+        chat = notify.find_chat_id()
+        print(f"找到对话：TELEGRAM_CHAT_ID={chat}" if chat else "没找到对话。先在 Telegram 里给机器人发一条 /start，再试一次。")
+    elif args.failed is not None:
+        notify.send_failure(args.failed)
+    elif notify.send_daily():
+        print("推送已发送")
+
+
 def main() -> None:
     p = argparse.ArgumentParser(prog="quantify", description="美股日内交易信号工具")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -332,8 +343,11 @@ def main() -> None:
     pp.add_argument("--reset", action="store_true", help="清空模拟账户，重新开始")
     pp.add_argument("--start", help="模拟开始日期 YYYY-MM-DD（默认最近一个交易日）")
     pp.add_argument("--only", choices=[st.key for st in paper.STRATEGIES], help="只重置/重新开始这一个策略")
+    nt = sub.add_parser("notify", help="发送 Telegram 推送（每日摘要）")
+    nt.add_argument("--find-chat", action="store_true", help="设置时用：找出你和机器人的对话编号")
+    nt.add_argument("--failed", metavar="说明", help="发送「自动更新失败」的提醒")
     args = p.parse_args()
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,
      "swing-sweep": cmd_swing_sweep, "noise-sweep": cmd_noise_sweep,
-     "wide-sweep": cmd_wide_sweep, "paper": cmd_paper}[args.cmd](cfg, args)
+     "wide-sweep": cmd_wide_sweep, "paper": cmd_paper, "notify": cmd_notify}[args.cmd](cfg, args)
