@@ -65,9 +65,24 @@ def fetch_panel(symbols: list[str], period: str = "2y") -> tuple[Panel, pd.DataF
     """Yahoo daily bars -> (adjusted Panel, raw closes, split ratios). Only finished sessions."""
     raw = yf.download(symbols, period=period, interval="1d", auto_adjust=False, actions=True,
                       group_by="ticker", progress=False, threads=True)
+    got = [s for s in symbols if s in raw.columns.get_level_values(0)]
+    # Yahoo sometimes leaves columns out for some tickers (seen on GitHub's runners): no split
+    # column means no split, no adjusted close means no adjustment.
+    fallback = {"Stock Splits": lambda df: pd.Series(0.0, index=df.index), "Adj Close": lambda df: df["Close"]}
+    patched = set()
     fields = {}
     for name in ("Open", "High", "Low", "Close", "Adj Close", "Volume", "Stock Splits"):
-        fields[name] = pd.DataFrame({s: raw[s][name] for s in symbols if s in raw.columns.get_level_values(0)})
+        cols = {}
+        for s in got:
+            df = raw[s]
+            if name in df.columns:
+                cols[s] = df[name]
+            elif name in fallback and "Close" in df.columns:
+                cols[s] = fallback[name](df)
+                patched.add(s)
+        fields[name] = pd.DataFrame(cols)
+    if patched:
+        print(f"Yahoo 少给了部分字段，已按默认值补上：{', '.join(sorted(patched))}")
     idx = pd.to_datetime(fields["Close"].index).date
     for f in fields.values():
         f.index = idx
