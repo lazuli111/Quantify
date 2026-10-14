@@ -4,8 +4,26 @@
     {
       "name": "dashboard",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "docs"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765",
+        "--directory",
+        "docs"
+      ],
       "port": 8765
+    },
+    {
+      "name": "dashboard-demo",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8766",
+        "--directory",
+        "/tmp/claude-1000/-home-box-Quantify/8d937f1d-34ab-49be-8d70-5898fb3e51af/scratchpad/demo/docs"
+      ],
+      "port": 8766
     }
   ]
 }

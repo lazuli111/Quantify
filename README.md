@@ -2,14 +2,18 @@
 
 扫描纳斯达克 100，按汇丰 Trade25 的真实收费（免佣额度、超额佣金、月费、滑点）回测日内和波段策略。全部策略只做多。
 
-## 三连跌观察台（每日模拟记录）
+## 回调观察台（每日模拟记录）
 
-网页：**https://lazuli111.github.io/Quantify/**
+网页：**https://lazuli111.github.io/Quantify/**（`#pullback3` / `#luk` 直接打开对应策略）
+
+同时观察两个策略，各有一个独立的 1,300 美元模拟账户：
+- **三连跌回调**（`swing_strategies.Pullback3`）：消除幸存者偏差后唯一通过检验的策略；
+- **Martin Luk 风格回调**（`swing_strategies.LukPullback`，回调到 9 日 EMA 买、跌破 21 日 EMA 卖、止损不超过 4%）：回测证据很弱，用来观察。
 
 GitHub Actions 每天香港时间早上 7:00（美股收盘后）自动运行 `uv run quantify paper`：
-1. 用 Yahoo 日线按回测里同样的规则（`swing_strategies.Pullback3`）找三连跌回调信号；
-2. 用 1,300 美元模拟交易：下一个交易日按开盘价成交，计入 0.05% 滑点和汇丰 Trade25 的费用与免佣额度；
-3. 把账户状态存到 `paper/state.json`，网页数据存到 `docs/data.json`，并发布到 GitHub Pages。
+1. 用 Yahoo 日线按回测里同样的信号代码找信号；
+2. 模拟交易：下一个交易日按开盘价成交，Luk 策略另有盘中止损，计入 0.05% 滑点和汇丰 Trade25 的费用与免佣额度；
+3. 把各策略的账户状态存到 `paper/<策略>.json`，网页数据存到 `docs/data.json`，并发布到 GitHub Pages。
 
 也可以在 GitHub 仓库的 Actions 页面手动点 **Run workflow** 立即更新。在本地运行前，先 `git pull` 拿到最新记录，避免和自动运行冲突。网页源文件是 `src/quantify/dashboard.html`。
 
@@ -24,7 +28,7 @@ uv run quantify sweep all                # 日内策略参数检验（3 小时�
 uv run quantify noise-sweep              # QQQ 全天日内动量检验
 uv run quantify swing-sweep all --pit    # 波段策略检验，用当时的成分股（消除幸存者偏差）
 uv run quantify wide-sweep               # 全市场强势股回调买入检验（需要先下载全市场日线）
-uv run quantify paper                    # 三连跌回调每日模拟更新（--reset 重新开始）
+uv run quantify paper                    # 每日模拟更新（--reset 重新开始，--only luk 只针对一个策略）
 ```
 
 数据来源在 `config.yaml` 的 `data.source` 里设置：`alpaca`（2016 年至今，需要在 `.env` 中填写 `ALPACA_API_KEY` 和 `ALPACA_SECRET_KEY`）或 `yahoo`（最近 60 天，不需要账户）。
@@ -62,6 +66,6 @@ uv run quantify paper                    # 三连跌回调每日模拟更新（-
 
 ## 待办
 
-- [x] 三连跌回调：每日收盘后生成信号，先只观察不交易（三连跌观察台）
+- [x] 每日收盘后生成信号，先只观察不交易（回调观察台：三连跌回调 + Martin Luk 风格回调）
 - [ ] 实时扫描，Telegram 推送
 - [ ] 网页仪表盘（含额度追踪）
