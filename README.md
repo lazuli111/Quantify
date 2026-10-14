@@ -4,7 +4,9 @@
 
 ## 回调观察台（每日模拟记录）
 
-网页：**https://lazuli111.github.io/Quantify/**（`#pullback3` / `#luk` 直接打开对应策略）
+网页：**[lazuli111.github.io/Quantify](https://lazuli111.github.io/Quantify/)**
+
+直接打开某个策略：[三连跌回调](https://lazuli111.github.io/Quantify/#pullback3) · [Martin Luk 风格回调](https://lazuli111.github.io/Quantify/#luk)
 
 同时观察两个策略，各有一个独立的 1,300 美元模拟账户：
 - **三连跌回调**（`swing_strategies.Pullback3`）：消除幸存者偏差后唯一通过检验的策略；
