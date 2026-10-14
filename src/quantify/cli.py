@@ -9,7 +9,7 @@ import pandas as pd
 from .backtest import benchmark_return, prepare, simulate
 from .config import data_dir, load_config
 from .data import get_source
-from . import noise, swing, wide
+from . import noise, paper, swing, wide
 from .strategies import STRATEGIES
 from .swing_strategies import SWING_STRATEGIES
 from .report import print_recent, print_report, print_yearly, summarize
@@ -290,6 +290,28 @@ def _first_day_on_or_after(panel, day):
     return next(d for d in panel.close.index if d >= day)
 
 
+def cmd_paper(cfg: dict, args) -> None:
+    """Daily paper-trading update for the 3-day pullback strategy (run after each US close)."""
+    start = date.fromisoformat(args.start) if args.start else None
+    v = paper.run(cfg, start=start, reset=args.reset)
+    a = v["account"]
+    print(f"数据截至 {v['as_of']}（美东收盘），下一个交易日 {v['next_session']}，香港时间 {v['next_open_hk']} 开盘")
+    print(f"模拟账户 ${a['equity']:,.2f}（{a['return_pct']:+.2f}%，同期 QQQ {a['qqq_return_pct']:+.2f}%），"
+          f"本月免佣额度已用 HK${a['quota_used_hkd']:,} / {a['quota_hkd']:,}")
+    if v["position"]:
+        p = v["position"]
+        print(f"持仓：{p['symbol']} {p['shares']:g} 股，成本 ${p['entry_price']}，现价 ${p['last']}"
+              f"（{p['unrealized_pct']:+.2f}%），已持有 {p['held_days']}/{p['max_hold']} 天")
+    if v["tonight"]:
+        for o in v["tonight"]:
+            verb = "买入" if o["action"] == "buy" else "卖出"
+            extra = f" 约 {o['est_shares']} 股" if o["action"] == "buy" else ""
+            print(f"今晚开盘{verb} {o['symbol']}{extra}（参考价 ${o['ref_price']}，{o['reason']}）")
+    else:
+        print("今晚：无操作")
+    print(f"候选 {len(v['candidates'])} 只，观察名单 {len(v['watchlist'])} 只；仪表盘数据已写入 docs/data.json")
+
+
 def main() -> None:
     p = argparse.ArgumentParser(prog="quantify", description="美股日内交易信号工具")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -304,8 +326,11 @@ def main() -> None:
     sub.add_parser("noise-sweep", help="QQQ 全天日内动量策略检验")
     ws = sub.add_parser("wide-sweep", help="全市场强势股回调买入（Martin Luk 风格）检验")
     ws.add_argument("--slippage", type=float, default=WIDE_SLIPPAGE, help="每边滑点，默认 0.001")
+    pp = sub.add_parser("paper", help="三连跌回调：每日模拟交易更新（美股收盘后运行）")
+    pp.add_argument("--reset", action="store_true", help="清空模拟账户，重新开始")
+    pp.add_argument("--start", help="模拟开始日期 YYYY-MM-DD（默认最近一个交易日）")
     args = p.parse_args()
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,
      "swing-sweep": cmd_swing_sweep, "noise-sweep": cmd_noise_sweep,
-     "wide-sweep": cmd_wide_sweep}[args.cmd](cfg, args)
+     "wide-sweep": cmd_wide_sweep, "paper": cmd_paper}[args.cmd](cfg, args)

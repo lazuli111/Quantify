@@ -1,0 +1,28 @@
+{
+ "start_date": "2026-10-13",
+ "capital": 1300.0,
+ "cash": 1300.0,
+ "position": null,
+ "pending": [
+  {
+   "action": "buy",
+   "symbol": "AMAT",
+   "reason": "三连跌回调信号",
+   "ref_price": 464.24,
+   "est_shares": 2
+  }
+ ],
+ "trades": [],
+ "skipped": [],
+ "equity_curve": [
+  {
+   "date": "2026-10-13",
+   "equity": 1300.0,
+   "qqq": 743.57
+  }
+ ],
+ "quota_used_hkd": {},
+ "months_charged": [],
+ "fees_paid": 0.0,
+ "last_processed": "2026-10-13"
+}

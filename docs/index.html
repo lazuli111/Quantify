@@ -1,0 +1,444 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>
+<title>三连跌观察台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* Layout: one order ticket leads (tonight's action); a two-column desk below it,
+   main work on the left (position, signals, watchlist), account context on the right;
+   the record (chart, trade log) runs full width underneath. */
+:root {
+  --bg: #F2F4F6;
+  --surface: #FFFFFF;
+  --sunk: #E8ECF0;
+  --ink: #16202E;
+  --ink-2: #4A5668;
+  --muted: #7A8597;
+  --line: #D9DFE6;
+  --accent: #2F5BB7;
+  --series-a: #2F5BB7;
+  --series-b: #C2802A;
+  --red: #C93A3A;
+  --green: #138A5E;
+  --up: var(--red);
+  --down: var(--green);
+  --f-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --f-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F151D; --surface: #151E2A; --sunk: #1C2735; --ink: #E5EAF0; --ink-2: #B4BECB;
+    --muted: #8592A3; --line: #263345; --accent: #7EA2EC; --series-a: #6A8FDB; --series-b: #B98032;
+    --red: #EE6B6B; --green: #3DBE8B; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F151D; --surface: #151E2A; --sunk: #1C2735; --ink: #E5EAF0; --ink-2: #B4BECB;
+  --muted: #8592A3; --line: #263345; --accent: #7EA2EC; --series-a: #6A8FDB; --series-b: #B98032;
+  --red: #EE6B6B; --green: #3DBE8B; color-scheme: dark;
+}
+:root[data-updown="green-up"] { --up: var(--green); --down: var(--red); }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body);
+  font-size: 15px; line-height: 1.6; margin: 0; padding-inline: 16px; padding-block: 20px 48px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin-inline: auto; display: grid; gap: 20px; }
+.num, .mono { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.up { color: var(--up); } .down { color: var(--down); } .flat { color: var(--ink-2); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* header */
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+.eyebrow { font-size: 12px; letter-spacing: .12em; color: var(--muted); margin: 0; }
+h1 { font-family: var(--f-display); font-size: 30px; line-height: 1.2; margin: 2px 0 0; text-wrap: balance; }
+.stamp { font-size: 13px; color: var(--ink-2); display: grid; gap: 2px; text-align: right; }
+.stamp b { color: var(--ink); font-weight: 500; }
+
+/* the ticket */
+.ticket {
+  display: grid; grid-template-columns: 148px minmax(0, 1fr); background: var(--surface);
+  border-radius: var(--r); box-shadow: 0 1px 0 var(--line), 0 10px 30px -18px rgba(22, 32, 46, .35);
+  position: relative; overflow: hidden;
+}
+.ticket .stub {
+  padding: 20px 18px; border-right: 2px dashed var(--line); display: grid; align-content: center; gap: 4px;
+  background: var(--sunk);
+}
+.stub .day { font-family: var(--f-data); font-size: 28px; font-weight: 600; line-height: 1; }
+.stub .wd { font-size: 13px; color: var(--ink-2); }
+.stub .time { font-family: var(--f-data); font-size: 15px; margin-top: 10px; }
+.stub .tz { font-size: 12px; color: var(--muted); }
+.ticket::before, .ticket::after {
+  content: ""; position: absolute; left: 140px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg);
+}
+.ticket::before { top: -8px; } .ticket::after { bottom: -8px; }
+.ticket .body { padding: 20px 24px; display: grid; gap: 14px; min-width: 0; }
+.ticket .label { font-size: 12px; letter-spacing: .12em; color: var(--muted); margin: 0; }
+.orders { display: grid; gap: 12px; }
+.order { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.verb {
+  font-weight: 700; font-size: 15px; padding: 2px 10px; border-radius: 6px; color: var(--surface); background: var(--ink);
+}
+.verb.buy { background: var(--up); } .verb.sell { background: var(--down); }
+.order .sym { font-family: var(--f-data); font-size: 34px; font-weight: 600; line-height: 1.1; letter-spacing: .02em; }
+.order .qty { font-size: 17px; }
+.order .meta { flex-basis: 100%; font-size: 13px; color: var(--ink-2); }
+.none-title { font-family: var(--f-display); font-size: 24px; margin: 0; }
+.ticket .note { font-size: 13px; color: var(--muted); margin: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* desk */
+.desk { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 880px) { .desk { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; } }
+.col { display: grid; gap: 20px; min-width: 0; }
+.panel { background: var(--surface); border-radius: var(--r); padding: 18px 20px; min-width: 0; border: 1px solid var(--line); }
+.panel h2 { font-size: 16px; font-weight: 700; margin: 0; }
+.panel .sub { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.empty { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+
+/* position */
+.pos-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+.pos-top .sym { font-family: var(--f-data); font-size: 26px; font-weight: 600; }
+.pos-top .pl { font-family: var(--f-data); font-size: 20px; font-weight: 500; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 16px; margin: 14px 0; }
+.fact dt { font-size: 12px; color: var(--muted); }
+.fact dd { margin: 0; font-family: var(--f-data); font-size: 15px; }
+.days { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin: 6px 0 4px; }
+.days i { height: 8px; border-radius: 2px; background: var(--sunk); }
+.days i.on { background: var(--accent); }
+.rule { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+.rule b { font-family: var(--f-data); font-weight: 500; color: var(--ink); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; margin-inline: -4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 8px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+tr:last-child td { border-bottom: 0; }
+td.sym { font-weight: 600; }
+td.txt { font-family: var(--f-body); text-align: left; color: var(--ink-2); font-size: 13px; }
+.chip { display: inline-block; font-family: var(--f-body); font-size: 12px; padding: 0 6px; border-radius: 4px; background: var(--sunk); color: var(--ink-2); margin-left: 6px; vertical-align: 1px; }
+.chip.pick { background: var(--accent); color: var(--surface); }
+
+/* account */
+.acct-big { font-family: var(--f-data); font-size: 32px; font-weight: 600; line-height: 1.15; }
+.vs { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+.vs .num { font-weight: 500; }
+.meter { margin-top: 16px; }
+.meter-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-2); gap: 8px; flex-wrap: wrap; }
+.bar { height: 8px; background: var(--sunk); border-radius: 4px; margin: 6px 0; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.meter small { font-size: 12px; color: var(--muted); }
+
+/* compare */
+.cmp td:first-child { font-family: var(--f-body); color: var(--ink-2); font-size: 13px; }
+.caveat { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+
+/* chart */
+.chart-box { position: relative; }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--ink-2); flex-wrap: wrap; }
+.key { display: inline-flex; align-items: center; gap: 6px; }
+.key i { width: 14px; height: 2px; border-radius: 1px; display: inline-block; }
+svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--muted); font-family: var(--f-data); font-size: 11px; }
+.chart .end { fill: var(--ink-2); font-size: 12px; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px -10px rgba(0, 0, 0, .35); min-width: 150px;
+}
+.tip .row { display: flex; justify-content: space-between; gap: 12px; font-family: var(--f-data); }
+.tip .d { color: var(--muted); margin-bottom: 4px; font-family: var(--f-data); }
+
+/* rules & footer */
+.rules { margin: 0; padding-left: 1.2em; font-size: 14px; color: var(--ink-2); display: grid; gap: 4px; }
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+.toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.toggle button {
+  font: inherit; font-size: 12px; padding: 4px 10px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer;
+}
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.err { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+
+@media (max-width: 560px) {
+  h1 { font-size: 24px; }
+  .stamp { text-align: left; flex-basis: 100%; font-size: 12px; }
+  .ticket { grid-template-columns: minmax(0, 1fr); }
+  .ticket .stub { border-right: 0; border-bottom: 2px dashed var(--line); grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 10px; padding: 14px 18px; }
+  .stub .time { margin-top: 0; }
+  .ticket::before, .ticket::after { display: none; }
+  .order .sym { font-size: 28px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ticket { animation: rise .4s ease-out both; }
+  @keyframes rise { from { transform: translateY(6px); } to { transform: none; } }
+}
+</style>
+
+<div class="wrap" id="app">
+  <header>
+    <div>
+      <p class="eyebrow">三连跌回调 · 模拟记录</p>
+      <h1>三连跌观察台</h1>
+    </div>
+    <div class="stamp" id="stamp"><span>正在读取数据…</span></div>
+  </header>
+  <section class="ticket" id="ticket" aria-label="今晚开盘的操作"></section>
+  <div class="desk">
+    <div class="col">
+      <section class="panel" id="position"></section>
+      <section class="panel" id="signals"></section>
+      <section class="panel" id="watch"></section>
+    </div>
+    <div class="col">
+      <section class="panel" id="account"></section>
+      <section class="panel" id="compare"></section>
+      <section class="panel" id="rules"></section>
+    </div>
+  </div>
+  <section class="panel" id="curve"></section>
+  <section class="panel" id="trades"></section>
+  <footer>
+    <span>模拟记录，用来观察策略在真实行情中的表现，不是投资建议。数据：Yahoo Finance 日线。</span>
+    <span class="toggle" role="group" aria-label="涨跌颜色">
+      <button type="button" id="red-up" aria-pressed="true">红涨绿跌</button>
+      <button type="button" id="green-up" aria-pressed="false">绿涨红跌</button>
+    </span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const WD = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+  const usd = (v, d = 2) => "$" + Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const hkd = (v) => "HK$" + Math.round(v).toLocaleString("en-US");
+  const pct = (v, d = 2) => (v > 0 ? "+" : "") + Number(v).toFixed(d) + "%";
+  const sgn = (v) => (v > 0 ? "up" : v < 0 ? "down" : "flat");
+  const signedUsd = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + usd(Math.abs(v));
+  const md = (iso) => { const [y, m, d] = iso.split("-"); return `${+m}月${+d}日`; };
+  const wd = (iso) => WD[new Date(iso + "T12:00:00Z").getUTCDay()];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // up/down colour convention, remembered per viewer
+  function setUpdown(mode) {
+    document.documentElement.dataset.updown = mode;
+    $("red-up").setAttribute("aria-pressed", mode === "red-up");
+    $("green-up").setAttribute("aria-pressed", mode === "green-up");
+    try { localStorage.setItem("updown", mode); } catch (e) {}
+  }
+  let saved = "red-up";
+  try { saved = localStorage.getItem("updown") || "red-up"; } catch (e) {}
+  setUpdown(saved);
+  $("red-up").addEventListener("click", () => setUpdown("red-up"));
+  $("green-up").addEventListener("click", () => setUpdown("green-up"));
+
+  fetch("data.json", { cache: "no-store" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(render)
+    .catch(() => {
+      $("ticket").outerHTML = '<div class="err"><b>还没有数据。</b> 先运行 <span class="mono">uv run quantify paper</span>，它会生成 data.json。</div>';
+    });
+
+  function render(v) {
+    const a = v.account;
+    $("stamp").innerHTML =
+      `<span>数据截至 <b>美东 ${md(v.as_of)} 收盘</b></span>` +
+      `<span>更新于 香港 ${esc(v.generated_at)}</span>` +
+      `<span>记录开始于 ${md(v.start_date)}</span>`;
+
+    // ---- ticket
+    const orders = v.tonight || [];
+    const stub = `<div class="stub"><div class="day">${md(v.next_session).replace("月", "/").replace("日", "")}</div>` +
+      `<div class="wd">${wd(v.next_session)} 开盘</div><div class="time">${esc(v.next_open_hk_time)}</div><div class="tz">香港时间</div></div>`;
+    let body;
+    if (orders.length) {
+      body = `<p class="label">今晚开盘</p><div class="orders">` + orders.map((o) => {
+        const buy = o.action === "buy";
+        const qty = buy ? `<span class="qty">约 <span class="num">${o.est_shares}</span> 股</span>` : `<span class="qty">全部持股</span>`;
+        return `<div class="order"><span class="verb ${buy ? "buy" : "sell"}">${buy ? "买入" : "卖出"}</span>` +
+          `<span class="sym">${esc(o.symbol)}</span>${qty}` +
+          `<span class="meta">参考价 <span class="num">${usd(o.ref_price)}</span>（昨收） · ${esc(o.reason)}</span></div>`;
+      }).join("") + `</div><p class="note">模拟账户按开盘价成交，并计入 0.05% 滑点和汇丰的费用。实际股数以开盘价计算。</p>`;
+    } else {
+      const why = v.position
+        ? `继续持有 ${esc(v.position.symbol)}，还没触发卖出条件。`
+        : (v.watchlist.length ? `没有股票完成三连跌。观察名单里有 ${v.watchlist.length} 只，明天再跌就会触发。` : "没有股票完成三连跌。");
+      body = `<p class="label">今晚开盘</p><p class="none-title">没有操作</p><p class="note" style="border:0;padding:0">${why}</p>`;
+    }
+    $("ticket").innerHTML = stub + `<div class="body">${body}</div>`;
+
+    // ---- position
+    const p = v.position;
+    if (p) {
+      const segs = Array.from({ length: p.max_hold }, (_, i) => `<i class="${i < p.held_days ? "on" : ""}"></i>`).join("");
+      $("position").innerHTML =
+        `<div class="panel-head"><div><h2>当前持仓</h2><p class="sub">${md(p.entry_date)} 开盘买入</p></div></div>` +
+        `<div class="pos-top"><span class="sym">${esc(p.symbol)}</span>` +
+        `<span class="pl ${sgn(p.unrealized)}">${pct(p.unrealized_pct)}</span>` +
+        `<span class="num ${sgn(p.unrealized)}">${signedUsd(p.unrealized)}</span></div>` +
+        `<dl class="facts">` +
+        `<div class="fact"><dt>股数</dt><dd>${+p.shares}</dd></div>` +
+        `<div class="fact"><dt>成本价</dt><dd>${usd(p.entry_price)}</dd></div>` +
+        `<div class="fact"><dt>最新收盘</dt><dd>${usd(p.last)}</dd></div>` +
+        `<div class="fact"><dt>已持有</dt><dd>${p.held_days} / ${p.max_hold} 天</dd></div></dl>` +
+        `<div class="days" aria-hidden="true">${segs}</div>` +
+        `<p class="rule">下一个交易日收盘若高于 <b>${usd(p.exit_trigger)}</b>（今天最高价），再下一个交易日开盘卖出；持满 ${p.max_hold} 天也会卖出。</p>`;
+    } else {
+      $("position").innerHTML = `<div class="panel-head"><h2>当前持仓</h2></div><p class="empty">空仓。出现信号后，下一个交易日开盘买入。</p>`;
+    }
+
+    // ---- signals
+    const pick = orders.find((o) => o.action === "buy");
+    const cand = v.candidates || [];
+    $("signals").innerHTML =
+      `<div class="panel-head"><div><h2>今天的信号</h2><p class="sub">在 200 日均线之上、连续 3 天收跌。跌得越深排越前。</p></div></div>` +
+      (cand.length
+        ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>收盘</th><th>3 日涨跌</th><th>高于 200 日线</th><th>可买股数</th></tr></thead><tbody>` +
+          cand.map((c) => {
+            const n = Math.floor(a.equity / c.close);
+            const tag = pick && pick.symbol === c.symbol ? `<span class="chip pick">今晚买入</span>` : (n < 1 ? `<span class="chip">买不起</span>` : "");
+            return `<tr><td class="sym">${esc(c.symbol)}${tag}</td><td>${usd(c.close)}</td>` +
+              `<td class="${sgn(c.chg3_pct)}">${pct(c.chg3_pct)}</td><td>${pct(c.above_sma200_pct, 1)}</td><td>${n}</td></tr>`;
+          }).join("") + `</tbody></table></div>` +
+          (p && !pick ? `<p class="caveat">已有持仓，今天的信号只作参考，不会买入。</p>` : "")
+        : `<p class="empty">今天没有股票满足条件。</p>`);
+
+    // ---- watchlist
+    const w = v.watchlist || [];
+    $("watch").innerHTML =
+      `<div class="panel-head"><div><h2>观察名单</h2><p class="sub">已连续 2 天收跌。下一个交易日收盘低于今天收盘价，就会出现信号。</p></div></div>` +
+      (w.length
+        ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>今天收盘</th><th>2 日涨跌</th><th>高于 200 日线</th></tr></thead><tbody>` +
+          w.map((x) => `<tr><td class="sym">${esc(x.symbol)}</td><td>${usd(x.trigger_below)}</td><td class="${sgn(x.chg2_pct)}">${pct(x.chg2_pct)}</td><td>${pct(x.above_sma200_pct, 1)}</td></tr>`).join("") +
+          `</tbody></table></div>`
+        : `<p class="empty">目前没有。</p>`);
+
+    // ---- account
+    const used = a.quota_used_hkd, quota = a.quota_hkd, share = Math.min(used / quota, 1);
+    $("account").innerHTML =
+      `<div class="panel-head"><div><h2>模拟账户</h2><p class="sub">${md(v.start_date)} 起，本金 ${usd(a.capital, 0)}</p></div></div>` +
+      `<div class="acct-big">${usd(a.equity)}</div>` +
+      `<div class="vs"><span>本策略 <span class="num ${sgn(a.return_pct)}">${pct(a.return_pct)}</span></span>` +
+      `<span>同期持有 QQQ <span class="num ${sgn(a.qqq_return_pct)}">${pct(a.qqq_return_pct)}</span></span></div>` +
+      `<div class="meter"><div class="meter-row"><span>本月免佣额度</span><span class="num">${hkd(used)} / ${hkd(quota)}</span></div>` +
+      `<div class="bar" role="img" aria-label="已用 ${Math.round(share * 100)}%"><span style="width:${(share * 100).toFixed(1)}%"></span></div>` +
+      `<small>按目前账户大小，本月还能免佣交易约 ${a.round_trips_left} 个来回。已付费用 ${usd(a.fees_paid)}（含每月 HK$25）。</small></div>`;
+
+    // ---- compare with backtest
+    const L = v.live_stats, B = v.backtest;
+    const live = (k, f) => (L.trades ? f(L[k]) : "—");
+    $("compare").innerHTML =
+      `<div class="panel-head"><div><h2>实际 vs 回测</h2><p class="sub">回测：2016–2026 年，当时的成分股，扣除全部成本</p></div></div>` +
+      `<div class="tbl-wrap"><table class="cmp"><thead><tr><th></th><th>模拟记录</th><th>回测</th></tr></thead><tbody>` +
+      `<tr><td>完成交易</td><td>${L.trades} 笔</td><td>${B.trades} 笔</td></tr>` +
+      `<tr><td>平均每笔</td><td>${live("avg_ret_pct", (x) => `<span class="${sgn(x)}">${pct(x)}</span>`)}</td><td class="${sgn(B.avg_ret_pct)}">${pct(B.avg_ret_pct)}</td></tr>` +
+      `<tr><td>中位数</td><td>${live("median_ret_pct", (x) => `<span class="${sgn(x)}">${pct(x)}</span>`)}</td><td class="${sgn(B.median_ret_pct)}">${pct(B.median_ret_pct)}</td></tr>` +
+      `<tr><td>胜率</td><td>${live("win_rate", (x) => Math.round(x * 100) + "%")}</td><td>${Math.round(B.win_rate * 100)}%</td></tr>` +
+      `<tr><td>每月交易</td><td>—</td><td>${B.trades_per_month} 笔</td></tr>` +
+      `</tbody></table></div>` +
+      `<p class="caveat">回测里单笔最差 ${pct(B.worst_pct, 1)}、最好 ${pct(B.best_pct, 1)}。少于 30 笔时，和回测的差距多半是运气，不能说明策略失效或有效。</p>`;
+
+    // ---- rules
+    $("rules").innerHTML =
+      `<div class="panel-head"><h2>规则</h2></div><ol class="rules">` +
+      `<li>股价在 200 日均线之上，连续 3 天收跌：下一个交易日开盘买入。</li>` +
+      `<li>同一天有多只时，买 3 日跌幅最深、而且买得起的那只。</li>` +
+      `<li>收盘高于前一天最高价：下一个交易日开盘卖出。</li>` +
+      `<li>最多持有 ${v.params.max_hold} 天；只在免佣额度够用时买入。</li></ol>`;
+
+    renderCurve(v);
+    renderTrades(v);
+  }
+
+  function renderCurve(v) {
+    const pts = v.equity_curve || [];
+    const head = `<div class="panel-head"><div><h2>账户走势</h2><p class="sub">模拟账户和同样投入 ${usd(v.account.capital, 0)} 买入持有 QQQ 的对比</p></div>` +
+      `<div class="legend"><span class="key"><i style="background:var(--series-a)"></i>本策略</span><span class="key"><i style="background:var(--series-b)"></i>QQQ</span></div></div>`;
+    if (pts.length < 2) {
+      $("curve").innerHTML = head + `<p class="empty">记录满 2 个交易日后显示走势。</p>`;
+      return;
+    }
+    const cap = v.account.capital, q0 = pts[0].qqq;
+    const A = pts.map((p) => p.equity), Q = pts.map((p) => (cap * p.qqq) / q0);
+    const W = 1000, H = 300, m = { t: 12, r: 92, b: 28, l: 64 };
+    const lo = Math.min(...A, ...Q), hi = Math.max(...A, ...Q);
+    const step = niceStep((hi - lo) / 4 || 50);
+    const y0 = Math.floor(lo / step) * step, y1 = Math.ceil(hi / step) * step;
+    const x = (i) => m.l + (i / (pts.length - 1)) * (W - m.l - m.r);
+    const y = (val) => m.t + (1 - (val - y0) / (y1 - y0 || 1)) * (H - m.t - m.b);
+    const path = (arr) => arr.map((val, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(val).toFixed(1)).join("");
+    let grid = "";
+    for (let g = y0; g <= y1 + 1e-9; g += step) {
+      grid += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(g)}" y2="${y(g)}" stroke="var(--line)" stroke-width="1"/>` +
+        `<text x="${m.l - 8}" y="${y(g) + 4}" text-anchor="end">${usd(g, 0)}</text>`;
+    }
+    const ticks = [0, Math.floor((pts.length - 1) / 2), pts.length - 1];
+    const xl = [...new Set(ticks)].map((i) => `<text x="${x(i)}" y="${H - 6}" text-anchor="${i === 0 ? "start" : i === pts.length - 1 ? "end" : "middle"}">${md(pts[i].date)}</text>`).join("");
+    const last = pts.length - 1;
+    const ya = y(A[last]), yq = y(Q[last]);
+    const gapLbl = Math.abs(ya - yq) < 16 ? (ya < yq ? [-8, 8] : [8, -8]) : [0, 0];
+    const svg =
+      `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="账户走势图">` + grid + xl +
+      `<path d="${path(A)} L${x(last)} ${y(y0)} L${x(0)} ${y(y0)} Z" fill="var(--series-a)" opacity=".08"/>` +
+      `<path d="${path(Q)}" fill="none" stroke="var(--series-b)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` +
+      `<path d="${path(A)}" fill="none" stroke="var(--series-a)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` +
+      `<circle cx="${x(last)}" cy="${yq}" r="4" fill="var(--series-b)" stroke="var(--surface)" stroke-width="2"/>` +
+      `<circle cx="${x(last)}" cy="${ya}" r="4" fill="var(--series-a)" stroke="var(--surface)" stroke-width="2"/>` +
+      `<text class="end" x="${x(last) + 10}" y="${ya + 4 + gapLbl[0]}">${usd(A[last], 0)}</text>` +
+      `<text class="end" x="${x(last) + 10}" y="${yq + 4 + gapLbl[1]}">${usd(Q[last], 0)}</text>` +
+      `<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>` +
+      `<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent" id="hit"/>` +
+      `</svg>`;
+    $("curve").innerHTML = head + `<div class="chart-box">${svg}<div class="tip" id="tip" hidden></div></div>`;
+
+    const svgEl = $("curve").querySelector("svg"), tip = $("tip"), xh = $("xh");
+    function show(evt) {
+      const r = svgEl.getBoundingClientRect();
+      const px = ((evt.clientX - r.left) / r.width) * W;
+      const i = Math.max(0, Math.min(last, Math.round(((px - m.l) / (W - m.l - m.r)) * last)));
+      xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("visibility", "visible");
+      tip.innerHTML = `<div class="d">${pts[i].date}</div>` +
+        `<div class="row"><span><span class="key"><i style="background:var(--series-a)"></i></span>本策略</span><span>${usd(A[i])}</span></div>` +
+        `<div class="row"><span><span class="key"><i style="background:var(--series-b)"></i></span>QQQ</span><span>${usd(Q[i])}</span></div>`;
+      tip.hidden = false;
+      const left = (x(i) / W) * r.width;
+      tip.style.left = Math.min(Math.max(left + 12, 0), r.width - tip.offsetWidth) + "px";
+      tip.style.top = "8px";
+    }
+    const hide = () => { tip.hidden = true; xh.setAttribute("visibility", "hidden"); };
+    $("hit").addEventListener("pointermove", show);
+    $("hit").addEventListener("pointerdown", show);
+    $("hit").addEventListener("pointerleave", hide);
+  }
+
+  function niceStep(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw)));
+    for (const k of [1, 2, 2.5, 5, 10]) if (raw <= k * p) return k * p;
+    return 10 * p;
+  }
+
+  function renderTrades(v) {
+    const t = v.trades || [];
+    const skipped = (v.skipped || []).map((s) => `${md(s.date)} ${esc(s.symbol)}：${esc(s.reason)}`).join("；");
+    $("trades").innerHTML =
+      `<div class="panel-head"><div><h2>交易记录</h2><p class="sub">已完成 ${t.length} 笔，最新的在上面</p></div></div>` +
+      (t.length
+        ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>买入</th><th>买入价</th><th>卖出</th><th>卖出价</th><th>股数</th><th>持有</th><th>盈亏</th><th>收益率</th><th>卖出原因</th></tr></thead><tbody>` +
+          t.map((r) => `<tr><td class="sym">${esc(r.symbol)}</td><td>${md(r.entry_date)}</td><td>${usd(r.entry_price)}</td>` +
+            `<td>${md(r.exit_date)}</td><td>${usd(r.exit_price)}</td><td>${+r.shares}</td><td>${r.held_days} 天</td>` +
+            `<td class="${sgn(r.pnl)}">${signedUsd(r.pnl)}</td><td class="${sgn(r.ret_pct)}">${pct(r.ret_pct)}</td><td class="txt">${esc(r.reason)}</td></tr>`).join("") +
+          `</tbody></table></div>`
+        : `<p class="empty">还没有完成的交易。第一笔会在出现信号后的下一个交易日开盘买入。</p>`) +
+      (skipped ? `<p class="caveat">未执行：${skipped}</p>` : "");
+  }
+})();
+</script>
+
+</body></html>

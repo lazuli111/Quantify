@@ -1,0 +1,176 @@
+{
+ "generated_at": "2026-10-14 17:31",
+ "as_of": "2026-10-13",
+ "next_session": "2026-10-14",
+ "next_open_hk": "10月14日 21:30",
+ "next_open_hk_time": "21:30",
+ "start_date": "2026-10-13",
+ "params": {
+  "down_days": 3,
+  "max_hold": 10
+ },
+ "account": {
+  "capital": 1300.0,
+  "equity": 1300.0,
+  "cash": 1300.0,
+  "return_pct": 0.0,
+  "qqq_return_pct": 0.0,
+  "fees_paid": 0.0,
+  "quota_used_hkd": 0,
+  "quota_hkd": 250000,
+  "round_trips_left": 12
+ },
+ "tonight": [
+  {
+   "action": "buy",
+   "symbol": "AMAT",
+   "reason": "三连跌回调信号",
+   "ref_price": 464.24,
+   "est_shares": 2
+  }
+ ],
+ "position": null,
+ "candidates": [
+  {
+   "symbol": "AMAT",
+   "close": 464.24,
+   "chg3_pct": -8.9,
+   "above_sma200_pct": 6.5,
+   "score": 0.08895738846144863
+  },
+  {
+   "symbol": "MU",
+   "close": 953.19,
+   "chg3_pct": -7.98,
+   "above_sma200_pct": 34.5,
+   "score": 0.07979028238541974
+  },
+  {
+   "symbol": "SNDK",
+   "close": 1482.33,
+   "chg3_pct": -7.9,
+   "above_sma200_pct": 24.2,
+   "score": 0.07898923115102541
+  },
+  {
+   "symbol": "KLAC",
+   "close": 184.0,
+   "chg3_pct": -6.47,
+   "above_sma200_pct": 2.2,
+   "score": 0.06466043687358647
+  },
+  {
+   "symbol": "LRCX",
+   "close": 301.11,
+   "chg3_pct": -6.08,
+   "above_sma200_pct": 7.5,
+   "score": 0.06076300324042827
+  }
+ ],
+ "watchlist": [
+  {
+   "symbol": "LITE",
+   "close": 987.99,
+   "chg3_pct": -5.78,
+   "above_sma200_pct": 28.3,
+   "chg2_pct": -10.46,
+   "trigger_below": 987.99
+  },
+  {
+   "symbol": "NBIS",
+   "close": 206.86,
+   "chg3_pct": -5.85,
+   "above_sma200_pct": 19.8,
+   "chg2_pct": -6.43,
+   "trigger_below": 206.86
+  },
+  {
+   "symbol": "TER",
+   "close": 380.29,
+   "chg3_pct": -4.62,
+   "above_sma200_pct": 11.1,
+   "chg2_pct": -5.56,
+   "trigger_below": 380.29
+  },
+  {
+   "symbol": "CDNS",
+   "close": 334.2,
+   "chg3_pct": -4.2,
+   "above_sma200_pct": 2.2,
+   "chg2_pct": -5.28,
+   "trigger_below": 334.2
+  },
+  {
+   "symbol": "PANW",
+   "close": 397.03,
+   "chg3_pct": -0.37,
+   "above_sma200_pct": 53.9,
+   "chg2_pct": -5.19,
+   "trigger_below": 397.03
+  },
+  {
+   "symbol": "CRWD",
+   "close": 261.21,
+   "chg3_pct": -0.68,
+   "above_sma200_pct": 64.5,
+   "chg2_pct": -5.03,
+   "trigger_below": 261.21
+  },
+  {
+   "symbol": "VRTX",
+   "close": 485.22,
+   "chg3_pct": -3.58,
+   "above_sma200_pct": 2.1,
+   "chg2_pct": -4.87,
+   "trigger_below": 485.22
+  },
+  {
+   "symbol": "STX",
+   "close": 747.2,
+   "chg3_pct": -3.57,
+   "above_sma200_pct": 11.9,
+   "chg2_pct": -4.57,
+   "trigger_below": 747.2
+  },
+  {
+   "symbol": "ASML",
+   "close": 1717.76,
+   "chg3_pct": -2.94,
+   "above_sma200_pct": 9.7,
+   "chg2_pct": -3.52,
+   "trigger_below": 1717.76
+  },
+  {
+   "symbol": "DDOG",
+   "close": 283.34,
+   "chg3_pct": 3.48,
+   "above_sma200_pct": 49.3,
+   "chg2_pct": -3.38,
+   "trigger_below": 283.34
+  }
+ ],
+ "trades": [],
+ "skipped": [],
+ "equity_curve": [
+  {
+   "date": "2026-10-13",
+   "equity": 1300.0,
+   "qqq": 743.57
+  }
+ ],
+ "live_stats": {
+  "trades": 0
+ },
+ "backtest": {
+  "trades": 562,
+  "avg_ret_pct": 0.357,
+  "median_ret_pct": 0.878,
+  "win_rate": 0.664,
+  "avg_win_pct": 2.41,
+  "avg_loss_pct": -3.7,
+  "hold_days_median": 3,
+  "trades_per_month": 4.3,
+  "worst_pct": -40.3,
+  "best_pct": 16.2
+ }
+}
