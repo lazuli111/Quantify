@@ -1,0 +1,54 @@
+# Quantify 配置文件 —— 改数字就能调整策略，不用改代码。
+# 所有时间都是美东时间（ET）。夏令时 09:30 ET = 香港 21:30；冬令时（11月初起）= 香港 22:30。
+
+account:
+  capital_usd: 1300        # 本金（美元）
+  usd_hkd: 7.8             # 汇率，用来换算免佣额度
+  compound: true           # true = 盈亏滚入下一笔（真实账户）；false = 每笔都按本金下单（评估策略用）
+
+broker:                    # 汇丰 Trade25 收费规则
+  monthly_free_quota_hkd: 250000   # 每月累计成交额（买+卖）免佣上限
+  commission_usd: 18               # 超额后每笔佣金（首 1,000 股）
+  per_share_over_1000_usd: 0.015   # 超过 1,000 股的部分每股加收
+  monthly_fee_hkd: 25              # 当月有交易或持仓才收
+  other_fees_pct: 0.0001           # 政府/交易所代收费的保守估计（每边 0.01%）
+  respect_quota: true              # true = 只做免佣额度内的交易，超额就不交易
+
+execution:
+  slippage_pct: 0.0005     # 手动市价单的滑点估计（每边 0.05%）
+
+session:
+  open: "09:30"
+  last_entry: "11:30"      # 最晚开仓时间
+  exit_by: "12:30"         # 强制平仓时间：12:30 = 开盘后 3 小时（香港 00:30 / 冬令时 01:30）；16:00 = 持有到收盘
+
+strategy:
+  name: orb                # 使用哪个策略：orb | in_play_orb | vwap_pullback | gap_reversal | late_momentum（全部只做多）
+
+  # ---- 所有策略通用 ----
+  min_rvol: 1.5            # 相对成交量门槛：今天到此刻的成交额 ≥ 过去 N 天同一时刻平均的 1.5 倍
+  rvol_lookback_days: 10
+  max_stop_pct: 0.015      # 止损距离超过 1.5% 的信号不做（风险太大）
+  target_r: 2.0            # 止盈 = 2 倍止损距离；null = 不设止盈、持有到 exit_by；signal = 用策略自带目标
+  max_trades_per_day: 1
+
+  # ---- 各策略自己的参数 ----
+  orb:                     # 开盘区间突破：突破开盘区间高点时买入，止损在区间低点
+    or_minutes: 15         # 开盘区间长度（分钟）
+    require_above_vwap: true
+  in_play_orb:             # 热门股开盘跟进：第一根 5 分钟 K 线收阳、开盘成交额最异常的股票，09:35 买入
+    stop_atr: 0.1          # 止损 = 入场价下方 0.1 倍日均波幅（ATR）；null = 第一根 K 线低点
+  vwap_pullback:           # VWAP 回踩：当天已上涨的股票回落到 VWAP 附近并收阳时买入，止损在该 K 线低点
+    min_move: 0.01         # 当天曾比开盘价上涨至少 1%
+    touch_tol: 0.002       # K 线最低点离 VWAP 不超过 0.2%
+  gap_reversal:            # 低开反转：低开后重新站上开盘价和 VWAP 时买入，止损在当天最低点
+    min_gap: 0.02          # 低开至少 2%；配合 target_r: signal 以昨收（缺口回补）为止盈
+  late_momentum:           # 尾盘动量：下午仍强势（涨幅够、在 VWAP 上、接近当天高点）的股票，持有到收盘；需要全天窗口
+    signal_at: "14:55"     # 在这根 K 线收盘时检查
+    min_ret: 0.01          # 比昨收至少上涨 1%
+
+data:
+  source: alpaca           # alpaca = 2016 年至今全市场数据；yahoo = 最近 60 天（无需账户）
+  interval: 5m
+  dir: data
+  benchmark: QQQ           # 对比基准（只用来比较，不交易）
