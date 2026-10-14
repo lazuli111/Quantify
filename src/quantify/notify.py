@@ -89,8 +89,13 @@ def send(text: str) -> bool:
     return True
 
 
-def send_daily() -> bool:
-    return send(build_message(json.loads(DATA_PATH.read_text(encoding="utf-8"))))
+def send_daily(force: bool = False) -> bool:
+    """Push the summary, but only when the update booked a new session (not on holidays or reruns)."""
+    v = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    if not v.get("new_day") and not force:
+        print("这次更新没有新的交易日（休市或重复运行），不推送")
+        return False
+    return send(build_message(v))
 
 
 def send_failure(details: str) -> bool:

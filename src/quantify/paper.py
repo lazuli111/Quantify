@@ -426,6 +426,7 @@ def run(cfg: dict, start: date | None = None, reset: bool = False, only: str | N
     days = list(m.panel.close.index)
     last_day = days[-1]
     views = []
+    new_day = False  # did this run book a session that wasn't booked before? (holidays / reruns: no)
     for st in STRATEGIES:
         touch = only is None or only == st.key
         state = None if (reset and touch) else load_state(st.key)
@@ -439,13 +440,14 @@ def run(cfg: dict, start: date | None = None, reset: bool = False, only: str | N
         for d in days:
             if d >= start_d and (done is None or d > done):
                 process_day(st, state, d, m, sig, costs, cfg)
+                new_day = True
         save_state(st.key, state)
         views.append(strategy_view(st, state, m, sig, last_day, cfg))
 
     nxt = next_session(last_day)
     view = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="minutes"), "as_of": last_day.isoformat(),
             "next_session": nxt.isoformat(), "next_open": open_time(nxt).isoformat(timespec="minutes"),
-            "strategies": views}
+            "new_day": new_day, "strategies": views}
     DATA_PATH.parent.mkdir(exist_ok=True)
     DATA_PATH.write_text(json.dumps(view, ensure_ascii=False, indent=1), encoding="utf-8")
     PAGE_PATH.write_text(PAGE_SKELETON.format(body=PAGE_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")

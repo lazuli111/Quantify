@@ -64,7 +64,8 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: uv run quantify notify
+        # 定时运行只在出现新交易日时推送；手动运行（勾选推送）总是推送
+        run: uv run quantify notify ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: 更新失败时推送提醒
         if: failure()
