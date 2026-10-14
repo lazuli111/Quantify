@@ -169,7 +169,8 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   h1 { font-size: 24px; }
   .stamp { text-align: left; flex-basis: 100%; font-size: 12px; }
   .ticket { grid-template-columns: minmax(0, 1fr); }
-  .ticket .stub { border-right: 0; border-bottom: 2px dashed var(--line); grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 10px; padding: 14px 18px; }
+  .ticket .stub { border-right: 0; border-bottom: 2px dashed var(--line); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 14px 18px; }
+  .ticket .stub > div { white-space: nowrap; }
   .stub .time { margin-top: 0; }
   .ticket::before, .ticket::after { display: none; }
   .order .sym { font-size: 28px; }
