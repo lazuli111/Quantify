@@ -204,7 +204,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
     </div>
     <div class="stamp" id="stamp"><span>正在读取数据…</span></div>
   </header>
-  <section class="ticket" id="ticket" aria-label="今晚开盘的操作"></section>
+  <section class="ticket" id="ticket" aria-label="下次开盘的操作"></section>
   <nav class="tabs" id="tabs" role="tablist" aria-label="选择策略"></nav>
   <div class="desk">
     <div class="col">
@@ -241,6 +241,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   const md = (iso) => { const [, m, d] = iso.split("-"); return `${+m}月${+d}日`; };
   const wd = (iso) => WD[new Date(iso + "T12:00:00Z").getUTCDay()];
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const localStamp = (iso) => new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
   const rich = (s) => esc(s).replace(/\[\[(.+?)\]\]/g, "<b>$1</b>");
   const cell = (col, val) => {
     if (val === null || val === undefined) return "<td>—</td>";
@@ -292,32 +293,40 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   function renderTop(v) {
     $("stamp").innerHTML =
       `<span>数据截至 <b>美东 ${md(v.as_of)} 收盘</b></span>` +
-      `<span>更新于 香港 ${esc(v.generated_at)}</span>`;
+      `<span>更新于 ${localStamp(v.generated_at)}（你的时间）</span>`;
 
     // ticket: tonight's orders from every strategy
-    const stub = `<div class="stub"><div class="day">${md(v.next_session).replace("月", "/").replace("日", "")}</div>` +
-      `<div class="wd">${wd(v.next_session)} 开盘</div><div class="time">${esc(v.next_open_hk_time)}</div><div class="tz">香港时间</div></div>`;
+    const open = new Date(v.next_open);
+    const loc = (opts) => new Intl.DateTimeFormat("zh-CN", opts).format(open);
+    const stub = `<div class="stub"><div class="day">${loc({ month: "numeric", day: "numeric" })}</div>` +
+      `<div class="wd">${loc({ weekday: "short" })} 开盘</div>` +
+      `<div class="time">${loc({ hour: "2-digit", minute: "2-digit", hourCycle: "h23" })}</div>` +
+      `<div class="tz">你的时间 · 美东 09:30</div></div>`;
+    const opened = Date.now() >= open.getTime();
+    const label = opened ? "已开盘 · 收盘后记账" : "下次开盘";
     const orders = v.strategies.flatMap((s) => (s.tonight || []).map((o) => ({ ...o, strategy: s.name })));
     let body;
     if (orders.length) {
-      body = `<p class="label">今晚开盘</p><div class="orders">` + orders.map((o) => {
+      body = `<p class="label">${label}</p><div class="orders">` + orders.map((o) => {
         const buy = o.action === "buy";
         const qty = buy ? `<span class="qty">约 <span class="num">${o.est_shares}</span> 股</span>` : `<span class="qty">全部持股</span>`;
         const stop = o.stop ? ` · 止损 <span class="num">${usd(o.stop)}</span>` : "";
         return `<div class="order"><span class="verb ${buy ? "buy" : "sell"}">${buy ? "买入" : "卖出"}</span>` +
           `<span class="sym">${esc(o.symbol)}</span>${qty}<span class="tag">${esc(o.strategy)}</span>` +
           `<span class="meta">参考价 <span class="num">${usd(o.ref_price)}</span>（昨收）${stop} · ${esc(o.reason)}</span></div>`;
-      }).join("") + `</div><p class="note">模拟账户按开盘价成交，并计入 0.05% 滑点和汇丰的费用。实际股数以开盘价计算。</p>`;
+      }).join("") + `</div><p class="note">${opened
+        ? "已经开盘：这些委托已按开盘价模拟成交，美股收盘后（美东晚上 7 点）记进账户并推送。"
+        : "模拟账户按开盘价成交，并计入 0.05% 滑点和汇丰的费用。实际股数以开盘价计算。"}</p>`;
     } else {
       const why = v.strategies.map((s) => `${esc(s.name)}：` + (s.position ? `继续持有 ${esc(s.position.symbol)}` : "没有信号")).join("；");
-      body = `<p class="label">今晚开盘</p><p class="none-title">没有操作</p><p class="note" style="border:0;padding:0">${why}。</p>`;
+      body = `<p class="label">${label}</p><p class="none-title">没有操作</p><p class="note" style="border:0;padding:0">${why}。</p>`;
     }
     $("ticket").innerHTML = stub + `<div class="body">${body}</div>`;
 
     // tabs
     $("tabs").innerHTML = v.strategies.map((s) => {
       const a = s.account;
-      const state = s.tonight.length ? "今晚有操作" : s.position ? `持有 ${esc(s.position.symbol)}` : "空仓";
+      const state = s.tonight.length ? "开盘有操作" : s.position ? `持有 ${esc(s.position.symbol)}` : "空仓";
       return `<button type="button" class="tab" role="tab" data-key="${s.key}" aria-selected="false">` +
         `<span class="t-name">${esc(s.name)}</span>` +
         `<span class="t-meta"><span class="num ${sgn(a.return_pct)}">${pct(a.return_pct)}</span><span>${usd(a.equity)}</span><span>${state}</span></span></button>`;
@@ -358,7 +367,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
         ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>收盘</th>${cc.map((c) => `<th>${esc(c.label)}</th>`).join("")}<th>可买股数</th></tr></thead><tbody>` +
           cand.map((c) => {
             const n = Math.floor(a.equity / c.close);
-            const tag = pick && pick.symbol === c.symbol ? `<span class="chip pick">今晚买入</span>` : (n < 1 ? `<span class="chip">买不起</span>` : "");
+            const tag = pick && pick.symbol === c.symbol ? `<span class="chip pick">开盘买入</span>` : (n < 1 ? `<span class="chip">买不起</span>` : "");
             return `<tr><td class="sym">${esc(c.symbol)}${tag}</td><td>${usd(c.close)}</td>${cc.map((col) => cell(col, c[col.key])).join("")}<td>${n}</td></tr>`;
           }).join("") + `</tbody></table></div>` +
           (p && !pick ? `<p class="caveat">已有持仓，今天的信号只作参考，不会买入。</p>` : "")

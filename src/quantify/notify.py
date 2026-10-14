@@ -36,7 +36,7 @@ def build_message(v: dict) -> str:
 
     nxt = date.fromisoformat(v["next_session"])
     lines = [f"<b>回调观察台 · {_md(v['next_session'])}（周{WEEKDAYS[nxt.weekday()]}）</b>",
-             f"香港时间 {v['next_open_hk_time']} 开盘"]
+             "美东时间 09:30 开盘"]
     as_of = v["as_of"]
     for s in v["strategies"]:
         a = s["account"]
@@ -60,11 +60,11 @@ def build_message(v: dict) -> str:
             for o in s["tonight"]:
                 if o["action"] == "buy":
                     stop = f"，止损 {_usd(o['stop'])}" if o.get("stop") else ""
-                    lines.append(f"▶ 今晚<b>买入 {o['symbol']}</b> 约 {o['est_shares']} 股，参考价 {_usd(o['ref_price'])}{stop}")
+                    lines.append(f"▶ 开盘<b>买入 {o['symbol']}</b> 约 {o['est_shares']} 股，参考价 {_usd(o['ref_price'])}{stop}")
                 else:
-                    lines.append(f"▶ 今晚<b>卖出 {o['symbol']}</b>（{escape(o['reason'])}）")
+                    lines.append(f"▶ 开盘<b>卖出 {o['symbol']}</b>（{escape(o['reason'])}）")
         else:
-            lines.append("今晚没有操作")
+            lines.append("下次开盘没有操作")
         if p:
             lines.append(f"持有 {p['symbol']} {p['shares']:g} 股，{_pct(p['unrealized_pct'])}，第 {p['held_days']} 天")
         lines.append(f"账户 {_usd(a['equity'])}（{_pct(a['return_pct'])}，同期 QQQ {_pct(a['qqq_return_pct'])}）")

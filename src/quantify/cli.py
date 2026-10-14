@@ -294,7 +294,7 @@ def cmd_paper(cfg: dict, args) -> None:
     """Daily paper-trading update for the watched swing strategies (run after each US close)."""
     start = date.fromisoformat(args.start) if args.start else None
     v = paper.run(cfg, start=start, reset=args.reset, only=args.only)
-    print(f"数据截至 {v['as_of']}（美东收盘），下一个交易日 {v['next_session']}，香港时间 {v['next_open_hk']} 开盘")
+    print(f"数据截至 {v['as_of']}（美东收盘），下一个交易日 {v['next_session']}，美东时间 09:30 开盘")
     for s in v["strategies"]:
         a = s["account"]
         print(f"\n【{s['name']}】模拟账户 ${a['equity']:,.2f}（{a['return_pct']:+.2f}%，同期 QQQ {a['qqq_return_pct']:+.2f}%），"
@@ -307,9 +307,9 @@ def cmd_paper(cfg: dict, args) -> None:
             verb = "买入" if o["action"] == "buy" else "卖出"
             extra = f" 约 {o['est_shares']} 股" if o["action"] == "buy" else ""
             stop = f"，止损 ${o['stop']:.2f}" if o.get("stop") else ""
-            print(f"  今晚开盘{verb} {o['symbol']}{extra}（参考价 ${o['ref_price']}，{o['reason']}{stop}）")
+            print(f"  下次开盘{verb} {o['symbol']}{extra}（参考价 ${o['ref_price']}，{o['reason']}{stop}）")
         if not s["tonight"]:
-            print("  今晚：无操作")
+            print("  下次开盘：无操作")
         print(f"  信号 {len(s['candidates'])} 只，{s['watch_title']} {len(s['watchlist'])} 只")
     print("\n仪表盘数据已写入 docs/data.json")
 

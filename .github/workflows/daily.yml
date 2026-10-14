@@ -1,10 +1,15 @@
 name: 每日模拟交易更新
 
-# 美股收盘后运行：23:00 UTC = 香港时间早上 7:00（周二到周六），对应美东周一到周五的收盘。
+# 美股收盘后运行：23:00 UTC（美东晚上 7 点），周一到周五。
 on:
   schedule:
     - cron: "0 23 * * 1-5"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      notify:
+        description: "发送 Telegram 推送"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -54,6 +59,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: 发送 Telegram 推送
+        if: github.event_name == 'schedule' || inputs.notify
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

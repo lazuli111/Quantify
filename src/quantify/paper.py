@@ -13,7 +13,7 @@ Missed days are caught up on the next run. Prices come from Yahoo daily bars (no
 import json
 import math
 from dataclasses import dataclass
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from typing import Callable
 from zoneinfo import ZoneInfo
 
@@ -28,7 +28,7 @@ from .swing import Panel, Signals, sma
 from .swing_strategies import LukPullback, Pullback3, ema
 from .universe import get_universe
 
-ET, HK = ZoneInfo("America/New_York"), ZoneInfo("Asia/Hong_Kong")
+ET = ZoneInfo("America/New_York")
 BENCH = "QQQ"
 PAPER_DIR = ROOT / "paper"
 UNIVERSE_PATH = PAPER_DIR / "universe.csv"  # last good member list, for when the sources are unreachable
@@ -54,8 +54,9 @@ def next_session(after: date) -> date:
     return d
 
 
-def open_time_hk(day: date) -> datetime:
-    return datetime.combine(day, time(9, 30), tzinfo=ET).astimezone(HK)
+def open_time(day: date) -> datetime:
+    """The regular-session open in New York time; the dashboard converts it to the viewer's zone."""
+    return datetime.combine(day, time(9, 30), tzinfo=ET)
 
 
 # ---------------------------------------------------------------- data
@@ -427,9 +428,9 @@ def run(cfg: dict, start: date | None = None, reset: bool = False, only: str | N
         views.append(strategy_view(st, state, m, sig, last_day, cfg))
 
     nxt = next_session(last_day)
-    view = {"generated_at": datetime.now(HK).strftime("%Y-%m-%d %H:%M"), "as_of": last_day.isoformat(),
-            "next_session": nxt.isoformat(), "next_open_hk": open_time_hk(nxt).strftime("%m月%d日 %H:%M"),
-            "next_open_hk_time": open_time_hk(nxt).strftime("%H:%M"), "strategies": views}
+    view = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="minutes"), "as_of": last_day.isoformat(),
+            "next_session": nxt.isoformat(), "next_open": open_time(nxt).isoformat(timespec="minutes"),
+            "strategies": views}
     DATA_PATH.parent.mkdir(exist_ok=True)
     DATA_PATH.write_text(json.dumps(view, ensure_ascii=False, indent=1), encoding="utf-8")
     PAGE_PATH.write_text(PAGE_SKELETON.format(body=PAGE_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
