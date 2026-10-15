@@ -1,0 +1,32 @@
+[
+ {
+  "date": "2026-10-13",
+  "symbol": "AMAT",
+  "strategies": [
+   "三连跌回调"
+  ],
+  "rating": "Underweight",
+  "rating_zh": "减持",
+  "agrees": false,
+  "report": "ai/2026-10-13_AMAT.html",
+  "model": "deepseek-flash",
+  "minutes": 13.1,
+  "cost": 0.48,
+  "currency": "CNY"
+ },
+ {
+  "date": "2026-10-13",
+  "symbol": "CSCO",
+  "strategies": [
+   "Martin Luk 风格回调"
+  ],
+  "rating": "Hold",
+  "rating_zh": "持有",
+  "agrees": false,
+  "report": "ai/2026-10-13_CSCO.html",
+  "model": "deepseek-flash",
+  "minutes": 11.7,
+  "cost": 0.64,
+  "currency": "CNY"
+ }
+]

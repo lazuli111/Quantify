@@ -1,0 +1,1566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>AMAT 2026-10-13 Underweight: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">AMAT</span> <span class="rating down">Underweight</span></h1>
+<p class="date">Analysis of 2026-10-13</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-10-15 12:27</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">deepseek</span> <span class="field">deepseek-flash</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">deepseek</span> <span class="field">deepseek-flash</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>AMAT（Applied Materials, Inc.）技术分析报告</h4>
+<p><strong>分析日期：2026-10-13 ｜ 最新收盘：464.24</strong></p>
+<hr />
+<h5>一、指标选择说明（为何选用这 8 个指标）</h5>
+<p>本轮分析选用以下 8 个互补指标，覆盖趋势、动量、波动率与量能四个维度，避免同类冗余：</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>选用指标</th>
+<th>选择理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>短期动量</td>
+<td><strong>close_10_ema</strong></td>
+<td>捕捉当日急跌带来的短期动能反转，判断短线多空分界</td>
+</tr>
+<tr>
+<td>中期趋势</td>
+<td><strong>close_50_sma</strong></td>
+<td>AMAT 近期在 50 日均线附近反复争夺，是最关键的动态支撑/阻力</td>
+</tr>
+<tr>
+<td>长期趋势</td>
+<td><strong>close_200_sma</strong></td>
+<td>判断自 4 月以来大级别上升趋势是否被破坏</td>
+</tr>
+<tr>
+<td>动量</td>
+<td><strong>macd</strong></td>
+<td>识别动能拐点与背离</td>
+</tr>
+<tr>
+<td>动量确认</td>
+<td><strong>macds</strong></td>
+<td>与 MACD 线配合确认金叉/死叉，过滤假信号</td>
+</tr>
+<tr>
+<td>动量摆动</td>
+<td><strong>rsi</strong></td>
+<td>判断超买/超卖与动能强弱，与 MACD 互补（非同类）</td>
+</tr>
+<tr>
+<td>波动率/风控</td>
+<td><strong>atr</strong></td>
+<td>设定止损与仓位，衡量当日跳空风险</td>
+</tr>
+<tr>
+<td>量能确认</td>
+<td><strong>vwma</strong></td>
+<td>用成交量加权验证价格趋势的真实性</td>
+</tr>
+</tbody>
+</table></div>
+<p>未选用 boll_ub/boll_lb/macdh 等作为核心，但会在下文引用快照数值作为辅助佐证。</p>
+<hr />
+<h5>二、价格行为复盘（基于工具输出）</h5>
+<p>AMAT 年内呈现极端波动，且以 2026-06-30 为分水岭：</p>
+<ul>
+<li><strong>上半年强涨</strong>：4 月初收盘约 352.98（4/1），至 6/30 盘中最高 738.88、收盘 722.23，形成主升浪。</li>
+<li><strong>7 月急挫</strong>：7/28–7/29 连续大跌，7/29 收盘 435.98，回吐大部分涨幅。</li>
+<li><strong>9 月二次探底后强劲反弹</strong>：9/16 收盘 415.38（阶段低点），随后强势反弹至 <strong>10/5 收盘 542.28</strong>。以收盘价计，自 9/16 的 415.38 至 10/5 的 542.28，涨幅约 <strong>+30.5%</strong>（依据快照收盘价计算）。</li>
+<li><strong>10 月见顶回落</strong>：10/5 触及 542.28 后连续走弱——10/6 收 530.27、10/7 收 520.65、10/8 收 509.57、10/9 收 507.03、10/12 收 497.53，<strong>10/13 收 464.24</strong>。以收盘价计，从 10/5 的 542.28 至 10/13 的 464.24 回撤约 <strong>-14.4%</strong>（依据快照收盘价计算）。</li>
+</ul>
+<p><strong>10/13 当日 K 线极为关键</strong>：开 485.40、高 485.63、低 452.81、收 464.24，成交量 <strong>10,876,600 股</strong>，明显高于近期 400–700 万股的常态水平，属于<strong>放量下跌</strong>。当日为典型的高开低走大阴线，且收盘接近日内低位。</p>
+<hr />
+<h5>三、指标逐一解读（数值以 2026-10-13 验证快照为准）</h5>
+<h6>1. 均线系统——短中期转弱，长期趋势未破</h6>
+<ul>
+<li><strong>close_10_ema = 500.78</strong>：价格（464.24）<strong>远低于</strong>短均线，且 10 EMA 已从 10/5 的 507.15 掉头向下，短线动能明确转空。</li>
+<li><strong>close_50_sma = 488.53</strong>：价格<strong>跌破</strong>中期均线。值得注意的是，50 SMA 从 8/14 的 558.29 一路下滑至 488.53，斜率向下，说明中期趋势本身已偏弱。</li>
+<li><strong>close_200_sma = 435.86</strong>：价格（464.24）仍<strong>高于</strong>长期均线，且 200 SMA 持续上行（8/14 为 387.80 → 10/13 为 435.86），<strong>长期上升结构尚未被破坏</strong>。</li>
+</ul>
+<p><strong>综合</strong>：价格处于&quot;短均线下方 + 中均线下方 + 长均线上方&quot;的夹心状态——短中期偏空，长期仍偏多。50 SMA（488.53）与 200 SMA（435.86）之间的距离约 52.7 点，一旦 50 SMA 下穿 200 SMA，将构成中期&quot;死叉&quot;预警信号，是后续需要盯防的战术事件。</p>
+<h6>2. MACD——刚发生死叉，动能转负</h6>
+<ul>
+<li><strong>macd = 6.99，macds = 9.06</strong>：MACD 线<strong>下穿</strong>信号线，10/13 形成<strong>看跌交叉</strong>。</li>
+<li>佐证（快照 macdh = <strong>-2.07</strong>）：动能柱由 10/12 的 +1.62 转为负值，而 10/5 时曾高达 +12.07。动能柱在短短数日内由正值大幅收缩并翻负，显示多头动能急速衰竭。</li>
+<li>交叉尚未深入，但方向明确——短线动能释放偏向卖方。</li>
+</ul>
+<h6>3. RSI——从超买回落至中性偏弱</h6>
+<ul>
+<li><strong>rsi = 40.59</strong>：从 10/5 的 69.66（逼近超买区 70）快速回落约 29 点，10/13 报 40.59。</li>
+<li>目前<strong>未进入超卖（&lt;30）</strong>，意味着仍有进一步下行空间，尚未出现&quot;跌深反弹&quot;的技术触发。</li>
+<li>参考 9/16–9/17，RSI 曾低至约 33（9/16 为 33.03），随后触发反弹——这提供了一个&quot;超卖→反弹&quot;的历史参照，但需 RSI 再度逼近 30–35 区才能复制。</li>
+</ul>
+<h6>4. 波动率（ATR）——单日风险放大</h6>
+<ul>
+<li><strong>atr = 20.31</strong>：较 10/9 的 18.68、10/12 的 18.43 明显抬升，反映当日大幅波动。</li>
+<li>以收盘 464.24 计算，ATR 约为价格的 <strong>4.4%</strong>，属高波动品种。需要注意的是，ATR 相对 8 月中旬的 35.68、9 月初的 22–24 已系统性回落，说明波动率虽在当日放大，但整体仍低于夏季峰值。</li>
+<li><strong>风控含义</strong>：用 2×ATR 设止损约 40 点宽，单笔仓位需相应压缩。</li>
+</ul>
+<h6>5. 量能（VWMA）——放量确认卖压</h6>
+<ul>
+<li><strong>vwma = 504.93</strong>：价格（464.24）<strong>远低于</strong>量能加权均线，说明近期下跌是在放量背景下发生的，量价配合向下，削弱了&quot;缩量回调&quot;的乐观解读。</li>
+<li>10/13 的 1,087.66 万股显著放量，进一步印证筹码在高位派发。</li>
+</ul>
+<h6>6. 布林带（快照辅助，非核心选用指标）</h6>
+<ul>
+<li><strong>boll（中轨）= 489.94 ｜ boll_ub = 564.03 ｜ boll_lb = 415.84</strong></li>
+<li>价格（464.24）位于中轨下方、下半区，未触及下轨。中轨 489.94 与 50 SMA（488.53）几乎重合，构成<strong>488–490 的密集阻力带</strong>；下轨 415.84 与 200 SMA（435.86）共同构成下方支撑区间。</li>
+</ul>
+<hr />
+<h5>四、关键价位地图（全部来自快照/工具输出）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>方向</th>
+<th>价位</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上方阻力 1</td>
+<td><strong>488–490</strong></td>
+<td>close_50_sma 488.53 与 boll 中轨 489.94 重合带</td>
+</tr>
+<tr>
+<td>上方阻力 2</td>
+<td><strong>500.78 / 504.93</strong></td>
+<td>close_10_ema 与 vwma</td>
+</tr>
+<tr>
+<td>上方强阻力</td>
+<td><strong>564.03</strong></td>
+<td>boll_ub</td>
+</tr>
+<tr>
+<td>下方支撑 1</td>
+<td><strong>435.86</strong></td>
+<td>close_200_sma（长期趋势生命线）</td>
+</tr>
+<tr>
+<td>下方支撑 2</td>
+<td><strong>415.84 / 415.38</strong></td>
+<td>boll_lb 与 9/16 收盘低点</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h5>五、交易情景与可操作建议</h5>
+<p><strong>基准情景（概率偏高）：短线继续偏弱，回测 200 日均线支撑。</strong>
+10/13 放量大阴线叠加 MACD 死叉、跌破 50 SMA/10 EMA/VWMA，短线动能偏空。若后续无法迅速收复 488.53（50 SMA），价格大概率向下测试 <strong>435.86（200 SMA）</strong>，该处是多空分水岭。</p>
+<ul>
+<li><strong>看空触发</strong>：日收盘有效跌破 <strong>435.86</strong>（200 SMA），并伴随放量 → 中期趋势转弱，下一目标看 415–416 区间（boll_lb / 9 月低点）。此时应减仓、离场或转为观望。</li>
+<li><strong>看空止损参考</strong>：若做多，可将止损设在 2×ATR（约 40 点）之外，或置于 435.86 下方。</li>
+</ul>
+<p><strong>反向情景：超卖反弹。</strong>
+若价格在 435–440 一带企稳、RSI 重新逼近 30–35 后回升，并放量收复 50 SMA（488.53），则可视作回调结束，重新转为多头思路。参考 9 月中旬 RSI≈33 后反弹的先例。</p>
+<p><strong>中性/长期视角</strong>：200 SMA 仍上行、价格仍在其上方，<strong>长期牛市结构未破</strong>。本次下跌在技术定义上仍属&quot;上升趋势中的深度回调&quot;，直到 435.86 被有效跌破为止。</p>
+<hr />
+<h5>六、结论</h5>
+<p>AMAT 在经历 9/16（415.38）到 10/5（542.28）的约 +30.5% 强反弹后，于 10/5 见顶回落，10/13 出现放量大阴线（收 464.24，成交 1,087.66 万股），并同步触发 MACD 看跌交叉（macd 6.99 &lt; macds 9.06，macdh -2.07）、跌破 50 SMA（488.53）与 10 EMA（500.78）/VWMA（504.93），RSI 由 69.66 快速回落至 40.59（未超卖）。短中期信号偏空，但价格仍站稳 200 SMA（435.86）上方，长期趋势未破坏。</p>
+<p><strong>操作定性</strong>：短中期偏防守，不宜追多；等待价格在 435–440 支撑带企稳信号或重新收复 488.53 后再评估。若有效跌破 435.86，则升级为明确看空。</p>
+<p><strong>Rating</strong>: HOLD</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<hr />
+<h5>七、关键要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>指标/数值（2026-10-13）</th>
+<th>信号解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最新 OHLCV</td>
+<td>O 485.40 / H 485.63 / L 452.81 / C 464.24 / Vol 10,876,600</td>
+<td>高开低走放量大阴线，卖压主导</td>
+</tr>
+<tr>
+<td>短期动量</td>
+<td>close_10_ema = 500.78</td>
+<td>价格远低于短均线，短线转空</td>
+</tr>
+<tr>
+<td>中期趋势</td>
+<td>close_50_sma = 488.53（下行）</td>
+<td>价格跌破，488–490 成阻力带</td>
+</tr>
+<tr>
+<td>长期趋势</td>
+<td>close_200_sma = 435.86（上行）</td>
+<td>价格仍在其上，长期结构未破</td>
+</tr>
+<tr>
+<td>MACD</td>
+<td>macd 6.99 / macds 9.06 / macdh -2.07</td>
+<td>10/13 死叉，动能转负</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>40.59（前值 10/5 为 69.66）</td>
+<td>由超买回落至中性偏弱，未超卖</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>20.31（前值 10/12 为 18.43）</td>
+<td>单日波动放大，约价格 4.4%，需压缩仓位</td>
+</tr>
+<tr>
+<td>量能</td>
+<td>vwma = 504.93</td>
+<td>价格远低于量价均线，下跌获成交量确认</td>
+</tr>
+<tr>
+<td>布林带（辅助）</td>
+<td>中 489.94 / 上 564.03 / 下 415.84</td>
+<td>价格处下半区，未触下轨</td>
+</tr>
+<tr>
+<td>关键支撑</td>
+<td>435.86（200 SMA）、415.84（boll_lb）</td>
+<td>破 435.86 转空；415 为次支撑</td>
+</tr>
+<tr>
+<td>关键阻力</td>
+<td>488–490、500.78、504.93、564.03</td>
+<td>收复 488.53 前短线难言转多</td>
+</tr>
+<tr>
+<td>结论</td>
+<td>短空 / 长多夹心，放量破位</td>
+<td>HOLD，跌破 435.86 升级看空</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>注：本报告所有精确价格、指标数值均以 2026-10-13 验证快照为唯一来源；百分比回撤均由快照收盘价直接计算得出，未引入外部数据。</em></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mixed</strong> (Score: 5.2/10)
+<strong>Confidence:</strong> Low</p>
+<h4>AMAT 情绪报告（2026-10-06 至 2026-10-13）</h4>
+<h5>一、数据源逐项拆解</h5>
+<h6>1. 新闻头条（Yahoo Finance）——不可用</h6>
+<p>本次抓取返回占位符：“Yahoo Finance news unavailable for 2026-10-06..2026-10-13”。需要特别强调：<strong>这并不意味着 AMAT 在观察期内没有新闻</strong>，仅说明该来源没有返回可用的机构口径报道样本。因此本次分析<strong>缺失了“机构框架”这一慢变量来源</strong>，无法据此判断新闻叙事的方向。所有关于机构立场的推断只能间接地来自 StockTwits 用户转述的卖方研报信息（见下）。</p>
+<h6>2. StockTwits（散户社交平台）——唯一有实质内容的来源，但极稀薄</h6>
+<ul>
+<li><strong>样本量：仅 4 条最近消息</strong>；其中带情绪标签的只有 1 条（Bullish 1 条 / 25%，Bearish 0 条 / 0%），另外 3 条为 no-label。<strong>真正可计量的标签样本只有 1 条</strong>，比例（100% 看多）在统计上没有意义，不能按常规“70/30 温和看多、90/10 过热”的框架解读。</li>
+<li>逐条证据：
+<ol>
+<li><code>@Muktar65</code>（no-label，2026-10-13T23:58Z）：转述 Cantor Fitzgerald 分析师 C.J. Muse <strong>重申“Overweight”评级、目标价 850 美元</strong>，并称从周二价格看隐含约 <strong>85% 上行空间</strong>。反推可知当时 AMAT 股价大致在 <strong>460 美元附近</strong>。这是本次数据中<strong>最明确的事件性/事实性利多信号</strong>（但注意：它是用户转述，不是原始新闻源）。</li>
+<li><code>@commonsense1123</code>（no-label，23:16Z）：“我打赌明天会跌破 400.00，干火药已备好”——<strong>明确的做空/看跌表达</strong>，且给出具体价位（相对 460 美元约 -13%）。</li>
+<li><code>@KryptonResearch14</code>（no-label，22:36Z）：转述当日“investor breakfast（投资者早餐会）”——<strong>公司把所有自己能控制的指标都给了指引，唯独跳过了决定设备收入的那个数字：没有 WFE（晶圆厂设备）市场预测、没有总营收指引</strong>，只有 Dickerson 表态 CAGR“将非常强劲”。这是<strong>典型的“预期管理含糊化”信号</strong>：定性乐观、定量留白，对设备类公司的营收能见度构成实质折扣。</li>
+<li><code>@SwingPlay</code>（Bullish 标签，22:31Z）：“现在一买入就立刻跌 20 美元的人请举手 😂”——虽有 Bullish 标签，但<strong>文本实为自嘲式畏跌情绪</strong>，属于“想做多但害怕被套”的矛盾心态，而非坚定看多。</li>
+</ol>
+</li>
+<li>综合读法：<strong>唯一被分类器标记为看多的那条，内容本身是焦虑；而两条未标记的消息里，一条是极端看跌下注，一条是对指引缺口的审慎质疑。<strong>散户情绪的“表面看多、内里犹疑”特征明显，且</strong>没有任何一条消息体现出群体性的追涨热情</strong>（4 条消息、0 条看空标签，却也没有形成多头共识叙事）。</li>
+</ul>
+<h6>3. Reddit（r/wallstreetbets、r/stocks、r/investing）——不可用</h6>
+<p>返回占位符：“Reddit search unavailable for 2026-10-06..2026-10-13”。同样地，<strong>这不代表 AMAT 在三个子版块没有讨论</strong>，只说明检索窗口内没有取到帖子。因此：</p>
+<ul>
+<li>无法判断 r/wallstreetbets 的逆向/亢奋情绪、r/stocks 的温和口径、r/investing 的长期视角各自如何；</li>
+<li>无法做“散户社区共识是否已形成”的交叉验证。
+这一缺口直接压低本报告的置信度。</li>
+</ul>
+<h5>二、跨源背离与一致性</h5>
+<ul>
+<li><strong>可验证的跨源对照只有一条</strong>：新闻源与 Reddit 均缺失，因此无法构建常规的“机构新闻 vs 散户社交 vs 社区讨论”三维对照。这是一个<strong>结构性缺口</strong>，不是“情绪中性”的证据。</li>
+<li><strong>真实存在的背离发生在单一来源内部，且方向清晰</strong>：
+<ul>
+<li><strong>卖方/机构口径（经转述）：偏多</strong> —— Cantor Fitzgerald 重申 Overweight，850 美元目标价、隐含约 85% 上行空间；</li>
+<li><strong>散户口径：偏空或犹疑</strong> —— 一条公开押注跌破 400 美元（较 460 美元约 -13%），一条质疑公司回避 WFE 与总营收指引，一条“看多”标签下藏着买入即被套的恐惧。</li>
+<li>这正是提示中描述的经典错位形态的镜像版本：<strong>卖方看多、零售不买账</strong>。在新闻源缺席的情况下，这种“研报高目标价 vs 散户拒绝承接”的错位更值得警惕，因为它缺少机构新闻流来确认目标价的合理性基础。</li>
+</ul>
+</li>
+<li><strong>一致性</strong>：唯一贯穿所有消息的背景事实是 <strong>2026-10-13 当日的 investor breakfast 与随之而来的指引发布</strong>——所有四条消息都直接或间接围绕这一天的事件情绪展开，这是本周情绪的唯一共同锚点。</li>
+</ul>
+<h5>三、主导叙事主题</h5>
+<ol>
+<li><strong>“指引缺口”是本周最强、最具体的叙事</strong>。公司给出了除 WFE 市场预测和总营收指引之外的所有可控指标，并用“CAGR 将非常强劲”这类定性表述填补。对半导体设备股而言，WFE 预期与总营收指引恰恰是估值定价的核心变量，<strong>回避这两项本身就是信息</strong>。这条叙事在散户端被直接解读为审慎（甚至负面）信号。</li>
+<li><strong>“卖方高目标价 vs 买方不接力”的估值落差叙事</strong>。850 美元目标价对应约 85% 上行空间，但散户端的实际行为（备好干火药等 400 美元以下、害怕买入即亏 20 美元）与目标价叙事完全脱节。高目标价在缺少新闻源验证时，更容易被读作“研报孤例”而非共识。</li>
+<li><strong>短线价格博弈叙事</strong>。消息集中在 2026-10-13 晚间（22:31Z–23:58Z，即盘后/次日盘前时段），讨论对象是“明天”的价格（400 美元关口 vs 460 美元现价），说明当前活跃情绪是<strong>短线交易情绪而非中长期配置情绪</strong>。</li>
+<li><strong>缺席的叙事</strong>：没有任何一条消息提及财报日期、订单簿、中国出口管制、同业竞争（如其他设备厂商）、AI 资本开支等常见主题。<strong>在如此小的样本里，这些主题的缺失不能被解读为它们不重要，只能说明样本不足。</strong></li>
+</ol>
+<h5>四、催化剂与风险</h5>
+<p><strong>催化剂（偏多）</strong></p>
+<ul>
+<li>Cantor Fitzgerald（C.J. Muse）重申 Overweight 与 850 美元目标价，隐含约 85% 上行空间——若被更多卖方跟进，可能形成机构叙事合力。</li>
+<li>公司管理层（Dickerson）在投资者早餐会上给出“CAGR 将非常强劲”的定性乐观表述，且表示“几乎所有可控项”都已指引。</li>
+<li>存在明确的价格博弈锚点：400 美元（散户下注位）与约 460 美元（隐含现价）之间约 13% 的空间，任何回补都可能放大短线波动。</li>
+</ul>
+<p><strong>风险（偏空/不确定性）</strong></p>
+<ul>
+<li><strong>缺少 WFE 市场预测与总营收指引</strong>——最直接决定设备收入的两个数字留白，营收能见度下降，可能成为后续下修或波动来源。</li>
+<li>散户端出现公开的、带具体价位的做空表达（400 美元以下），且无人以多头论据反驳。</li>
+<li>唯一被标记为 Bullish 的消息文本实为畏跌自嘲，说明<strong>多头信心脆弱、缺乏承接力</strong>，一旦回落容易触发情绪反转。</li>
+<li><strong>信息真空风险</strong>：新闻源与 Reddit 双双缺席，意味着若存在负面机构报道或社区讨论，本报告无法捕捉。</li>
+</ul>
+<h5>五、关键情绪信号汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>支撑证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>卖方评级与目标价重申</td>
+<td>偏多</td>
+<td>StockTwits（用户转述 Cantor Fitzgerald）</td>
+<td><code>@Muktar65</code>：C.J. Muse 重申 Overweight、目标价 850 美元，较周二价隐含约 85% 上行</td>
+</tr>
+<tr>
+<td>投资者早餐会指引</td>
+<td>偏空/不确定</td>
+<td>StockTwits（用户转述公司活动）</td>
+<td><code>@KryptonResearch14</code>：未给 WFE 市场预测、未给总营收指引，仅有“CAGR 非常强劲”的定性表述</td>
+</tr>
+<tr>
+<td>散户短线押注</td>
+<td>偏空</td>
+<td>StockTwits</td>
+<td><code>@commonsense1123</code>：下注次日跌破 400.00，干火药已备好</td>
+</tr>
+<tr>
+<td>多头信心质地</td>
+<td>偏空（表面看多、实质犹疑）</td>
+<td>StockTwits</td>
+<td><code>@SwingPlay</code>（Bullish 标签）：“一买入就跌 20 美元”的自嘲式畏跌</td>
+</tr>
+<tr>
+<td>标签比例</td>
+<td>名义偏多但无效</td>
+<td>StockTwits</td>
+<td>Bullish 1（25%）/ Bearish 0（0%）/ 无标签 3，总样本仅 4 条，可计量标签样本仅 1 条</td>
+</tr>
+<tr>
+<td>新闻叙事</td>
+<td>未知</td>
+<td>Yahoo Finance</td>
+<td>占位符，未返回可用样本（非“无新闻”）</td>
+</tr>
+<tr>
+<td>社区讨论</td>
+<td>未知</td>
+<td>Reddit（WSB / stocks / investing）</td>
+<td>占位符，未返回可用样本（非“无讨论”）</td>
+</tr>
+</tbody>
+</table></div>
+<h5>六、结论与数据局限说明（务必向交易者明示）</h5>
+<ul>
+<li><strong>本报告的证据基础极其薄弱</strong>：三个来源中两个（新闻、Reddit）为占位符，第三个仅有 4 条消息、其中 1 条带标签。任何百分比（如“25% 看多”）在此样本量下都不具备统计意义，<strong>不应作为仓位依据</strong>。</li>
+<li>由于唯一可用来源内部即存在“卖方高目标价”与“散户看跌/犹疑”的对立，且两个外部来源无法提供方向性交叉验证，本次判断落在 <strong>Mixed（分歧）</strong> 而非单向的看多或看空：名义标签偏多，但实质内容与行为偏审慎。</li>
+<li><strong>建议交易者重点关注</strong>：(1) 后续是否出现覆盖 WFE 市场预测或总营收指引的正式披露（这是当前最强的信息缺口）；(2) 是否有更多卖方跟进 850 美元目标价，或相反出现下调；(3) 400 美元附近的实际价格行为与成交量，用以验证散户短线押注是否成立。</li>
+<li><strong>情绪是权重之一，不是价格预测</strong>。以上为需要与基本面、技术面和后续补充数据一并权衡的信号，历史及当下情绪不具预测性。若后续取到新闻与 Reddit 样本，本报告的方向性结论（尤其是 Mixed 的判断）应被重新评估。</li>
+</ul>
+<p><strong>Rating</strong>: Mixed
+<strong>FINAL TRANSACTION PROPOSAL</strong>: HOLD</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>AMAT（Applied Materials, Inc.）新闻与宏观研究报告</h4>
+<p><strong>报告日期：2026-10-13　|　分析标的：AMAT　|　回顾窗口：2026-09-29 至 2026-10-13</strong></p>
+<hr />
+<h5>一、执行摘要</h5>
+<p><strong>核心矛盾：基本面顺风（存储/先进逻辑资本开支上行）与金融条件逆风（长端利率创 2002 年以来新高、美联储偏鹰）的对撞。</strong></p>
+<ul>
+<li>本次工具检索范围内<strong>未获取到任何 AMAT 公司层面的个股新闻</strong>（新闻源明确返回&quot;仅返回近期文章样本，不代表 AMAT 无新闻&quot;）。因此本报告的 AMAT 判断主要基于<strong>板块与宏观传导</strong>推断，个股层面的确定性偏低。</li>
+<li>宏观数据（CPI、核心 PCE、失业率、联邦基金利率、10Y 国债、收益率曲线）与预测市场（Polymarket）在本日期<strong>全部不可用</strong>，本报告不填补、不臆造任何数值。</li>
+<li>可用的全球新闻却给出了非常清晰的宏观画像：<strong>长端利率飙升 + 通胀担忧重燃 + 美联储官员集体鹰派 + AI 交易出现&quot;摇摆&quot;</strong>。</li>
+<li>板块层面存在<strong>一正一负的关键信号</strong>：三星发布创纪录的盈利指引（存储上行周期确认，利好晶圆制造设备 WFE 需求），但<strong>芯片股在该利好下反而下跌</strong>（利好出尽/资金轮动至银行股）。</li>
+<li>结论：AMAT 处于&quot;<strong>产业周期向上、估值久期受压制</strong>&quot;的夹缝中，在缺乏个股催化且宏观利率环境不利的窗口内，<strong>风险收益比不对称，倾向观望</strong>。</li>
+</ul>
+<hr />
+<h5>二、数据可用性与局限（必须先声明）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>数据源</th>
+<th>请求内容</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_news</code></td>
+<td>AMAT，2026-10-06→10-13（及扩大至 09-15）</td>
+<td><strong>不可用</strong>：新闻源仅返回近期文章样本，未返回 AMAT 条目（非&quot;确认无新闻&quot;）</td>
+</tr>
+<tr>
+<td><code>get_macro_indicators</code></td>
+<td>cpi / fed_funds_rate / 10y_treasury / unemployment / yield_curve</td>
+<td><strong>不可用</strong>：FRED_API_KEY 未配置，工具明确要求不得编造数值</td>
+</tr>
+<tr>
+<td><code>get_prediction_markets</code></td>
+<td>Fed rate cut 2026 / recession 2026 / 半导体关税 / 美国中期选举</td>
+<td><strong>被 withhold</strong>：Polymarket 仅提供实时开市赔率，无历史快照</td>
+</tr>
+<tr>
+<td><code>get_global_news</code></td>
+<td>2026-09-29→10-13，50 篇</td>
+<td><strong>可用</strong>（本报告主要证据来源）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>操作含义</strong>：本报告的置信度集中在<strong>宏观与板块层面</strong>，AMAT 个股层面的结论为<strong>推断性质</strong>，需要后续（个股新闻与宏观数据恢复后）复核。任何仓位决策应据此下调规模或分步建仓。</p>
+<hr />
+<h5>三、AMAT 公司层面：信息真空期</h5>
+<ul>
+<li>检索窗口内<strong>无 AMAT 相关报道</strong>。从日历规律推断，此时点处于 AMAT 财年第四季度（截至 10 月下旬）的<strong>业绩静默期前后</strong>，公司通常于 11 月中旬发布 FQ4 财报 —— 也就是说，<strong>未来约 4–5 周是财报前的预期交易窗口，个股催化稀缺</strong>。</li>
+<li>在没有公司专属新闻的情况下，AMAT 的短期价格将<strong>几乎完全由&quot;AI 资本开支叙事 + 长端利率 + 芯片板块资金流&quot;三项外生变量驱动</strong>。</li>
+<li><strong>风险提示</strong>：信息真空期个股易被板块 beta 主导（放大同向波动），且在利率高波动环境下，<strong>没有任何公司层面的利好消息来对冲宏观逆风</strong>。</li>
+</ul>
+<hr />
+<h5>四、宏观环境：利率是当前最大的定价变量</h5>
+<p>从可用的全球新闻中提取到的高置信度宏观事实：</p>
+<ol>
+<li><strong>长端利率创本世纪新高区间</strong>
+<ul>
+<li>&quot;10-year Treasury yield hits highest level since 2002 as stocks retreat&quot;</li>
+<li>&quot;30-year Treasury climbs to highest level since 2002&quot;</li>
+<li>&quot;10-year Treasury yield posts biggest monthly gain since 2022&quot;（9 月单月涨幅为 2022 年以来最大）</li>
+</ul>
+</li>
+<li><strong>全球利率同步上行，非美国独有</strong>
+<ul>
+<li>&quot;Bond yields are surging worldwide — and France is on the 'ugly side'&quot;</li>
+<li>含义：这是<strong>全球期限溢价/财政风险重定价</strong>，而非单纯的美国增长故事；对全球资本开支与半导体终端需求都是收紧信号。</li>
+</ul>
+</li>
+<li><strong>资金轮动的临界点被明确标出</strong>
+<ul>
+<li>BofA 调查：&quot;Fund managers won't dump stocks for bonds until yields hit 5.9%&quot;</li>
+<li>含义：市场自我认定的<strong>股票→债券换仓触发点约在 5.9%</strong>。若长端利率继续向其靠拢，将出现系统性的股债再平衡抛压，<strong>高久期成长股（含 AMAT）首当其冲</strong>。</li>
+</ul>
+</li>
+<li><strong>抵押贷款利率逼近三年高位（7.58%），并有&quot;是否见 8%&quot;的讨论</strong>
+<ul>
+<li>含义：住房与消费信贷的紧缩效应仍在累积，压制成品终端需求（对半导体下游的消费电子/汽车需求为滞后负面）。</li>
+</ul>
+</li>
+<li><strong>美联储立场偏鹰，市场讨论的是&quot;加息风险消退&quot;而非&quot;降息&quot;</strong>
+<ul>
+<li>&quot;Chorus of Fed officials warn inflation is still too high, signaling more work to do on interest rates&quot;</li>
+<li>&quot;Dow, S&amp;P 500, Nasdaq rally as Fed rate-hike expectations fade&quot; + &quot;Tech stocks jump after jobs report miss&quot;</li>
+<li><strong>重要解读</strong>：本情境中的政策辩论核心是**&quot;是否还要加息&quot;**，而非降息周期。这对高估值成长股是根本性的估值压制——<strong>折现率高位维持的时间越长，AMAT 这类长久期现金流资产的相对吸引力越低</strong>。</li>
+</ul>
+</li>
+<li><strong>财政可持续性质疑升温</strong>
+<ul>
+<li>&quot;Rising interest rates could trigger a harsh reality for America's ballooning debt pile, Goldman Sachs warns&quot;</li>
+<li>&quot;Rapid bond yield moves have preceded nearly every major financial blowup&quot;（急速的收益率变动几乎先于每一次重大金融事故）</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h5>五、通胀与地缘政治：被低估的尾部风险</h5>
+<ul>
+<li><strong>伊朗战争正在推高通胀</strong>：&quot;The Iran war is driving inflation higher — and it's not just because of oil&quot;（不仅油价，暗示运输、保险、供应链成本扩散）。</li>
+<li><strong>油价处于绝对高位</strong>：新闻显示油价曾在 $103 附近回落（特朗普称中期选举前不会攻击伊朗），此前则是&quot;油价上涨压制科技股&quot;。</li>
+<li><strong>传导到 AMAT</strong>：
+<ul>
+<li>直接：能源/材料成本对设备厂商毛利率影响有限。</li>
+<li>间接且更重要：<strong>高油价→通胀黏性→美联储无法转向→长端利率高企→成长股估值受压</strong>；同时<strong>能源成本上升可能促使晶圆厂客户推迟资本开支</strong>（尽管 AI 相关投资优先级最高，短期最不易被砍）。</li>
+<li>地缘：中东冲突升级可能波及台海/东亚供应链预期，对半导体设备交付与客户信心构成尾部风险。</li>
+</ul>
+</li>
+<li>**中期选举（11 月）**是另一个需要标注的波动事件窗口：政策不确定性（关税、出口管制、对华半导体限制）在选举前后可能重新定价。</li>
+</ul>
+<hr />
+<h5>六、半导体 / AI 板块动态：一正一负</h5>
+<p><strong>利多信号（产业周期）：</strong></p>
+<ul>
+<li><strong>&quot;Chip stocks retreat despite Samsung's record profit guidance&quot;</strong> —— 三星发布<strong>创纪录盈利指引</strong>。作为存储龙头，这强烈指向<strong>内存（尤其 HBM/DRAM）上行周期确认</strong>，而存储资本开支是 WFE（晶圆制造设备）需求最敏感的驱动之一。<strong>AMAT 的存储设备业务是直接受益方。</strong></li>
+<li><strong>&quot;S&amp;P 500, Nasdaq hit record highs as Nvidia, AMD lead tech higher&quot;</strong>、<strong>&quot;Nasdaq, Nvidia post record highs as tech strength outshines bond weakness&quot;</strong> —— AI 主线仍在创高，说明 AI 资本开支叙事未被推翻。</li>
+<li><strong>&quot;Tech rebounds as AI trade jitters ease&quot;</strong> —— AI 交易出现&quot;摇摆（jitters）&quot;后修复，表明市场对 AI 主题的信念是<strong>脆弱的、情绪化的</strong>，而非单向。</li>
+</ul>
+<p><strong>利空信号（资金流与情绪）：</strong></p>
+<ul>
+<li><strong>利好出尽</strong>：三星创纪录指引下芯片股<strong>仍下跌</strong>，是典型的&quot;好消息不涨=卖压占优&quot;信号。</li>
+<li><strong>&quot;Bank stocks rise on JPMorgan, Goldman earnings as chip stocks fall&quot;</strong> —— 资金明确<strong>从芯片轮动至金融</strong>（价值/短久期替代长久期成长），这是利率上行周期的经典特征，对 AMAT 不利。</li>
+<li><strong>&quot;Tech slumps as oil prices rise&quot;</strong> —— 科技股对油价/通胀数据高度敏感，风险敞口放大。</li>
+<li><strong>&quot;Bubble-like stock valuations and debt crisis chatter aren't exactly bullish&quot;</strong>、<strong>BlackRock 转为更看空股票</strong>、<strong>&quot;Why this chart making the rounds on X is a bad omen for stocks&quot;</strong> —— 机构情绪转向谨慎，估值泡沫论调扩散。</li>
+<li><strong>&quot;Bitcoin falls below $83,000&quot;</strong> 拖累 Strategy/Coinbase/Robinhood —— <strong>高 beta 风险资产同步走弱</strong>，是整体风险偏好收缩的旁证。</li>
+</ul>
+<hr />
+<h5>七、对 AMAT 的传导路径与交易含义</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>传导链</th>
+<th>方向</th>
+<th>力度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>三星创纪录指引 → 存储资本开支上行 → WFE 需求</td>
+<td><strong>利好</strong></td>
+<td>中高</td>
+<td>AMAT 存储设备（沉积/刻蚀/离子注入）直接受益，是最强的单一基本面信号</td>
+</tr>
+<tr>
+<td>长端利率创 2002 年以来新高 → 折现率上升</td>
+<td><strong>利空</strong></td>
+<td>高</td>
+<td>压制高久期成长股估值，是当前最大定价变量</td>
+</tr>
+<tr>
+<td>美联储偏鹰（讨论&quot;是否加息&quot;） → 政策转向预期落空</td>
+<td><strong>利空</strong></td>
+<td>高</td>
+<td>利率高位维持 → 估值中枢下移</td>
+</tr>
+<tr>
+<td>资金从芯片轮动至银行/价值</td>
+<td><strong>利空</strong></td>
+<td>中</td>
+<td>板块 beta 逆风，AMAT 无量价催化对冲</td>
+</tr>
+<tr>
+<td>油价/伊朗战争 → 通胀黏性 → 利率难降</td>
+<td><strong>利空</strong></td>
+<td>中</td>
+<td>间接压制客户资本开支与终端需求</td>
+</tr>
+<tr>
+<td>油价/地缘 → 晶圆厂客户推迟非 AI 资本开支</td>
+<td><strong>利空（尾部）</strong></td>
+<td>中低</td>
+<td>AI 相关投入优先级最高，短期韧性较强</td>
+</tr>
+<tr>
+<td>BofA 5.9% 股债换仓阈值逼近</td>
+<td><strong>利空（条件性）</strong></td>
+<td>高（若触发）</td>
+<td>一旦触及，系统性抛压波及全市场成长股</td>
+</tr>
+<tr>
+<td>AI 主线仍创新高（Nvidia/AMD）</td>
+<td><strong>利好</strong></td>
+<td>中</td>
+<td>支撑长期逻辑，但不代表短期资金流</td>
+</tr>
+<tr>
+<td>AMAT 个股信息真空（财报前静默）</td>
+<td><strong>中性偏空</strong></td>
+<td>中</td>
+<td>缺乏公司利好对冲宏观逆风，易被 beta 主导放大波动</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>净判断：产业周期（存储上行）的正面力量与金融条件（利率/鹰派）的负面力量方向相反，但当前</strong>短期主导变量是利率与资金流**，因此短期风险偏下行/震荡；中期若利率见顶，AMAT 的存储周期弹性具备较高不对称上行空间。</p>
+<hr />
+<h5>八、关键监测清单与催化剂</h5>
+<ol>
+<li><strong>长端利率是否逼近 5.9%</strong>（BofA 标出的股债换仓阈值）—— 决定性变量。</li>
+<li><strong>10 年期 / 30 年期收益率是否延续&quot;2002 年以来新高&quot;趋势</strong>，以及是否出现&quot;急速变动&quot;（新闻已警示其为金融事故前兆）。</li>
+<li><strong>美联储官员讲话基调</strong> —— 是继续&quot;通胀仍太高&quot;的鹰派合唱，还是出现转向信号。</li>
+<li><strong>油价与伊朗局势</strong>（选举前是否升级），直接影响通胀路径与美联储空间。</li>
+<li><strong>内存/存储价格与三星、SK 海力士资本开支指引</strong> —— WFE 需求的领先指标，直接决定 AMAT 的中期上行空间。</li>
+<li><strong>AI 资本开支新闻流（Nvidia/AMD/超大规模云厂商指引）</strong> —— &quot;AI trade jitters&quot;是修复还是再度恶化。</li>
+<li><strong>11 月美国中期选举</strong> —— 关税与对华半导体出口管制政策的重新定价风险。</li>
+<li><strong>AMAT 自身 FQ4 财报（预计 11 月中旬）</strong> —— 静默期结束后最大的公司层面催化剂，需重点关注订单/backlog 与存储端指引。</li>
+</ol>
+<hr />
+<h5>九、关键信息汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>关键事实/信号</th>
+<th>方向（对 AMAT）</th>
+<th>来源/证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>个股新闻</td>
+<td>检索窗口内<strong>无 AMAT 专属新闻</strong>（非确认无新闻）</td>
+<td>中性（增大 beta 暴露）</td>
+<td><code>get_news</code> 返回&quot;仅样本&quot;</td>
+</tr>
+<tr>
+<td>产业（利好）</td>
+<td>三星发布<strong>创纪录盈利指引</strong>，指向存储上行周期</td>
+<td><strong>正面</strong></td>
+<td>&quot;Chip stocks retreat despite Samsung's record profit guidance&quot;</td>
+</tr>
+<tr>
+<td>产业（利空）</td>
+<td>三星利好下<strong>芯片股仍下跌</strong>（利好出尽）</td>
+<td>负面</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>资金流</td>
+<td>资金<strong>从芯片轮动至银行</strong>（JPM/GS 财报驱动）</td>
+<td>负面</td>
+<td>&quot;Bank stocks rise on JPMorgan, Goldman earnings as chip stocks fall&quot;</td>
+</tr>
+<tr>
+<td>利率</td>
+<td><strong>10Y 与 30Y 国债收益率创 2002 年以来最高</strong>；10Y 9 月涨幅为 2022 年以来最大</td>
+<td><strong>强负面</strong></td>
+<td>多条 AlphaCheck/Chart of the Day</td>
+</tr>
+<tr>
+<td>全球利率</td>
+<td>全球债券收益率飙升，法国&quot;难看的一侧&quot;</td>
+<td>负面</td>
+<td>&quot;Bond yields are surging worldwide&quot;</td>
+</tr>
+<tr>
+<td>股债阈值</td>
+<td>BofA 调查：收益率达 <strong>5.9%</strong> 前基金经理不弃股转债</td>
+<td>条件是负</td>
+<td>&quot;Fund managers won't dump stocks for bonds until yields hit 5.9%&quot;</td>
+</tr>
+<tr>
+<td>货币政策</td>
+<td>美联储官员<strong>集体警示通胀仍过高</strong>；市场讨论的是&quot;加息风险消退&quot;而非降息</td>
+<td><strong>强负面</strong></td>
+<td>&quot;Chorus of Fed officials warn inflation is still too high&quot;</td>
+</tr>
+<tr>
+<td>通胀/地缘</td>
+<td><strong>伊朗战争推高通胀</strong>（不止油价）；油价曾在 $103</td>
+<td>负面（间接）</td>
+<td>&quot;The Iran war is driving inflation higher&quot;</td>
+</tr>
+<tr>
+<td>消费者</td>
+<td>抵押贷款利率 <strong>7.58%</strong>，逼近三年高位，讨论&quot;是否见 8%&quot;</td>
+<td>负面（终端需求）</td>
+<td>&quot;Mortgage rates hit 7.58%&quot; / &quot;Is 8% next?&quot;</td>
+</tr>
+<tr>
+<td>市场情绪</td>
+<td>BlackRock 转谨慎；&quot;泡沫化估值&quot;与&quot;债务危机&quot;论调升温</td>
+<td>负面</td>
+<td>&quot;Why BlackRock is suddenly more bearish&quot;</td>
+</tr>
+<tr>
+<td>风险偏好</td>
+<td>比特币跌破 <strong>$83,000</strong>，拖累加密相关股</td>
+<td>负面（beta 收缩）</td>
+<td>&quot;Bitcoin falls below $83,000&quot;</td>
+</tr>
+<tr>
+<td>AI 主线</td>
+<td>Nvidia/AMD 推动纳指创纪录新高；&quot;AI trade jitters ease&quot;</td>
+<td>正面（长期）</td>
+<td>&quot;S&amp;P 500, Nasdaq hit record highs&quot;</td>
+</tr>
+<tr>
+<td>财政风险</td>
+<td>高盛警示利率上升对美国债务的&quot;严峻现实&quot;；急速利率变动常先于金融事故</td>
+<td>负面（尾部）</td>
+<td>Goldman 警示 / &quot;Rapid bond yield moves&quot;</td>
+</tr>
+<tr>
+<td>宏观数据</td>
+<td>CPI/核心 PCE/失业率/联邦基金利率/收益率曲线<strong>全部不可用</strong></td>
+<td>数据缺口</td>
+<td>FRED_API_KEY 未配置</td>
+</tr>
+<tr>
+<td>预测市场</td>
+<td>Fed 降息/衰退/关税/选举赔率<strong>全部被 withhold</strong></td>
+<td>数据缺口</td>
+<td>Polymarket 无历史快照</td>
+</tr>
+<tr>
+<td>事件日历</td>
+<td>中期选举（11 月）、AMAT FQ4 财报（预计 11 月中旬）</td>
+<td>波动事件</td>
+<td>日历推断</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h5>十、结论与建议</h5>
+<p><strong>结论</strong>：AMAT 当前处于**&quot;产业周期向上（存储/三星创纪录指引）&quot;与&quot;金融条件向下（利率创 2002 年以来新高、美联储鹰派、资金撤离芯片板块）&quot;的对撞点**。在<strong>个股新闻完全缺失</strong>、<strong>宏观数据与预测市场均不可用</strong>的约束下，<strong>无法建立高置信度的看多依据</strong>；而短期主导定价的利率与资金流变量均指向不利方向。风险收益比在财报前的静默期内偏不利，最佳策略是<strong>保持观望、等待利率见顶信号或公司层面催化（FQ4 财报）确认</strong>，而非在信息真空期中抢跑。</p>
+<p><strong>操作纪律要点</strong>：</p>
+<ol>
+<li>若<strong>长端利率继续新高并逼近 5.9%</strong>，应视为减持成长股的系统性信号，AMAT 不应逆势加仓。</li>
+<li>若<strong>出现&quot;急速收益率变动&quot;</strong>（新闻已警示其为金融事故前兆），应优先控制总仓位风险敞口。</li>
+<li>中期看多逻辑应<strong>锚定存储资本开支与 AI capex 的实际订单数据</strong>，而非板块情绪；等<strong>财报/backlog</strong>确认再评估加仓。</li>
+<li>在个股与宏观数据源恢复后，<strong>必须对本报告的推断做一次复核</strong>，尤其需验证 AMAT 是否存在未检索到的公司特定事件（大客户订单、出口管制、指引调整）。</li>
+</ol>
+<hr />
+<p><strong>Rating</strong>: HOLD</p>
+<p><strong>FINAL TRANSACTION PROPOSAL</strong>: HOLD</p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>Applied Materials (AMAT) 基本面综合研究报告</h4>
+<p><strong>数据时点（point-in-time）：2026-10-13</strong></p>
+<hr />
+<h5>一、数据可用性与口径说明（务必先读）</h5>
+<p>在解读本报告前，需明确本次工具返回的数据边界：</p>
+<ol>
+<li><strong>财报数据</strong>：来自 SEC EDGAR，仅包含 <strong>在 2026-10-13 或之前已申报</strong> 的报表数据。最近可获得季度为 <strong>FY2026 Q3（截至 2026-07-26）</strong>，该季财报大约于 2026 年 8 月中旬披露。</li>
+<li><strong>未提供的数据</strong>：本次调用中，<strong>公司简介字段、市值、估值倍数、52 周区间、TTM 口径数据全部被供应商保留（withheld）</strong>，理由是供应商仅存&quot;当日快照&quot;值、无历史 vintage，直接引用会把决策后的信息注入 2026-10-13 的分析。<strong>因此本报告不包含 PE/PB/PS 等估值判断。</strong></li>
+<li><strong>内部人交易</strong>：同样被保留，供应商无法确定哪些交易在 2026-10-13 已公开。</li>
+<li><strong>报表口径瑕疵</strong>：利润表<strong>缺失 2024-10-27 与 2025-10-26 两个 10 月末财季</strong>；现金流量表仅提供<strong>财年年初至今累计值</strong>（3/6/9 个月），故无法直接读取单季现金流。</li>
+</ol>
+<blockquote>
+<p><strong>结论：本报告的判断建立在&quot;营收/利润/资产/现金流&quot;的真实申报数据之上，但</strong>缺失估值锚**，交易决策需自行补足价格与估值维度。</p>
+</blockquote>
+<hr />
+<h5>二、公司简介（定性）</h5>
+<p>Applied Materials, Inc.（AMAT）是全球规模最大的**半导体晶圆制造设备（WFE）**供应商，产品线覆盖薄膜沉积（CVD/PVD/ALD）、刻蚀、离子注入、CMP、量测检测、先进封装及显示面板设备。业务分部通常包括：<strong>半导体系统（Semiconductor Systems）、全球服务（AGS）、显示及相关市场</strong>。</p>
+<p>终端需求结构横跨<strong>逻辑代工、DRAM/NAND 存储、先进封装（含 AI/HBM）与显示面板</strong>。行业属性为<strong>强周期</strong>，公司收入与全球晶圆厂资本开支（WFE 支出）高度同步——这也正是后文营收急剧波动、以及在 FY2026 出现加速的根本原因。</p>
+<p>（注：上述为定性描述；本次供应商未返回经核验的 profile 字段。）</p>
+<hr />
+<h5>三、收入与盈利能力分析</h5>
+<h6>3.1 近 9 个季度核心损益（单位：百万美元）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>财季（期末）</th>
+<th>营收</th>
+<th>环比</th>
+<th>同比</th>
+<th>毛利</th>
+<th>毛利率</th>
+<th>营业利润</th>
+<th>营业利润率</th>
+<th>净利润</th>
+<th>净利率</th>
+<th>摊薄EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY24 Q1 (2024-01-28)</td>
+<td>6,707</td>
+<td>—</td>
+<td>—</td>
+<td>3,204</td>
+<td>47.8%</td>
+<td>1,942</td>
+<td>29.0%</td>
+<td>2,019</td>
+<td>30.1%</td>
+<td>2.41</td>
+</tr>
+<tr>
+<td>FY24 Q2 (2024-04-28)</td>
+<td>6,646</td>
+<td>-0.9%</td>
+<td>—</td>
+<td>3,153</td>
+<td>47.4%</td>
+<td>1,912</td>
+<td>28.8%</td>
+<td>1,722</td>
+<td>25.9%</td>
+<td>2.06</td>
+</tr>
+<tr>
+<td>FY24 Q3 (2024-07-28)</td>
+<td>6,778</td>
+<td>+2.0%</td>
+<td>—</td>
+<td>3,205</td>
+<td>47.3%</td>
+<td>1,942</td>
+<td>28.7%</td>
+<td>1,705</td>
+<td>25.2%</td>
+<td>2.05</td>
+</tr>
+<tr>
+<td>FY25 Q1 (2025-01-26)</td>
+<td>7,166</td>
+<td>+5.7%</td>
+<td>+6.8%</td>
+<td>3,496</td>
+<td>48.8%</td>
+<td>2,175</td>
+<td>30.4%</td>
+<td>1,185</td>
+<td>16.5%</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>FY25 Q2 (2025-04-27)</td>
+<td>7,100</td>
+<td>-0.9%</td>
+<td>+6.8%</td>
+<td>3,485</td>
+<td>49.1%</td>
+<td>2,169</td>
+<td>30.5%</td>
+<td>2,137</td>
+<td>30.1%</td>
+<td>2.63</td>
+</tr>
+<tr>
+<td>FY25 Q3 (2025-07-27)</td>
+<td>7,302</td>
+<td>+2.8%</td>
+<td>+7.7%</td>
+<td>3,562</td>
+<td>48.8%</td>
+<td>2,233</td>
+<td>30.6%</td>
+<td>1,779</td>
+<td>24.4%</td>
+<td>2.22</td>
+</tr>
+<tr>
+<td><strong>FY26 Q1 (2026-01-25)</strong></td>
+<td><strong>7,012</strong></td>
+<td>-4.0%</td>
+<td><strong>-2.1%</strong></td>
+<td>3,435</td>
+<td>49.0%</td>
+<td>1,831</td>
+<td>26.1%</td>
+<td>2,026</td>
+<td>28.9%</td>
+<td>2.54</td>
+</tr>
+<tr>
+<td><strong>FY26 Q2 (2026-04-26)</strong></td>
+<td><strong>7,910</strong></td>
+<td><strong>+12.8%</strong></td>
+<td><strong>+11.4%</strong></td>
+<td>3,947</td>
+<td>49.9%</td>
+<td>2,523</td>
+<td>31.9%</td>
+<td>2,806</td>
+<td>35.5%</td>
+<td>3.51</td>
+</tr>
+<tr>
+<td><strong>FY26 Q3 (2026-07-26)</strong></td>
+<td><strong>9,115</strong></td>
+<td><strong>+15.2%</strong></td>
+<td><strong>+24.8%</strong></td>
+<td>4,586</td>
+<td><strong>50.3%</strong></td>
+<td>3,075</td>
+<td><strong>33.7%</strong></td>
+<td>2,538</td>
+<td>27.8%</td>
+<td>3.17</td>
+</tr>
+</tbody>
+</table></div>
+<h6>3.2 关键发现</h6>
+<p><strong>（1）营收出现明确的&quot;拐点式加速&quot;。</strong></p>
+<ul>
+<li>FY25 Q1–Q3 同比增速仅 +6.8% / +6.8% / +7.7%，且 FY26 Q1 同比转负（-2.1%），呈&quot;温和复苏但停滞&quot;。</li>
+<li>但自 FY26 Q2 起急转向上：<strong>FY26 Q2 同比 +11.4%、环比 +12.8%；FY26 Q3 同比 +24.8%、环比 +15.2%</strong>。</li>
+<li>FY26 Q3 单季营收 <strong>9,115</strong> 创下数据序列中的<strong>历史最高单季</strong>（对比 FY22 峰值季约 6,700 量级），暗示本轮由 AI/先进封装/存储驱动的晶圆厂资本开支在上行。</li>
+</ul>
+<p><strong>（2）毛利率持续、稳定抬升——产品结构改善的硬证据。</strong></p>
+<ul>
+<li>毛利率从 FY24 的 <strong>47.3–47.8%</strong> → FY25 的 <strong>48.8–49.1%</strong> → FY26 Q3 的 <strong>50.3%</strong>，连续台阶式上行。</li>
+<li>在营收环比 +15.2% 的规模下毛利率仍能扩张，说明<strong>不是靠降价换量</strong>，而是高价值产品/服务组合（先进节点、HBM 相关封装、AGS 服务收入）占比提升，具备较强经营杠杆。</li>
+</ul>
+<p><strong>（3）营业利润率创新高，但需注意费用节奏。</strong></p>
+<ul>
+<li>FY26 Q1 营业利润率骤降至 <strong>26.1%</strong>（营收下滑 4% 但费用刚性），随后迅速修复至 FY26 Q2 的 31.9%、<strong>FY26 Q3 的 33.7%（序列新高）</strong>。</li>
+<li>这印证了<strong>高经营杠杆</strong>特性：收入一旦放量，利润弹性极大。</li>
+</ul>
+<p><strong>（4）⚠️ 盈利质量警示：多个季度&quot;净利润 &gt; 营业利润&quot;。</strong></p>
+<ul>
+<li>FY26 Q1：净利 2,026 &gt; 营业利润 1,831（差额 +195）</li>
+<li>FY26 Q2：净利 2,806 &gt; 营业利润 2,523（差额 <strong>+283</strong>）</li>
+<li>对比 FY26 Q3：净利 2,538 &lt; 营业利润 3,075（差额 -537，符合正常税收/利息结构）</li>
+<li><strong>结论</strong>：FY26 Q1、Q2 的净利被<strong>营业外收益（如股权投资/权益法收益、一次性收益）或异常低的税负</strong>所抬高，导致这两个季度的净利率（28.9%、35.5%）<strong>高于营业利润率</strong>，属于<strong>非经常性/低质量成分</strong>。FY26 Q3 反而是结构性最&quot;干净&quot;的一季。<strong>投资者不应简单用 Q2 的 35.5% 净利率外推。</strong></li>
+</ul>
+<hr />
+<h5>四、资产负债表分析</h5>
+<h6>4.1 关键项目（单位：百万美元）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>财季（期末）</th>
+<th>总资产</th>
+<th>流动资产</th>
+<th>现金及等价物</th>
+<th>总负债</th>
+<th>流动负债</th>
+<th>股东权益</th>
+<th>流动比率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY25 Q1 (2025-01-26)</td>
+<td>33,338</td>
+<td>20,694</td>
+<td>6,264</td>
+<td>14,713</td>
+<td>7,736</td>
+<td>18,625</td>
+<td>2.68</td>
+</tr>
+<tr>
+<td>FY25 Q2 (2025-04-27)</td>
+<td>33,632</td>
+<td>19,708</td>
+<td>6,169</td>
+<td>14,671</td>
+<td>7,999</td>
+<td>18,961</td>
+<td>2.46</td>
+</tr>
+<tr>
+<td>FY25 Q3 (2025-07-27)</td>
+<td>34,211</td>
+<td>21,220</td>
+<td>5,384</td>
+<td>14,707</td>
+<td>7,883</td>
+<td>19,504</td>
+<td>2.69</td>
+</tr>
+<tr>
+<td>FY25 Q4 (2025-10-26)</td>
+<td>36,299</td>
+<td>21,049</td>
+<td>7,241</td>
+<td>15,884</td>
+<td>7,753</td>
+<td>20,415</td>
+<td>2.71</td>
+</tr>
+<tr>
+<td>FY26 Q1 (2026-01-25)</td>
+<td>37,644</td>
+<td>20,881</td>
+<td>7,218</td>
+<td>15,927</td>
+<td>8,468</td>
+<td>21,717</td>
+<td>2.47</td>
+</tr>
+<tr>
+<td>FY26 Q2 (2026-04-26)</td>
+<td>40,286</td>
+<td>22,571</td>
+<td>6,301</td>
+<td>16,377</td>
+<td>8,998</td>
+<td>23,909</td>
+<td>2.51</td>
+</tr>
+<tr>
+<td><strong>FY26 Q3 (2026-07-26)</strong></td>
+<td><strong>43,522</strong></td>
+<td><strong>25,095</strong></td>
+<td><strong>7,037</strong></td>
+<td><strong>17,896</strong></td>
+<td><strong>10,357</strong></td>
+<td><strong>25,626</strong></td>
+<td><strong>2.42</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>（会计恒等式校验：17,896 + 25,626 = 43,522 ✓）</p>
+<h6>4.2 关键发现</h6>
+<ul>
+<li><strong>资产负债表稳健且持续扩张</strong>：总资产同比（2025-07-27 → 2026-07-26）+27.2%（34,211 → 43,522）。</li>
+<li><strong>股东权益强劲累积</strong>：19,504 → 25,626，<strong>同比 +31.4%</strong>。注意这是在<strong>同时进行回购与分红</strong>（见现金流&quot;筹资活动&quot;）的情况下实现的，说明<strong>内生盈利留存远超股东回报支出</strong>。以约 8.0 亿股计，每股账面价值约 <strong>$32</strong>。</li>
+<li><strong>流动性充裕</strong>：流动比率 <strong>2.42</strong>，现金 7,037 vs 流动负债 10,357，短期偿付压力小；总负债 17,896（含递延收入、应付账款等经营性负债），整体杠杆温和。</li>
+<li><strong>营运资本占用上升</strong>：流动负债从 7,753（FY25 Q4）升至 10,357（FY26 Q3），应付/递延项目随订单放量增长，与营收加速一致（预收/递延收入通常是领先指标，值得在下一份 10-K 中重点核查 backlog 与 deferred revenue 明细）。</li>
+</ul>
+<hr />
+<h5>五、现金流分析（年初至今累计口径）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>累计区间</th>
+<th>经营活动现金流</th>
+<th>资本开支</th>
+<th>自由现金流(FCF)</th>
+<th>投资活动</th>
+<th>筹资活动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY24 前 9 个月（至 2024-07-28）</td>
+<td>6,102</td>
+<td>783</td>
+<td><strong>5,319</strong></td>
+<td>-1,256</td>
+<td>-2,701</td>
+</tr>
+<tr>
+<td>FY25 前 9 个月（至 2025-07-27）</td>
+<td>5,130</td>
+<td>1,475</td>
+<td><strong>3,655</strong></td>
+<td>-2,643</td>
+<td>-5,146</td>
+</tr>
+<tr>
+<td><strong>FY26 前 9 个月（至 2026-07-26）</strong></td>
+<td><strong>5,568</strong></td>
+<td><strong>1,988</strong></td>
+<td><strong>3,580</strong></td>
+<td>-3,152</td>
+<td>-2,634</td>
+</tr>
+</tbody>
+</table></div>
+<h6>关键发现</h6>
+<ul>
+<li><strong>经营现金流回升</strong>：FY26 前 9 个月 5,568，同比 <strong>+8.5%</strong>（vs FY25 前 9 个月 5,130），但仍低于 FY24 同期的 6,102——<strong>利润大增而 OCF 未同步跟涨，说明营运资本（存货/应收）占用了大量现金</strong>，这是订单爆发期的典型特征，需在后续季度观察回款。</li>
+<li><strong>资本开支激增</strong>：FY26 前 9 个月 1,988，同比 <strong>+34.8%</strong>（1,475），且相对 FY24 同期的 783 <strong>翻倍以上</strong>。公司正在为需求上行扩张产能——<strong>利好长期供给能力，但短期压制 FCF</strong>。</li>
+<li><strong>自由现金流被摊薄</strong>：FY26 前 9 个月 FCF 3,580，<strong>同比基本持平（-2.1%）</strong>，尽管盈利和毛利率大幅改善。<strong>这是本报告最重要的&quot;基本面背离&quot;信号</strong>：盈利端加速，但现金流端因 capex 与营运资本而滞后。FCF 转化率（FCF/净利）由 FY25 的高位下滑。</li>
+<li><strong>筹资活动</strong>：FY26 前 9 个月净流出 2,634（含回购+分红），较 FY25 同期的 5,146 大幅收窄，意味着<strong>股东回报强度下降</strong>，可能将现金转向资本开支与并购。</li>
+</ul>
+<hr />
+<h5>六、内部人交易</h5>
+<p><strong>本次调用中内部人交易数据被供应商保留（withheld）</strong>，原因是该供应商以&quot;交易发生时间&quot;而非&quot;披露日期&quot;标注数据，无法确定哪些交易在 2026-10-13 已公开。<strong>因此无法对管理层/董事的近期买卖行为作出判断</strong>，这是本报告的一个盲点。建议通过 Form 4 原始申报另行核查。</p>
+<hr />
+<h5>七、风险与催化剂</h5>
+<h6>催化剂（偏多）</h6>
+<ol>
+<li><strong>营收加速已被证实</strong>：FY26 Q2/Q3 连续两个季度环比 12.8% / 15.2%，同比由负转正到 +24.8%，动能明确。</li>
+<li><strong>毛利率突破 50%</strong>，经营利润率创 33.7% 新高，经营杠杆在放量阶段将放大 EPS 弹性。</li>
+<li><strong>资产负债表&quot;弹药充足&quot;</strong>：现金 7,037、流动比率 2.42、权益增长 31%，有能力继续 capex、并购与回购。</li>
+<li><strong>临近财报催化</strong>：<strong>FY2026 全年及 Q4（截至约 2026-10-25）业绩预计于 2026 年 11 月中旬披露</strong>，市场将检验 Q3 的加速是否延续。这是未来一个月内最关键的事件。</li>
+</ol>
+<h6>风险（偏空）</h6>
+<ol>
+<li><strong>⚠️ 估值维度完全缺失</strong>：本报告无法回答&quot;当前价格是否已反映 AI/WFE 上行&quot;。周期股在加速期往往已被大幅透支，需自行补齐 PE/EV-EBITDA 与历史分位。</li>
+<li><strong>盈利质量瑕疵</strong>：FY26 Q1/Q2 净利含营业外/低税负成分（净利 &gt; 营业利润），Q2 的 35.5% 净利率<strong>不可外推</strong>。</li>
+<li><strong>FCF 未同步</strong>：OCF 仅 +8.5% 而 capex +34.8%，营运资本占用上升，FCF 同比持平——<strong>&quot;利润好≠现金好&quot;</strong>，需观察 Q4 回款与存货周转。</li>
+<li><strong>强周期本质</strong>：一旦 WFE 资本开支见顶或存储/逻辑客户推迟拉货，营收环比可能迅速转负（参考 FY26 Q1 环比 -4.0%、营业利润率骤降至 26.1% 的前例）。</li>
+<li><strong>数据缺口</strong>：缺失 10 月末财季（Q4）历史列，无法直接核算完整财年与 TTM，交叉验证受限。</li>
+</ol>
+<hr />
+<h5>八、结论与交易含义</h5>
+<p>AMAT 在数据可见的范围内呈现**&quot;周期上行 + 结构改善&quot;**的双重信号：营收连续两季大幅环比加速、毛利率突破 50%、营业利润率创 33.7% 新高，资产负债表与流动性堪称堡垒。<strong>方向上明确偏多。</strong></p>
+<p>但必须同时承认两个约束：（1）<strong>估值锚缺失</strong>，无法判断安全边际；（2）<strong>盈利质量与现金流转化存在瑕疵</strong>（营业外收益抬高净利、FCF 被 capex 与营运资本吞噬）。</p>
+<p>因此，<strong>在缺少估值数据的前提下</strong>，本报告主张基于<strong>基本面动能</strong>给予建设性偏多评级，但建议：</p>
+<ul>
+<li><strong>仓位控制</strong>：在 11 月中旬 FY26 Q4 财报前不宜过度集中，等待增速与 FCF 的双重确认。</li>
+<li><strong>确认信号</strong>：Q4 营收是否维持 9,000+ 量级、毛利率是否站稳 50% 以上、OCF 是否跟上、以及 backlog/递延收入趋势。</li>
+<li><strong>证伪信号</strong>：单季营收环比转负、毛利率回落、或营运资本继续恶化而 OCF 不改善。</li>
+</ul>
+<p><strong>Rating</strong>: Buy</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<hr />
+<h5>附录：关键要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>关键数据 / 事实</th>
+<th>方向</th>
+<th>交易含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最近财季</td>
+<td>FY26 Q3（截至 2026-07-26），约 2026-08 中披露</td>
+<td>—</td>
+<td>数据截至 2026-10-13 已公开</td>
+</tr>
+<tr>
+<td>营收</td>
+<td>9,115（单季历史新高）；环比 +15.2%、同比 +24.8%</td>
+<td>强多</td>
+<td>加速上行，动能确认</td>
+</tr>
+<tr>
+<td>营收趋势</td>
+<td>FY26 Q1 7,012 → Q2 7,910 → Q3 9,115</td>
+<td>强多</td>
+<td>拐点式加速</td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>50.3%（首次突破 50%），FY24 仅 47.3–47.8%</td>
+<td>多</td>
+<td>结构性改善，非降价换量</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>33.7%（序列新高）；FY26 Q1 曾降至 26.1%</td>
+<td>多</td>
+<td>高经营杠杆，放量放大器</td>
+</tr>
+<tr>
+<td>净利率</td>
+<td>FY26 Q3 27.8%；但 Q2 35.5%、Q1 28.9% 含营业外收益</td>
+<td>中性偏警</td>
+<td>净利&gt;营业利润，质量存瑕疵，勿外推</td>
+</tr>
+<tr>
+<td>摊薄EPS</td>
+<td>FY26 Q3 3.17；Q2 3.51（受非经收益抬高）</td>
+<td>多（谨慎）</td>
+<td>需剔除一次性因素</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>25,626，同比 +31.4%；每股账面≈$32</td>
+<td>多</td>
+<td>内生留存强劲</td>
+</tr>
+<tr>
+<td>总资产</td>
+<td>43,522，同比 +27.2%</td>
+<td>多</td>
+<td>规模扩张</td>
+</tr>
+<tr>
+<td>流动性</td>
+<td>流动比率 2.42；现金 7,037</td>
+<td>多</td>
+<td>短期偿付无虞</td>
+</tr>
+<tr>
+<td>经营现金流（9M）</td>
+<td>5,568，同比 +8.5%</td>
+<td>中性</td>
+<td>增速远低于利润</td>
+</tr>
+<tr>
+<td>资本开支（9M）</td>
+<td>1,988，同比 +34.8%</td>
+<td>中性偏警</td>
+<td>扩产激进，压制短期FCF</td>
+</tr>
+<tr>
+<td>自由现金流（9M）</td>
+<td>3,580，同比 -2.1%</td>
+<td>警</td>
+<td>利润与现金流背离</td>
+</tr>
+<tr>
+<td>筹资活动（9M）</td>
+<td>-2,634（回购+分红，较 FY25 减半）</td>
+<td>中性</td>
+<td>现金转向 capex</td>
+</tr>
+<tr>
+<td>估值（PE/PB/市值）</td>
+<td><strong>未提供（供应商保留）</strong></td>
+<td>未知</td>
+<td>无法判断安全边际</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td><strong>未提供（供应商保留）</strong></td>
+<td>未知</td>
+<td>盲点，需查 Form 4</td>
+</tr>
+<tr>
+<td>近期催化剂</td>
+<td>FY26 Q4/全年财报，预计 2026-11 中旬</td>
+<td>事件</td>
+<td>一个月内最大变量</td>
+</tr>
+<tr>
+<td>核心风险</td>
+<td>强周期、FCF未跟上、估值未知、盈利质量</td>
+<td>—</td>
+<td>控制仓位，等待确认</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: 空头还没开口，我就知道他会说什么：技术破位、MACD死叉、放量大阴线、投资者早餐会没给WFE指引、利率创2002年以来新高。问题是，这些大多是短期噪音，而AMAT的基本面正在加速。我的结论很直接：<strong>AMAT不是该防守，而是该在恐慌里分批买入。</strong></p>
+<p>先看增长。AMAT的FY26 Q3营收达到9,115百万美元，创单季历史新高，环比+15.2%、同比+24.8%。而FY26 Q2已经环比+12.8%、同比+11.4%。要知道FY26 Q1营收还是同比-2.1%，随后两个季度直接拐点式加速。这不是“弱复苏”，这是订单周期向上。毛利率同步从FY24的47%区间升到FY26 Q3的50.3%，营业利润率冲到33.7%的历史序列新高。毛利率在营收环比+15.2%时还能扩张，说明AMAT不是降价换量，而是产品结构升级——先进逻辑、HBM/先进封装、存储设备和服务业务一起拉动。</p>
+<p>竞争壁垒更不用怀疑。AMAT是全球最大WFE供应商，覆盖沉积、刻蚀、离子注入、CMP、量测检测和先进封装。客户切换成本极高，装机量又带来AGS服务收入，这是典型的“设备一次性销售+服务长期收费”双引擎。三星发布创纪录盈利指引，直接指向存储上行周期，而存储资本开支正是WFE最敏感的驱动之一。空头说芯片股在三星利好下仍下跌，这是“利好出尽”；但在我看来，这只是宏观利率压制下的短期资金轮动，产业数据本身没有恶化。</p>
+<p>再看财务健康。AMAT账上现金7,037百万美元，流动比率2.42，股东权益同比+31.4%，总资产同比+27.2%。前9个月经营现金流5,568百万美元，同比+8.5%；自由现金流3,580百万美元。空头会抓FCF同比-2.1%说事，但同期资本开支1,988百万美元，同比+34.8%。这不是现金流恶化，这是为下一轮需求扩张产能。一家公司敢在周期向上时大幅加码capex，恰恰说明它看到订单能见度。FY26 Q1/Q2净利含营业外收益，确实不够干净，但Q3净利2,538百万美元低于营业利润3,075百万美元，是结构最扎实的一季。核心经营趋势没有瑕疵。</p>
+<p>技术面呢？我承认短线偏空：价格464.24低于50 SMA 488.53、10 EMA 500.78和VWMA 504.93，MACD在10/13死叉，RSI从69.66回落到40.59，放量大阴线。但技术报告自己也说，200 SMA 435.86仍在上行，价格仍高于它，长期牛市结构未破。从10/5的542.28到10/13的464.24，回撤约14.4%，这是上升趋势中的深度回调，不是趋势反转。关键支撑435-440就在下方，若企稳，就是高赔率买点。跌破435.86再止损，损失约6%；上方先看488-490，再看500/564，而Cantor Fitzgerald给AMAT的目标价是850美元，较464.24仍有约83%空间。这个风险收益比，空头怎么解释？</p>
+<p>情绪面更不值得恐慌。情绪报告自己承认：Yahoo和Reddit不可用，StockTwits只有4条消息，置信度Low。拿4条散户噪音给AMAT定方向，本身就不严肃。唯一实质信号是Cantor Fitzgerald重申Overweight、目标价850美元。至于投资者早餐会没给WFE市场预测和总营收指引，这并非意外——AMAT通常按季度给指引，而不是给出全行业WFE总量预测。管理层说CAGR“非常强劲”，而实际Q3营收同比+24.8%比任何口头指引都硬。</p>
+<p>宏观方面，长端利率高企和美联储偏鹰确实是估值逆风，但这是全市场成长股的折现率问题，不是AMAT的盈利问题。AMAT营收加速、毛利率破50%、营业利润率创新高，说明需求足以消化高利率。BofA说的股债换仓阈值是5.9%，目前还没到。AI主线仍在，Nvidia/AMD推动纳指创纪录新高。一旦利率见顶，AMAT作为高久期、高经营杠杆的半导体设备龙头，向上弹性会非常大。</p>
+<p>所以，空头如果坚持HOLD甚至看空AMAT，本质上是在赌“技术破位会传导成基本面破位”。但数据不支持：营收在加速，毛利率在扩张，营业利润率创新高，资产负债表像堡垒，存储周期向上，AI资本开支未逆转。你要做空AMAT，需要证明WFE周期见顶、AI capex逆转、存储上行证伪、200 SMA失守——目前一个都没有发生。</p>
+<p>我的操作建议：分批买入AMAT，核心仓位，止损参考435.86下方；若放量收复488.53，加仓。短期波动是入场成本，不是离场理由。</p>
+<p><strong>Rating</strong>: Buy<br />
+FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: 牛方，你把 10/13 这根放量大阴线叫作“短期噪音”，但你忽略了一个关键事实：<strong>市场不是在交易已经公布的 FY26 Q3，而是在交易未来的 WFE 周期、折现率和资金流。</strong> 这三项，恰恰都站在 AMAT 的对立面。</p>
+<h5>一、技术面不是噪音，而是高位派发</h5>
+<p>10/13 AMAT 开 485.40、高 485.63、低 452.81、收 464.24，成交量 1,087.66 万股，远高于近期 400–700 万股常态。这是典型<strong>高开低走、放量收低</strong>，不是缩量洗盘。</p>
+<p>更关键的是，价格同时跌破：</p>
+<ul>
+<li>10 EMA：500.78</li>
+<li>50 SMA：488.53</li>
+<li>VWMA：504.93</li>
+</ul>
+<p>而且 50 SMA 本身从 8/14 的 558.29 一路下滑到 488.53，斜率向下。MACD 在 10/13 死叉，macd 6.99 低于 macds 9.06，macdh 转为 -2.07；10/5 时 macdh 还高达 +12.07。RSI 从 69.66 快速回落到 40.59，<strong>但还没到超卖</strong>。这意味着什么？意味着下行动能已经确认，但“跌深反弹”的技术触发还没出现。</p>
+<p>牛方说“200 SMA 435.86 仍上行，长期趋势未破”。对，但 200 SMA 是滞后指标。等到它被有效跌破，股价可能早已不是 464，而是 430 甚至 415。短中期均线全面转弱、50 SMA 可能下穿 200 SMA 的风险，才是当下更现实的信号。</p>
+<h5>二、基本面加速是真的，但质量与周期位置不支持追买</h5>
+<p>我承认 AMAT 的 FY26 Q3 很漂亮：营收 9,115 百万美元，环比 +15.2%、同比 +24.8%；毛利率 50.3%；营业利润率 33.7%。这不是弱复苏。</p>
+<p>但牛方把“两个季度加速”直接外推成“周期持续向上”，这太乐观。看 FY26 Q1：营收环比 -4.0%、同比 -2.1%，营业利润率从 FY25 Q3 的 30.6% 骤降到 26.1%。这就是周期股的真相：<strong>上行时经营杠杆放大利润，下行时同样放大伤害。</strong> Q3 营收和利润率都创序列新高，恰恰可能是周期高点的特征之一，而不是安全买点。</p>
+<p>更严重的是盈利质量：</p>
+<ul>
+<li>FY26 Q1：净利润 2,026 &gt; 营业利润 1,831</li>
+<li>FY26 Q2：净利润 2,806 &gt; 营业利润 2,523</li>
+<li>Q2 净利率 35.5%，高于营业利润率 31.9%</li>
+</ul>
+<p>这说明 Q1、Q2 净利被营业外收益或异常低税负抬高，不能外推。Q3 净利润 2,538 低于营业利润 3,075，反而是最干净的一季，但净利率只有 27.8%。牛方拿 Q2 的 35.5% 净利率说事，是选择性乐观。</p>
+<p>现金流更值得警惕。前 9 个月：</p>
+<ul>
+<li>经营现金流 5,568，同比 +8.5%</li>
+<li>资本开支 1,988，同比 +34.8%</li>
+<li>自由现金流 3,580，同比 <strong>-2.1%</strong></li>
+</ul>
+<p>利润大增，FCF 却同比持平甚至微降。这不是“为下一轮扩产”，至少不完全是。这里面还有营运资本占用、存货和应收上升。牛方说“敢加 capex 说明看到订单”，但周期股在接近高点时过度扩产，历史上从来不是好信号。资产负债表确实强，现金 7,037、流动比率 2.42，但强资产负债表不能阻止估值压缩，也不能保证 FCF 转化率回升。</p>
+<p>而且基本面报告明确说：<strong>估值数据、市值、PE/PB、内部人交易全部缺失。</strong> 在 464 美元这个位置，牛方无法证明 AMAT 便宜。没有估值锚就喊 Buy，这不是基本面投资，这是信仰。</p>
+<h5>三、指引缺口不是中性，是负面信息</h5>
+<p>牛方说投资者早餐会没给 WFE 市场预测和总营收指引“不是意外”。我不同意。对一家 WFE 龙头，<strong>WFE 总量预测和总营收指引就是核心变量</strong>。管理层把所有“可控项”都给了，唯独跳过决定设备收入的两个数字，只留下 Dickerson 一句“CAGR 将非常强劲”。这恰恰是典型的预期管理含糊化。</p>
+<p>牛方还说“实际 Q3 同比 +24.8% 比任何口头指引都硬”。但市场已经看到了 Q3，股价却从 10/5 的 542.28 跌到 10/13 的 464.24，回撤 14.4%。<strong>过去的好数据没有阻止下跌，说明市场在担心未来。</strong></p>
+<h5>四、竞争与行业信号并不支持牛方</h5>
+<p>AMAT 是最大 WFE 供应商，但不是每个环节都有绝对定价权。光刻被 ASML 垄断；刻蚀、沉积、量测面对 Lam Research、东京电子、KLA 等竞争；先进封装也有新进入者。客户集中在少数代工和存储巨头，资本开支周期一旦转向，AMAT 的收入弹性会反向放大。</p>
+<p>再看行业信号：三星发布创纪录盈利指引，理论上直接利好存储资本开支和 WFE 需求。但结果呢？<strong>芯片股反而下跌，资金轮动至银行股。</strong> 牛方把这叫“利好出尽、短期轮动”。但在高位放量大跌的背景下，好消息不涨，本身就是分配信号。如果三星创纪录都不能让芯片股接力，AMAT 要靠什么短期催化向上突破？</p>
+<h5>五、宏观才是当前主导变量</h5>
+<p>长端利率创 2002 年以来新高，10 年期 9 月涨幅为 2022 年以来最大；美联储官员集体警告通胀仍过高，市场讨论的是“是否还要加息”，不是降息。BofA 调查显示，基金经理要等到收益率到 5.9% 才愿意弃股转债。全球债券收益率同步飙升，法国在“难看的一侧”。油价、伊朗战争、抵押贷款利率 7.58%，都在推高通胀黏性。</p>
+<p>牛方说“这是全市场成长股的折现率问题，不是 AMAT 的盈利问题”。但股票定价本来就是未来现金流折现。AMAT 是高久期、高经营杠杆、高 beta 的半导体设备股，利率越高，它的估值中枢越受压制。高利率还会提高客户资本开支的门槛，推迟非 AI 相关投资。宏观不是背景板，它是当前主导变量。</p>
+<h5>六、牛方的风险收益比站不住脚</h5>
+<p>牛方说：止损 435.86，下方约 6%；上方先看 488–490，再看 500/564，Cantor 目标价 850，空间 83%。</p>
+<p>问题在于：</p>
+<ul>
+<li>当前 464.24 到第一阻力 488.53，只有约 5.2% 空间；</li>
+<li>到 435.86，是约 -6.1%；</li>
+<li>如果 435.86 被有效跌破，下一支撑 415.84，对应约 -10.4%；</li>
+<li>ATR 20.31，约价格的 4.4%，一天波动就能打穿止损；</li>
+<li>Cantor 850 是 StockTwits 用户转述的单一卖方观点，Yahoo 新闻和 Reddit 均不可用，无法独立验证。牛方一边说情绪样本只有 4 条、置信度 Low，一边又拿这 4 条里唯一一个 850 目标价当核心论据，这是双重标准。</li>
+</ul>
+<p>更合理的读法是：在 488.53 未收复前，AMAT 的短中期阻力密集，而下方 435.86 是长期趋势生命线。现在买入，是在赌 435.86 一定守住、利率见顶、WFE 周期继续加速、指引缺口被证明无害。四个条件中任何一个出问题，下行空间都会打开。</p>
+<h5>结论：不要在信息真空和放量破位中接刀</h5>
+<p>牛方说“你要做空 AMAT，需要证明 WFE 周期见顶、AI capex 逆转、存储上行证伪、200 SMA 失守”。不对。<strong>避险和卖出不需要等到所有利空确认，只需要风险收益比不对称。</strong> 现在 AMAT 就是不对称：短线技术破位、MACD 死叉、放量派发、FCF 未跟上、指引缺口、利率高企、资金撤出芯片板块。基本面好，不等于股价不会继续跌；在周期股里，最好的基本面数据往往出现在最危险的估值位置。</p>
+<p>我的建议很直接：<strong>不追多，已有仓位逢反弹至 488–505 减仓或对冲；若有效跌破 435.86，则升级为明确看空，下看 415.84。</strong> 只有 AMAT 重新放量收复 488.53 并站稳，同时利率压力缓解、FQ4 给出 WFE/总营收能见度，才值得重新评估多头逻辑。</p>
+<p><strong>Rating</strong>: Sell<br />
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Underweight</p>
+<p><strong>Rationale</strong>: This was a genuinely close debate, and I want to be clear about what decided it.</p>
+<p>The bull's fundamental case is real and I don't discount it: AMAT's FY26 Q3 revenue of $9,115M (+15.2% QoQ, +24.8% YoY), gross margin at 50.3%, operating margin at a record 33.7%, a fortress balance sheet ($7,037M cash, current ratio 2.42) and an intact long-term uptrend (price still above a rising 200 SMA at 435.86) all argue against a broken business. On the merits of the <em>business</em>, the bull wins.</p>
+<p>But the trader's job is the <em>stock</em>, and here the bear flipped the argument on the right axis. Three points decided it for me. First, the technicals aren't noise — the 10/13 session (open 485.40, close 464.24, low 452.81, 10.88M shares vs a 4–7M norm) is textbook high-volume distribution, with price simultaneously below the 10 EMA (500.78), 50 SMA (488.53) and VWMA (504.93), a MACD death cross (6.99 vs 9.06), and an RSI that fell from 69.66 to 40.59 — confirmed downside momentum <em>without</em> yet being oversold, meaning the reflexive bounce trigger hasn't fired. The bull's &quot;long-term trend intact&quot; relies on a lagging 200 SMA; by the time that breaks, 464 is old news.</p>
+<p>Second, the bull's risk/reward doesn't hold up at the current price. Only ~5.2% to the first resistance (488.53) versus ~6.1% to the 435.86 stop, and ~10.4% to the next support at 415.84 if that fails — with a 20-day ATR of 20.31 (~4.4% of price) that can blow the stop in a single session. The bull's 83% upside hinges on the Cantor $850 target, which he himself dismissed the surrounding sentiment sample as &quot;4 messages, Low confidence.&quot; Using that same sample's single sell-side citation as a core pillar is a double standard.</p>
+<p>Third, on earnings quality the bear scored clean points the bull didn't answer: FY26 Q1 net income (2,026) and Q2 (2,806) both exceeded operating income (1,831 / 2,523), signaling non-operating gains flattering the earlier quarters; Q3 (net 2,538 vs operating 3,075) is the clean quarter, but its net margin is only ~27.8%, not the 35.5% the bull leaned on. And FCF of 3,580 was down 2.1% YoY while capex rose 34.8% — the &quot;investing for the next cycle&quot; explanation is plausible but unproven and cuts both ways for a cyclical near a revenue/margin peak. Add the guidance gap (no WFE market forecast, no total revenue outlook) and a dominant macro headwind (long-end rates at 2002 highs, Fed officials warning on inflation, chip stocks sliding even on Samsung's record guide), and the near-to-medium-term picture is asymmetric to the downside.</p>
+<p>So why not Sell? Because the bear's call overreaches: the fundamental engine is accelerating, the long-term trend is intact, and valuation inputs (market cap, P/E, P/B, insider activity) are entirely missing from the record — we cannot prove AMAT is cheap OR expensive, so a high-conviction short isn't supported either. The honest read is that the bull owns the business, the bear owns the tape and the risk/reward, and on a trading horizon the latter matters more right now. That's a cautious, trim-into-strength stance — Underweight — not an exit, and not a &quot;do nothing&quot; Hold.</p>
+<p><strong>Strategic Actions</strong>: Direction: Underweight AMAT — reduce exposure relative to a standard allocation, do not chase the dip, and require technical and macro repair before re-engaging. Suggested sizing: trim existing long exposure by roughly one-third of a standard position (i.e., hold no more than ~2/3 of a normal weight, and add on nothing here).</p>
+<ol>
+<li>
+<p>Trim into strength, not weakness: use rallies into the 488–505 resistance band (50 SMA 488.53 / VWMA 504.93 / 10 EMA 500.78) to lighten. Do not initiate or add at 464.</p>
+</li>
+<li>
+<p>Define the invalidation line explicitly at 435.86 (rising 200 SMA). A decisive close below it on volume escalates this from cautious to outright bearish — reduce further and target the next support at 415.84. If we want directional short exposure, that break is the trigger, not current levels.</p>
+</li>
+<li>
+<p>Protect against the asymmetric downside while the guide gap persists: consider a modest hedge (puts or a collar) sized to the residual position, especially given ATR of 20.31 can breach a tight stop intraday. Explicit stop on any remaining long at a close below 435.86.</p>
+</li>
+<li>
+<p>Re-underwriting checklist before upgrading back to Hold/Overweight — all of these, not one: (a) AMAT reclaims and <em>holds</em> 488.53 on expanding volume; (b) long-end yields stop making new highs / rate pressure eases; (c) FQ4 provides actual WFE and total-revenue visibility, closing the guidance gap; (d) FCF conversion turns back up alongside revenue.</p>
+</li>
+<li>
+<p>Note the evidence gap explicitly: market cap, P/E, P/B and insider-transaction data are missing from the record, so position sizing here is driven by tape and risk/reward, not valuation. Flag for the trader that this Underweight is a technical/risk-control call with a genuine fundamental floor under it, not a business-quality downgrade.</p>
+</li>
+</ol>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Sell</p>
+<p><strong>Reasoning</strong>: 研究计划给出 Underweight（=Sell），依据是 10/13 的放量派发：开 485.40、收 464.24、最低 452.81、成交 1,087.66 万股（常态 400–700 万），价格同时失守 10 EMA（500.78）、50 SMA（488.53）与 VWMA（504.93），MACD 死叉（6.99 vs 9.06），RSI 由 69.66 降至 40.59 但未超卖，说明下行动能确认而&quot;跌深反弹&quot;触发条件尚未出现。风险回报在 464 一线同样不利：向上到首道阻力 488.53 仅约 5.2%，向下到 435.86 约 6.1%，再往下 415.84 约 10.4%，而 ATR 20.31（约占价格 4.4%）足以在一个交易日内击穿紧止损。因此方向为减持而非清仓：不追跌、不在 464 加仓，利用反弹至 488–505 阻力带减磅，并以 435.86（上行中的 200 SMA）作为整体看空论点的失效线；估值输入（市值、P/E、P/B、内部人交易）完全缺失，故这是基于量价与风控的减持，而非对企业基本面的否定。</p>
+<p><strong>Entry Price</strong>: 488.5</p>
+<p><strong>Stop Loss</strong>: 509.0</p>
+<p><strong>Position Sizing</strong>: 将现有 AMAT 多头削减约 1/3 个标准仓位，保留不超过正常权重的约 2/3；不新增。若做方向性空头，仅用约 1/3 标准仓位，因 ATR 20.31（≈4.4%）单日即可触及止损。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位，保守派和中性派还没开口，但我先把他们最可能抱住的论调拆掉。我支持交易员对 AMAT 的卖出决定，而且我认为真正的激进机会不是死扛多头，而是利用这段派发结构做不对称交易。</p>
+<p>保守派一定会说，AMAT 还在 200 日均线 435.86 上方，长期趋势没破，基本面 FY26 Q3 营收 9,115、毛利率 50.3%、营业利润率 33.7% 创高，所以应该持有甚至加仓。我的反驳是：200 日均线是滞后指标，不是防弹衣。10/13 的放量 1,087.66 万股大阴线已经同时击穿 10 EMA 500.78、50 SMA 488.53 和 VWMA 504.93，MACD 在 6.99 对 9.06 死叉，动能柱 -2.07，RSI 从 69.66 掉到 40.59 却还没超卖。这不是回调尾声，这是派发确认。等 435.86 真破了再卖，价格已经比 488.5 的反弹卖出点低 10% 以上。保守派的错误是把“长期趋势未破”当成“短期不用减仓”，而我们的职责是在跌破生命线之前先把风险卖掉。</p>
+<p>再说基本面。营收和毛利率确实强，但 FY26 前九个月经营现金流只增 8.5%，资本开支却增 34.8%，自由现金流同比 -2.1%。利润好，现金没跟上；FY26 Q1、Q2 还出现净利润大于营业利润的杂质。强基本面可能早已计入价格，而市场在 10/13 用放量下跌投票。估值数据缺失更说明没有安全边际可依赖，只能尊重价格。卖出不是否定 AMAT 的长期价值，而是拒绝在错误位置承担完整周期风险。</p>
+<p>中性派会说数据混合、新闻和论坛缺失、情绪 5.2 分，所以观望。我的反驳是：数据缺失不等于风险中性。唯一可验证的情绪里，看多标签只有一条，内容却是“一买入就跌 20 美元”的畏跌自嘲；有人公开下注跌破 400；投资者早餐会没有给 WFE 市场预测，也没有总营收指引。坎托菲茨杰拉德 850 美元目标价只是用户转述，没有新闻源确认，也没有带来买盘。更关键的是，三星创纪录盈利指引下芯片股仍然下跌，这是典型的利好出尽。中性派的观望在这种高波动品种上就是被动持有，ATR 20.31 约 4.4%，一天就能让你从 464 打到 445 以下。我们不该用“不确定”当借口维持满仓，而该用仓位控制去交易不确定性。</p>
+<p>宏观也不站在死扛多头这边。长端利率创 2002 年以来新高，美联储官员集体警告通胀仍太高，资金从芯片轮动到银行，BofA 说 5.9% 收益率前基金经理不弃股转债，油价和伊朗战争又在推通胀。AMAT 是典型高久期成长股，折现率上升首先压估值。三星存储周期向上是真的，但短期主导变量是利率和资金流，产业利好救不了估值压缩。</p>
+<p>所以交易员的方向是对的：不追跌，不在 464 加仓，而是卖。具体执行上，我支持把现有 AMAT 多头削减约三分之一标准仓位，保留不超过正常权重三分之二；如果做方向性空头，只用三分之一标准仓位，等反弹到 488.5 附近卖出，509 止损。这个止损离入场约 20.5 点，约 4.2%，刚好一个 ATR 左右；向下到 435.86 是约 10.8%，到 415.84 是约 14.9%。风险回报超过 2.5 比 1，甚至接近 3.5 比 1。若 AMAT 重新站上 509，我们认错，剩余多头还能参与；若 435.86 被放量跌破，空头可以加码，目标 415.84 甚至 400。这才是高波动环境下的激进不对称机会。</p>
+<p>保守派怕波动，中性派怕没数据，但市场不会等他们。AMAT 的派发信号、宏观逆风、利好不涨和现金流背离都指向同一个结论：现在该卖出或减持，而不是持有。用三分之一仓位换一个高赔率下行交易，同时保留三分之二多头作为纠错，这是最合理的进攻性风控。</p>
+<p><strong>Rating</strong>: Sell
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 我先把结论摆在前面：作为保守风险分析者，我支持交易员对 AMAT 的卖出方向，但我不能接受激进派把这件事包装成“高赔率不对称做空机会”。这两者差别很大。前者是保护资产、削减波动、避免在错误位置承担完整周期风险；后者是在高波动、数据不完整、长期趋势仍未确认破裂的 AMAT 上主动加杠杆式冒险。我的职责不是抓住每一次下跌，而是确保公司在 AMAT 这种单日 ATR 已经达到 20.31、约合价格 4.4% 的标的上不会因为一次跳空或一次逼空而遭受不可控损失。</p>
+<p>激进派说 200 日均线 435.86 是滞后指标，不是防弹衣。这个我同意一半。它确实是滞后指标，但它不是没用。AMAT 现价 464.24 仍站在 200 日均线上方，长期上升结构没有被有效跌破，这说明当前更准确的定性是“短中期派发确认，长期趋势尚未破坏”。在这种结构里，减仓是对的，但重仓做空或把卖出当成方向性空头进攻，是把短期信号当成长期结论。保守派不会因为 10 月 13 日一根放量大阴线就宣布 AMAT 的长期逻辑已死。那根阴线成交 1,087.66 万股、跌破 10 EMA 500.78、50 SMA 488.53 和 VWMA 504.93，MACD 在 6.99 对 9.06 死叉，RSI 从 69.66 掉到 40.59，这些我都承认，它们支持削减 AMAT 多头敞口。但它们不支持在 464 追空，尤其不支持把 509 当成足够安全的空头止损。因为对 AMAT 来说，从 488.5 到 509 只有约 20.5 点，基本就是 1 个 ATR。一个 ATR 的止损在高波动品种上太容易被正常噪声扫掉。激进派说风险回报超过 2.5 比 1，甚至接近 3.5 比 1，但那是假设你能在 488.5 顺利卖出、且价格不再反弹到 509 以上。如果 AMAT 根本不反弹到 488.5，你只能在 464 附近追空，那时到 509 是约 45 点、超过 2 个 ATR，而到第一支撑 435.86 只有约 28 点、约 1.4 个 ATR，风险回报反而变差。也就是说，激进派的“不对称”只在最理想的入场点成立，一旦执行偏离，就变成高风险低赔率。</p>
+<p>激进派还拿基本面现金流背离来证明卖出甚至做空。我同意 FY26 前九个月经营现金流只增 8.5%，资本开支增 34.8%，自由现金流同比 -2.1%，FY26 Q1、Q2 还出现净利润大于营业利润的质量瑕疵，这些都是真实风险，也是我支持削减 AMAT 多头的原因。但请把话说完整：AMAT FY26 Q3 营收 9,115，毛利率 50.3%，营业利润率 33.7%，股东权益同比增 31.4%，流动比率 2.42，现金 7,037。资产负债表稳健，盈利能力仍在改善。更关键的是，三星创纪录盈利指引指向存储上行周期，而存储资本开支是 WFE 需求最敏感的驱动之一，AMAT 作为晶圆制造设备龙头是直接受益方。你可以说“产业利好救不了短期估值压缩”，但不能说 AMAT 基本面已经支持高信心做空。对保守风险管理者来说，正确动作是降低周期股敞口，而不是在优质公司上押注崩塌。做空 AMAT 的尾部风险在于，一旦利率见顶或存储资本开支预期继续强化，空头会被快速挤压。</p>
+<p>激进派批评中性派“观望等于被动持有”，这句话有一定道理，但激进派自己也犯了相反的错误。数据缺失不等于风险中性，这句话我同意。情绪报告只有 4 条 StockTwits 消息，唯一一条 Bullish 标签的内容还是“一买入就跌 20 美元”的畏跌自嘲；有人公开下注跌破 400；投资者早餐会没有给 WFE 市场预测，也没有总营收指引；坎托菲茨杰拉德 850 美元目标价只是用户转述，没有新闻源确认。新闻源和 Reddit 都不可用，宏观数据和预测市场也缺失。这种信息真空下，中性派如果主张继续满仓 HOLD，那确实是把不确定性当成了安全。但同样，这种信息真空也不能成为激进做空的理由。数据越少，仓位越应该小，而不是把 1/3 标准仓位全部押到一个方向性空头上。保守派的调整是：AMAT 多头削减约三分之一标准仓位，保留不超过正常权重的三分之二；不新增多头；如果要做方向性空头，只能作为战术对冲，且规模必须按 2 倍 ATR 来重新计算，而不是按 1 倍 ATR 的 509 止损来算。</p>
+<p>中性派如果强调“长期趋势未破、基本面 Buy、情绪 Mixed，所以 HOLD”，我会直接指出：HOLD 在 AMAT 这里不是零风险。AMAT 的 ATR 是 20.31，约占价格 4.4%，一天正常波动就能让 464 附近的价格打到 445 以下。你拿着满仓多头说 HOLD，实际上是在承担完整的高波动风险，却没有对应的减仓纪律。长期趋势未破只说明你不应该恐慌清仓，不说明你不应该减仓。基本面 Buy 只说明 AMAT 的长期价值可能仍在，不说明当前价格没有短期下行风险。情绪 Mixed 更不是中性，它反映的是卖方目标价和散户行为严重脱节，且缺少新闻源验证。保守派不会用“长期看好”来为短期风险敞口找借口。我们会在 488 到 505 的阻力带利用反弹减磅，而不是在 464 追跌；我们会把 435.86 作为 AMAT 整体看空论点的失效线，而不是把 509 当成短线止损后就放松警惕。</p>
+<p>所以我的低风险调整是：第一，支持交易员对 AMAT 的 SELL 方向，但把它定义为减仓和风险预算下调，不是激进做空。第二，如果持有 AMAT 多头，削减约三分之一标准仓位，保留不超过正常权重的三分之二，不新增。第三，如果价格反弹到 488.5 至 505 阻力带，继续减磅，而不是因为反弹就重新看多。第四，如果做 AMAT 方向性空头或对冲，只用约三分之一标准仓位，且必须认识到 509 离 488.5 只有约 1 个 ATR，止损太紧；更保守的做法是把风险预算按 2 倍 ATR 来设，约 40 点宽，并相应缩小仓位，或者用定义风险的期权结构代替裸空。第五，435.86 是 AMAT 长期趋势生命线。若放量有效跌破，才可以把看空升级，目标 415.84，甚至 400；若重新站稳 488.53 并放量收复 505，则要承认短期派发可能失败，保留的多头还有参与空间。第六，单笔 AMAT 风险必须控制在组合可承受范围内，不能让 4.4% 的日波动把整个账户拖入被动。</p>
+<p>激进派想用 AMAT 的下跌赚取不对称收益，中性派想用 HOLD 等待更多数据，但保守风险分析者的答案是：在 AMAT 这个位置上，降低敞口、保留纠错能力、拒绝追空、拒绝满仓死扛，才是长期存活并稳定增长的做法。卖出 AMAT 不是否定它的长期价值，而是在派发确认、宏观利率逆风、资金撤离芯片板块、信息真空和现金流背离同时出现时，先把风险卖掉。等 AMAT 在 435.86 附近证明支撑有效，或在 488.53 以上放量修复，再重新评估也不迟。资产保护永远优先于抓住每一次波动。</p>
+<p><strong>Rating</strong>: Sell
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 我先回应两位。激进派和保守派都喊 SELL，表面看方向一致，其实一个是想进攻，一个是想防守。中性视角不能只看方向，还要看仓位、入场、止损和失效条件。AMAT 现在的数据是分裂的：技术面短中期偏空，基本面中期偏多，情绪和宏观都是低置信度。所以正确做法不是选边站，而是把 AMAT 的风险敞口调到一个无论涨跌都能活下来的水平。</p>
+<p>激进派最大的漏洞，是把做空 AMAT 的不对称性建立在 488.5 能成交这个假设上。AMAT 现价是 464.24，离 488.5 还有约 5.2%。如果它根本不反弹，你只能在 464 附近追空，那时到 509 止损是约 45 点，超过 2 个 ATR；到第一目标 435.86 只有约 28 点，约 1.4 个 ATR，风险回报反而不到 1 比 1。所谓 2.5 到 3.5 比 1，只在理想限价单成交时成立。其次，509 离 488.5 只有约 20.5 点，基本就是 1 个 ATR。AMAT 的 ATR 是 20.31，约占价格 4.4%，正常噪声就能把这种止损扫掉。所以这不是高胜率空头，这是高波动博弈。激进派把短期派发直接当成长期崩塌，是在过度乐观地下注下行。</p>
+<p>再看基本面。AMAT FY26 Q3 营收 9,115，毛利率 50.3%，营业利润率 33.7%，股东权益同比增 31.4%，流动比率 2.42，现金 7,037。三星创纪录盈利指引指向存储上行周期，而存储资本开支是 WFE 需求最敏感的驱动之一，AMAT 作为设备龙头是直接受益方。现金流转化弱、FY26 Q1 和 Q2 净利质量有瑕疵，这些都是真风险，但它们不支持高信心做空。技术报告本身给出的也是 HOLD，不是 SELL。激进派可以说市场用放量下跌投票，但不能把投票结果说成确定性判决。</p>
+<p>保守派拒绝激进裸空是对的，但也有过度谨慎的地方。保守派说 AMAT 仍在 200 SMA 435.86 上方，长期趋势未破，所以保留 2/3 多头。这个逻辑在正常波动里成立，但 AMAT 的 ATR 是 20.31，一天就能从 464 打到 445 以下。价格已经跌破 10 EMA 500.78、50 SMA 488.53 和 VWMA 504.93，50 SMA 还在下行，MACD 6.99 对 9.06 死叉，RSI 从 69.66 掉到 40.59 却还没超卖。这些说明短期卖压没有释放完。如果你一定要等 488 到 505 才减仓，市场可能根本不给你机会，然后直接测试 435.86。中性视角会说：保留核心可以，但不应把 2/3 当作默认安全仓位；如果组合波动预算有限，应该先减一部分，或者用保护性期权代替满仓硬扛。</p>
+<p>保守派还太排斥任何战术对冲。并非所有空头都是裸空。用小的定义风险 put spread 或 collar 来对冲 AMAT 的下行，比完全不做、或激进裸空都更平衡。资产保护没错，但如果完全等到 435.86 被放量跌破才升级，可能已经多承担了约 6% 的价格风险。</p>
+<p>所以我的调整是：AMAT 的方向仍然偏防守，SELL 只代表减持和降低风险预算，不代表清仓或高信心做空。对于已有多头，第一，不在 464 追跌，但也不要因为长期趋势没破就拒绝减仓。第二，利用反弹到 488 到 505 减掉约三分之一标准仓位，若没有反弹且日收盘跌破 452.81 或 435.86，再减三分之一。保留的核心不超过正常权重的一半到三分之二，取决于账户对 4.4% 日波动的承受力。第三，不新增多头。</p>
+<p>如果要做方向性空头或对冲，只用四分之一到三分之一标准仓位，入场最好等 488 到 505 的反弹失败，止损不要用 509 这种 1 倍 ATR 紧止损。按 2 倍 ATR 算，止损约 40 点，或者放在 529 上方，并相应缩小仓位。更优选择是定义风险的期权结构，目标先看 435.86，再看 415.84。如果 AMAT 放量收复 488.53 和 504.93，说明短期派发失败，空头撤退，保留的多头可以继续参与。如果放量跌破 435.86，才把看空升级到下一个目标。</p>
+<p>宏观上，长端利率创 2002 年以来新高、美联储偏鹰、资金从芯片轮动到银行，这些确实压制 AMAT 的估值。但基本面 FY26 Q3 的加速和 200 SMA 上行又给中期支撑。情绪只有 4 条 StockTwits，新闻和 Reddit 缺失，5.2 分 Mixed 的置信度很低。这种环境下，最可靠的不是押注单边，而是分步减仓、保留核心、用宽止损和小仓位管理尾部风险。</p>
+<p>激进派想赚下跌的钱，但把执行风险说小了；保守派想保护资产，但可能保留太多多头并等待太久。中性策略是在两者之间：方向偏空但仓位中性，卖出反弹而不是追跌，保留纠错能力，拒绝裸空重仓。AMAT 的长期价值可以尊重，但短期风险必须定价。</p>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Underweight</p>
+<p><strong>Executive Summary</strong>:<br />
+对 AMAT 的最终决定是 <strong>Underweight</strong>，而不是 <strong>Sell</strong> 或 <strong>Hold</strong>。尽管激进派、保守派、中性派在标签上都倾向 “Sell”，交易员提案也写作 Sell，但其可执行共识是“减持和降低风险预算”，不是清仓或高信心裸空：保守派明确反对在 464 追空，并指出 509 止损距 488.5 仅约 1 个 ATR、过紧；中性派也强调 SELL 只代表减持，不代表退出。研究计划同样给出 Underweight，建议将现有 AMAT 多头削减约 1/3 个标准仓位，保留不超过正常权重约 2/3，不新增。</p>
+<p>执行上：不在 464 加仓或追跌；利用反弹至 488–505 阻力带减磅；若当前没有 AMAT 多头，避免新建多头；若做战术空头或对冲，只在反弹失败后，以约 1/4–1/3 标准仓位、宽止损或定义风险期权结构进行。435.86 是失效线；放量收盘跌破后，才升级为更明确看空。</p>
+<p><strong>Investment Thesis</strong>:<br />
+短线与风险回报层面，空方证据更强。AMAT 在 10/13 放量派发：成交 1,087.66 万股，远高于 400–700 万常态，开 485.40、收 464.24、最低 452.81，同时跌破 10 EMA 500.78、50 SMA 488.53 和 VWMA 504.93；MACD 为 6.99 对 9.06 死叉，RSI 从 69.66 降至 40.59 但未超卖。这说明下行动能确认，而“跌深反弹”触发条件尚未出现。ATR 为 20.31，约合价格 4.4%；464 附近到首道阻力 488.53 仅约 5.2%，到 435.86 约 6.1%，到 415.84 约 10.4%。对新增多头不利；509 止损距 488.5 仅约 1 个 ATR，若在 464 追空则止损超过 2 个 ATR、赔率反而恶化，因此也不支持激进裸空。</p>
+<p>宏观与指引亦压制近中期表现：长端利率处于 2002 年以来高位，美联储官员警告通胀，芯片股在三星创纪录盈利指引下仍下跌；AMAT 投资者早餐会没有给出 WFE 市场预测，也没有总营收指引，指引缺口仍未闭合。情绪样本仅 4 条 StockTwits 消息、5.2 分低置信，Cantor $850 目标价仅用户转述、无新闻源确认，不能作为高信心看多依据。</p>
+<p>但 <strong>Sell</strong> 的证据不够。AMAT FY26 Q3 营收 9,115，环比 +15.2%、同比 +24.8%，毛利率 50.3%，营业利润率 33.7% 创高，现金 7,037，流动比率 2.42，股东权益同比 +31.4%，且价格仍在上升的 200 SMA 435.86 上方，长期结构未破。空方对盈利质量的质疑有效：FY26 Q1 净利 2,026 &gt; 营业利润 1,831，Q2 净利 2,806 &gt; 营业利润 2,523；Q3 净利 2,538 对营业利润 3,075，净利率约 27.8%，并非 35.5%；FCF 3,580 同比 -2.1%，资本开支 +34.8%。这些支持减仓，但不足以证明高信心退出或做空。估值输入如市值、P/E、P/B、内部人交易均缺失，新闻、Reddit、宏观数据和预测市场也缺失，因此无法证明 AMAT 便宜或昂贵，不能给 Buy 或 Sell 高信心。</p>
+<p>最终选择为 <strong>Underweight</strong>：降低 AMAT 风险预算，卖出反弹而非追跌，保留纠错能力。现有多头削减约 1/3 标准仓位，保留不超过正常权重约 2/3；488–505 反弹带继续减磅；不在 464 新增；可用小规模 puts 或 collar 对冲残余仓位。435.86 是整体看空论点的失效/升级线：若放量收盘跌破，进一步减仓，目标 415.84，并可考虑战术空头；若 AMAT 放量收复并站稳 488.53，且长端利率压力缓解、FQ4 给出 WFE 和总营收可见度、FCF 转化回升，则重新评估升级至 Hold/Overweight。当前证据不支持清仓式 Sell，也不支持 Hold 满仓硬扛。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>Underweight</strong></p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-15T16:07+00:00",
+ "generated_at": "2026-10-15T16:14+00:00",
  "as_of": "2026-10-14",
  "next_session": "2026-10-15",
  "next_open": "2026-10-15T09:30-04:00",
@@ -41,7 +41,12 @@
     "unrealized": -15.47,
     "unrealized_pct": -1.7,
     "rule": "下一个交易日收盘若高于 [[$459.48]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
-    "ai": null
+    "ai": {
+     "rating": "Underweight",
+     "rating_zh": "减持",
+     "agrees": false,
+     "report": "ai/2026-10-13_AMAT.html"
+    }
    },
    "candidate_cols": [
     {
@@ -234,7 +239,12 @@
     "unrealized": -17.24,
     "unrealized_pct": -1.36,
     "rule": "止损 [[$112.76]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$112.39]]），下一个交易日开盘卖出。没有持有天数上限。",
-    "ai": null
+    "ai": {
+     "rating": "Hold",
+     "rating_zh": "持有",
+     "agrees": false,
+     "report": "ai/2026-10-13_CSCO.html"
+    }
    },
    "candidate_cols": [
     {
@@ -337,8 +347,8 @@
  ],
  "ai": {
   "model": "deepseek-flash",
-  "runs": 0,
-  "total_cost": null,
-  "currency": null
+  "runs": 2,
+  "total_cost": 1.12,
+  "currency": "CNY"
  }
 }

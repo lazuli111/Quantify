@@ -318,7 +318,8 @@ def cmd_ai(cfg: dict, args) -> None:
     """AI second opinion (TradingAgents on DeepSeek) on today's new buy signals. Recorded only."""
     from . import ai_opinion
     for o in ai_opinion.run(held=args.held):
-        print(f"{o['symbol']}：{o['rating_zh']}（{'同意' if o['agrees'] else '不同意'}买入），报告 docs/{o['report']}")
+        stance = "同意买入" if o["agrees"] else "中立" if o["rating"] == "Hold" else "不同意买入"
+        print(f"{o['symbol']}：{o['rating_zh']}（{stance}），报告 docs/{o['report']}")
 
 
 def cmd_notify(cfg: dict, args) -> None:

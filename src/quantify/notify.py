@@ -63,8 +63,8 @@ def build_message(v: dict) -> str:
                     lines.append(f"▶ 开盘<b>买入 {o['symbol']}</b> 约 {o['est_shares']} 股，参考价 {_usd(o['ref_price'])}{stop}")
                     ai = o.get("ai")
                     if ai:
-                        verdict = "同意" if ai["agrees"] else "不同意"
-                        lines.append(f"   AI 意见：{ai['rating_zh']}（{verdict}买入，仅供参考）")
+                        stance = "同意买入" if ai["agrees"] else "中立" if ai["rating"] == "Hold" else "不同意买入"
+                        lines.append(f"   AI 意见：{ai['rating_zh']}（{stance}，仅供参考）")
                 else:
                     lines.append(f"▶ 开盘<b>卖出 {o['symbol']}</b>（{escape(o['reason'])}）")
         else:

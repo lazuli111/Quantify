@@ -253,14 +253,15 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   // AI second opinion chip; links to the full report when there is one
   const aiChip = (ai, long) => {
     if (!ai) return "";
-    const text = esc(ai.rating_zh) + (long ? (ai.agrees ? " · 同意买入" : " · 不同意") : "");
+    const stance = ai.agrees ? "同意买入" : ai.rating === "Hold" ? "中立" : "不同意";
+    const text = esc(ai.rating_zh) + (long ? " · " + stance : "");
     const cls = "ai" + (ai.agrees ? " agree" : "");
     return ai.report ? `<a class="${cls}" href="${esc(ai.report)}" target="_blank" rel="noopener">${text}</a>` : `<span class="${cls}">${text}</span>`;
   };
   const aiRows = (st) => {
     if (!st || (!st.agree.trades && !st.disagree.trades)) return "";
     const row = (label, g) => `<tr><td>${label}</td><td>${g.trades ? `${g.trades} 笔，<span class="${sgn(g.avg_ret_pct)}">${pct(g.avg_ret_pct)}</span>` : "—"}</td><td>—</td></tr>`;
-    return row("AI 同意的交易", st.agree) + row("AI 不同意的交易", st.disagree);
+    return row("AI 同意买入的交易", st.agree) + row("AI 中立或反对的交易", st.disagree);
   };
   const rich = (s) => esc(s).replace(/\[\[(.+?)\]\]/g, "<b>$1</b>");
   const cell = (col, val) => {
