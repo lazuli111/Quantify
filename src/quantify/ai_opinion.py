@@ -75,8 +75,35 @@ def _opine(graph, symbol: str, day: date) -> tuple[str, str]:
     return rating, (f"ai/{report.name}" if report.exists() else "")
 
 
-def run() -> list[dict]:
-    """Form an opinion on every buy signal in docs/data.json that doesn't have one yet."""
+def _held_signals(view: dict) -> tuple[date, dict[str, list[str]]] | None:
+    """The signals behind the current positions (for a first run, when there is no new signal)."""
+    held = [(s["position"]["entry_date"], s["position"]["symbol"], s["name"]) for s in view["strategies"] if s.get("position")]
+    if not held:
+        return None
+    entry = min(e for e, _, _ in held)
+    signal_day = max(d for d in _sessions_before(date.fromisoformat(entry)))
+    out: dict[str, list[str]] = {}
+    for e, sym, name in held:
+        if e == entry:
+            out.setdefault(sym, []).append(name)
+    return signal_day, out
+
+
+def _sessions_before(day: date) -> list[date]:
+    from datetime import timedelta
+    d = day - timedelta(days=10)
+    days = []
+    while d < day:
+        if next_session(d - timedelta(days=1)) == d:
+            days.append(d)
+        d += timedelta(days=1)
+    return days
+
+
+def run(held: bool = False) -> list[dict]:
+    """Form an opinion on every buy signal in docs/data.json that doesn't have one yet.
+
+    held=True does the same for the signals behind the current positions instead."""
     _load_env()
     key = os.environ.get("DEEPSEEK_API_KEY")
     if not key:
@@ -85,10 +112,15 @@ def run() -> list[dict]:
     view = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     day = date.fromisoformat(view["as_of"])
     wanted: dict[str, list[str]] = {}
-    for s in view["strategies"]:
-        for o in s["tonight"]:
-            if o["action"] == "buy":
-                wanted.setdefault(o["symbol"], []).append(s["name"])
+    if held:
+        found = _held_signals(view)
+        if found:
+            day, wanted = found
+    else:
+        for s in view["strategies"]:
+            for o in s["tonight"]:
+                if o["action"] == "buy":
+                    wanted.setdefault(o["symbol"], []).append(s["name"])
     opinions = load_opinions()
     done = {(o["date"], o["symbol"]) for o in opinions}
     todo = {sym: names for sym, names in wanted.items() if (day.isoformat(), sym) not in done}

@@ -317,7 +317,7 @@ def cmd_paper(cfg: dict, args) -> None:
 def cmd_ai(cfg: dict, args) -> None:
     """AI second opinion (TradingAgents on DeepSeek) on today's new buy signals. Recorded only."""
     from . import ai_opinion
-    for o in ai_opinion.run():
+    for o in ai_opinion.run(held=args.held):
         print(f"{o['symbol']}：{o['rating_zh']}（{'同意' if o['agrees'] else '不同意'}买入），报告 docs/{o['report']}")
 
 
@@ -350,7 +350,8 @@ def main() -> None:
     pp.add_argument("--reset", action="store_true", help="清空模拟账户，重新开始")
     pp.add_argument("--start", help="模拟开始日期 YYYY-MM-DD（默认最近一个交易日）")
     pp.add_argument("--only", choices=[st.key for st in paper.STRATEGIES], help="只重置/重新开始这一个策略")
-    sub.add_parser("ai", help="AI 第二意见：用 TradingAgents（DeepSeek）分析今天的新买入信号，只记录")
+    ai = sub.add_parser("ai", help="AI 第二意见：用 TradingAgents（DeepSeek）分析今天的新买入信号，只记录")
+    ai.add_argument("--held", action="store_true", help="改为分析当前持仓当初的买入信号（补做）")
     nt = sub.add_parser("notify", help="发送 Telegram 推送（每日摘要）")
     nt.add_argument("--find-chat", action="store_true", help="设置时用：找出你和机器人的对话编号")
     nt.add_argument("--force", action="store_true", help="没有新的交易日也推送")
