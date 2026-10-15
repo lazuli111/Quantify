@@ -1,9 +1,12 @@
 name: 每日模拟交易更新
 
 # 美股收盘后运行：23:00 UTC（美东晚上 7 点），周一到周五。
+# 03:00 UTC（美东晚上 11 点）再跑一次作为备用：第一次成功时它发现没有新交易日，什么都不做；
+# 第一次失败（例如 Yahoo 限流）时由它补上。
 on:
   schedule:
     - cron: "0 23 * * 1-5"
+    - cron: "0 3 * * 2-6"
   workflow_dispatch:
     inputs:
       notify:
@@ -68,8 +71,9 @@ jobs:
         run: uv run quantify notify ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: 更新失败时推送提醒
-        if: failure()
+        # 第一次定时运行失败时先不提醒，等备用运行；备用运行或手动运行失败才提醒
+        if: failure() && (github.event_name != 'schedule' || github.event.schedule == '0 3 * * 2-6')
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: uv run quantify notify --failed "运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: uv run quantify notify --failed "已自动重试仍然失败。运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

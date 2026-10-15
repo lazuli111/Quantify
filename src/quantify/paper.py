@@ -12,6 +12,7 @@ Missed days are caught up on the next run. Prices come from Yahoo daily bars (no
 
 import json
 import math
+import time as _time
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
 from typing import Callable
@@ -61,11 +62,38 @@ def open_time(day: date) -> datetime:
 
 # ---------------------------------------------------------------- data
 
+def _download(symbols: list[str], period: str, threads: bool) -> dict[str, pd.DataFrame]:
+    raw = yf.download(symbols, period=period, interval="1d", auto_adjust=False, actions=True,
+                      group_by="ticker", progress=False, threads=threads)
+    if raw.empty:
+        return {}
+    if not isinstance(raw.columns, pd.MultiIndex):  # a single ticker comes back flat
+        raw = pd.concat({symbols[0]: raw}, axis=1)
+    have = set(raw.columns.get_level_values(0))
+    return {s: raw[s].dropna(how="all") for s in symbols if s in have}
+
+
+def _stale(frames: dict[str, pd.DataFrame], symbols: list[str]) -> list[str]:
+    """Tickers missing, or without a close on the latest date any ticker has."""
+    latest = max((f.index.max() for f in frames.values() if len(f)), default=None)
+    return [s for s in symbols
+            if s not in frames or not len(frames[s]) or frames[s].index.max() < latest
+            or "Close" not in frames[s] or pd.isna(frames[s]["Close"].iloc[-1])]
+
+
 def fetch_panel(symbols: list[str], period: str = "2y") -> tuple[Panel, pd.DataFrame, pd.DataFrame]:
     """Yahoo daily bars -> (adjusted Panel, raw closes, split ratios). Only finished sessions."""
-    raw = yf.download(symbols, period=period, interval="1d", auto_adjust=False, actions=True,
-                      group_by="ticker", progress=False, threads=True)
-    got = [s for s in symbols if s in raw.columns.get_level_values(0)]
+    frames = _download(symbols, period, threads=True)
+    # Yahoo throttles some tickers now and then (seen on GitHub's runners): fetch those again,
+    # one by one and more slowly, before giving up.
+    for wait in (15, 45, 90):
+        missing = _stale(frames, symbols)
+        if not missing:
+            break
+        print(f"{len(missing)} 只股票的数据不完整，{wait} 秒后重新下载：{', '.join(missing[:10])}…")
+        _time.sleep(wait)
+        frames.update({s: f for s, f in _download(missing, period, threads=False).items() if len(f)})
+    got = list(frames)
     # Yahoo sometimes leaves columns out for some tickers (seen on GitHub's runners): no split
     # column means no split, no adjusted close means no adjustment.
     fallback = {"Stock Splits": lambda df: pd.Series(0.0, index=df.index), "Adj Close": lambda df: df["Close"]}
@@ -74,7 +102,7 @@ def fetch_panel(symbols: list[str], period: str = "2y") -> tuple[Panel, pd.DataF
     for name in ("Open", "High", "Low", "Close", "Adj Close", "Volume", "Stock Splits"):
         cols = {}
         for s in got:
-            df = raw[s]
+            df = frames[s]
             if name in df.columns:
                 cols[s] = df[name]
             elif name in fallback and "Close" in df.columns:
