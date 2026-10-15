@@ -35,10 +35,17 @@ jobs:
       - uses: astral-sh/setup-uv@v5
 
       - name: 安装依赖
-        run: uv sync --frozen
+        run: uv sync --frozen --extra ai
 
       - name: 更新模拟账户
         run: uv run quantify paper
+
+      - name: AI 第二意见（只记录，不影响模拟交易）
+        continue-on-error: true
+        timeout-minutes: 30
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: uv run quantify ai
 
       - name: 保存记录到仓库
         run: |

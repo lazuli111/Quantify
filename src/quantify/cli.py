@@ -314,6 +314,13 @@ def cmd_paper(cfg: dict, args) -> None:
     print("\n仪表盘数据已写入 docs/data.json")
 
 
+def cmd_ai(cfg: dict, args) -> None:
+    """AI second opinion (TradingAgents on DeepSeek) on today's new buy signals. Recorded only."""
+    from . import ai_opinion
+    for o in ai_opinion.run():
+        print(f"{o['symbol']}：{o['rating_zh']}（{'同意' if o['agrees'] else '不同意'}买入），报告 docs/{o['report']}")
+
+
 def cmd_notify(cfg: dict, args) -> None:
     """Telegram push: the daily summary, a failure notice, or finding the chat id during setup."""
     if args.find_chat:
@@ -343,6 +350,7 @@ def main() -> None:
     pp.add_argument("--reset", action="store_true", help="清空模拟账户，重新开始")
     pp.add_argument("--start", help="模拟开始日期 YYYY-MM-DD（默认最近一个交易日）")
     pp.add_argument("--only", choices=[st.key for st in paper.STRATEGIES], help="只重置/重新开始这一个策略")
+    sub.add_parser("ai", help="AI 第二意见：用 TradingAgents（DeepSeek）分析今天的新买入信号，只记录")
     nt = sub.add_parser("notify", help="发送 Telegram 推送（每日摘要）")
     nt.add_argument("--find-chat", action="store_true", help="设置时用：找出你和机器人的对话编号")
     nt.add_argument("--force", action="store_true", help="没有新的交易日也推送")
@@ -351,4 +359,4 @@ def main() -> None:
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,
      "swing-sweep": cmd_swing_sweep, "noise-sweep": cmd_noise_sweep,
-     "wide-sweep": cmd_wide_sweep, "paper": cmd_paper, "notify": cmd_notify}[args.cmd](cfg, args)
+     "wide-sweep": cmd_wide_sweep, "paper": cmd_paper, "notify": cmd_notify, "ai": cmd_ai}[args.cmd](cfg, args)

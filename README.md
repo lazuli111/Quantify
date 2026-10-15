@@ -19,6 +19,8 @@ GitHub Actions 每个交易日美股收盘后（UTC 23:00，美东晚上 7 点�
 
 每次更新后会通过 Telegram 推送当晚的操作、上一个交易日的成交和账户现状（`uv run quantify notify`）；更新失败也会推送提醒。需要在 GitHub 仓库的 Secrets 里设置 `TELEGRAM_BOT_TOKEN` 和 `TELEGRAM_CHAT_ID`，本地测试则写在 `.env`。
 
+**AI 第二意见**：每出现新的买入信号，开源项目 [TradingAgents](https://github.com/TauricResearch/TradingAgents)（v0.6.0，用 DeepSeek）会对这只股票给出五档评级（买入 / 增持 / 持有 / 减持 / 卖出）和一份中文分析报告（`uv run quantify ai`，需要 `uv sync --extra ai` 和 `DEEPSEEK_API_KEY`）。**只记录，不影响模拟交易**；观察一段时间后，比较 AI 同意和不同意的交易各自的表现。AI 模型训练时看过历史，所以不能用来回测，只能这样往前记录。
+
 也可以在 GitHub 仓库的 Actions 页面手动点 **Run workflow** 立即更新。在本地运行前，先 `git pull` 拿到最新记录，避免和自动运行冲突。网页源文件是 `src/quantify/dashboard.html`。
 
 这是模拟记录，用来观察策略在真实行情中的表现，不是投资建议。

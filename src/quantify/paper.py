@@ -476,6 +476,8 @@ def run(cfg: dict, start: date | None = None, reset: bool = False, only: str | N
     view = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="minutes"), "as_of": last_day.isoformat(),
             "next_session": nxt.isoformat(), "next_open": open_time(nxt).isoformat(timespec="minutes"),
             "new_day": new_day, "strategies": views}
+    from . import ai_opinion  # here, not at the top: ai_opinion imports this module
+    ai_opinion.attach(view)
     DATA_PATH.parent.mkdir(exist_ok=True)
     DATA_PATH.write_text(json.dumps(view, ensure_ascii=False, indent=1), encoding="utf-8")
     PAGE_PATH.write_text(PAGE_SKELETON.format(body=PAGE_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")

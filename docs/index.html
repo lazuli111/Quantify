@@ -169,6 +169,14 @@ svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
 .tab:hover { border-color: var(--accent); }
 .tag { font-size: 12px; color: var(--ink-2); background: var(--sunk); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 .order .tag { align-self: center; }
+.ai {
+  display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-body); font-size: 12px; white-space: nowrap;
+  padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); text-decoration: none;
+}
+.ai.agree { background: var(--sunk); color: var(--ink); border-color: var(--accent); }
+.ai::before { content: "AI"; font-weight: 700; font-size: 10px; letter-spacing: .04em; color: var(--accent); }
+a.ai:hover { border-color: var(--accent); }
+.order .ai { align-self: center; }
 .info { font-size: 13px; color: var(--ink-2); background: var(--sunk); border-radius: 8px; padding: 10px 12px; margin: 12px 0 0; }
 
 /* rules & footer */
@@ -222,7 +230,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   <section class="panel" id="curve"></section>
   <section class="panel" id="trades"></section>
   <footer>
-    <span>模拟记录，用来观察策略在真实行情中的表现，不是投资建议。每个策略各有一个独立的 1,300 美元账户和免佣额度。数据：Yahoo Finance 日线。</span>
+    <span>模拟记录，用来观察策略在真实行情中的表现，不是投资建议。每个策略各有一个独立的 1,300 美元账户和免佣额度。数据：Yahoo Finance 日线。 <span id="ai-note"></span></span>
     <span class="toggle" role="group" aria-label="涨跌颜色">
       <button type="button" id="red-up" aria-pressed="true">红涨绿跌</button>
       <button type="button" id="green-up" aria-pressed="false">绿涨红跌</button>
@@ -243,6 +251,18 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   const wd = (iso) => WD[new Date(iso + "T12:00:00Z").getUTCDay()];
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const localStamp = (iso) => new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
+  // AI second opinion chip; links to the full report when there is one
+  const aiChip = (ai, long) => {
+    if (!ai) return "";
+    const text = esc(ai.rating_zh) + (long ? (ai.agrees ? " · 同意买入" : " · 不同意") : "");
+    const cls = "ai" + (ai.agrees ? " agree" : "");
+    return ai.report ? `<a class="${cls}" href="${esc(ai.report)}" target="_blank" rel="noopener">${text}</a>` : `<span class="${cls}">${text}</span>`;
+  };
+  const aiRows = (st) => {
+    if (!st || (!st.agree.trades && !st.disagree.trades)) return "";
+    const row = (label, g) => `<tr><td>${label}</td><td>${g.trades ? `${g.trades} 笔，<span class="${sgn(g.avg_ret_pct)}">${pct(g.avg_ret_pct)}</span>` : "—"}</td><td>—</td></tr>`;
+    return row("AI 同意的交易", st.agree) + row("AI 不同意的交易", st.disagree);
+  };
   const rich = (s) => esc(s).replace(/\[\[(.+?)\]\]/g, "<b>$1</b>");
   const cell = (col, val) => {
     if (val === null || val === undefined) return "<td>—</td>";
@@ -292,6 +312,12 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
   }
 
   function renderTop(v) {
+    if (v.ai) {
+      const cost = v.ai.total_cost != null ? `，累计花费 ${v.ai.total_cost} ${esc(v.ai.currency || "")}` : "";
+      $("ai-note").textContent = v.ai.runs
+        ? `AI 意见来自开源项目 TradingAgents（${v.ai.model}），只记录、不影响模拟交易；已分析 ${v.ai.runs} 次${cost}。`
+        : "";
+    }
     $("stamp").innerHTML =
       `<span>数据截至 <b>美东 ${md(v.as_of)} 收盘</b></span>` +
       `<span>更新于 ${localStamp(v.generated_at)}（你的时间）</span>`;
@@ -313,7 +339,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
         const qty = buy ? `<span class="qty">约 <span class="num">${o.est_shares}</span> 股</span>` : `<span class="qty">全部持股</span>`;
         const stop = o.stop ? ` · 止损 <span class="num">${usd(o.stop)}</span>` : "";
         return `<div class="order"><span class="verb ${buy ? "buy" : "sell"}">${buy ? "买入" : "卖出"}</span>` +
-          `<span class="sym">${esc(o.symbol)}</span>${qty}<span class="tag">${esc(o.strategy)}</span>` +
+          `<span class="sym">${esc(o.symbol)}</span>${qty}<span class="tag">${esc(o.strategy)}</span>${aiChip(o.ai, true)}` +
           `<span class="meta">参考价 <span class="num">${usd(o.ref_price)}</span>（昨收）${stop} · ${esc(o.reason)}</span></div>`;
       }).join("") + `</div><p class="note">${opened
         ? "已经开盘：这些委托已按开盘价模拟成交，美股收盘后（美东晚上 7 点）记进账户并推送。"
@@ -344,7 +370,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
         Array.from({ length: p.max_hold }, (_, i) => `<i class="${i < p.held_days ? "on" : ""}"></i>`).join("") + `</div>` : "";
       $("position").innerHTML =
         `<div class="panel-head"><div><h2>当前持仓</h2><p class="sub">${md(p.entry_date)} 开盘买入</p></div></div>` +
-        `<div class="pos-top"><span class="sym">${esc(p.symbol)}</span>` +
+        `<div class="pos-top"><span class="sym">${esc(p.symbol)}</span>${aiChip(p.ai, true)}` +
         `<span class="pl ${sgn(p.unrealized)}">${pct(p.unrealized_pct)}</span>` +
         `<span class="num ${sgn(p.unrealized)}">${signedUsd(p.unrealized)}</span></div>` +
         `<dl class="facts">` +
@@ -409,6 +435,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
       `<tr><td>胜率</td><td>${live("win_rate", (x) => Math.round(x * 100) + "%")}</td><td>${Math.round(B.win_rate * 100)}%</td></tr>` +
       `<tr><td>平均盈利 / 亏损</td><td>—</td><td>${pct(B.avg_win_pct)} / ${pct(B.avg_loss_pct)}</td></tr>` +
       `<tr><td>每月交易</td><td>—</td><td>${B.trades_per_month} 笔</td></tr>` +
+      aiRows(s.ai_stats) +
       `</tbody></table></div>` +
       `<p class="caveat">回测里单笔最差 ${pct(B.worst_pct, 1)}、最好 ${pct(B.best_pct, 1)}。少于 30 笔时，和回测的差距多半是运气，不能说明策略失效或有效。</p>` +
       (s.note ? `<p class="info">${esc(s.note)}</p>` : "");
@@ -495,10 +522,10 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12
     $("trades").innerHTML =
       `<div class="panel-head"><div><h2>交易记录</h2><p class="sub">${esc(s.name)}，已完成 ${t.length} 笔，最新的在上面</p></div></div>` +
       (t.length
-        ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>买入</th><th>买入价</th><th>卖出</th><th>卖出价</th><th>股数</th><th>持有</th><th>盈亏</th><th>收益率</th><th>卖出原因</th></tr></thead><tbody>` +
+        ? `<div class="tbl-wrap"><table><thead><tr><th>代码</th><th>买入</th><th>买入价</th><th>卖出</th><th>卖出价</th><th>股数</th><th>持有</th><th>盈亏</th><th>收益率</th><th>卖出原因</th><th>AI</th></tr></thead><tbody>` +
           t.map((r) => `<tr><td class="sym">${esc(r.symbol)}</td><td>${md(r.entry_date)}</td><td>${usd(r.entry_price)}</td>` +
             `<td>${md(r.exit_date)}</td><td>${usd(r.exit_price)}</td><td>${+r.shares}</td><td>${r.held_days} 天</td>` +
-            `<td class="${sgn(r.pnl)}">${signedUsd(r.pnl)}</td><td class="${sgn(r.ret_pct)}">${pct(r.ret_pct)}</td><td class="txt">${esc(r.reason)}</td></tr>`).join("") +
+            `<td class="${sgn(r.pnl)}">${signedUsd(r.pnl)}</td><td class="${sgn(r.ret_pct)}">${pct(r.ret_pct)}</td><td class="txt">${esc(r.reason)}</td><td class="txt">${aiChip(r.ai, false) || "—"}</td></tr>`).join("") +
           `</tbody></table></div>`
         : `<p class="empty">还没有完成的交易。出现信号后，下一个交易日开盘买入。</p>`) +
       (skipped ? `<p class="caveat">未执行：${skipped}</p>` : "");
