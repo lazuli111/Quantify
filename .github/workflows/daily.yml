@@ -1,12 +1,13 @@
 name: 每日模拟交易更新
 
-# 美股收盘后运行：23:00 UTC（美东晚上 7 点），周一到周五。
-# 03:00 UTC（美东晚上 11 点）再跑一次作为备用：第一次成功时它发现没有新交易日，什么都不做；
-# 第一次失败（例如 Yahoo 限流）时由它补上。
+# 美股收盘后运行。Yahoo 对部分股票的当天日线要到美东晚上 9–10 点半才给出，所以：
+# 03:30 UTC（美东夏令时 23:30 / 冬令时 22:30）第一次运行；数据还不全就安静结束，不报错。
+# 06:30 UTC 再跑一次作为备用：第一次已成功时它发现没有新交易日，什么都不做；否则由它补上，
+# 这次仍然不全才算失败并提醒。
 on:
   schedule:
-    - cron: "0 23 * * 1-5"
-    - cron: "0 3 * * 2-6"
+    - cron: "30 3 * * 2-6"
+    - cron: "30 6 * * 2-6"
   workflow_dispatch:
     inputs:
       notify:
@@ -38,9 +39,11 @@ jobs:
         run: uv sync --frozen --extra ai
 
       - name: 更新模拟账户
-        run: uv run quantify paper
+        id: paper
+        run: uv run quantify paper ${{ github.event.schedule == '30 3 * * 2-6' && '--soft-incomplete' || '' }}
 
       - name: AI 第二意见（只记录，不影响模拟交易）
+        if: steps.paper.outputs.skip != 'true'
         continue-on-error: true
         timeout-minutes: 30
         env:
@@ -48,6 +51,7 @@ jobs:
         run: uv run quantify ai
 
       - name: 保存记录到仓库
+        if: steps.paper.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -60,16 +64,19 @@ jobs:
           fi
 
       - uses: actions/configure-pages@v5
+        if: steps.paper.outputs.skip != 'true'
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.paper.outputs.skip != 'true'
         with:
           path: docs
 
       - id: deploy
+        if: steps.paper.outputs.skip != 'true'
         uses: actions/deploy-pages@v4
 
       - name: 发送 Telegram 推送
-        if: github.event_name == 'schedule' || inputs.notify
+        if: steps.paper.outputs.skip != 'true' && (github.event_name == 'schedule' || inputs.notify)
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -79,7 +86,7 @@ jobs:
 
       - name: 更新失败时推送提醒
         # 第一次定时运行失败时先不提醒，等备用运行；备用运行或手动运行失败才提醒
-        if: failure() && (github.event_name != 'schedule' || github.event.schedule == '0 3 * * 2-6')
+        if: failure() && (github.event_name != 'schedule' || github.event.schedule == '30 6 * * 2-6')
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

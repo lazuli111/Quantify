@@ -62,6 +62,10 @@ def open_time(day: date) -> datetime:
 
 # ---------------------------------------------------------------- data
 
+class DataIncomplete(RuntimeError):
+    """Yahoo hasn't published the latest session for enough tickers yet (it can lag by hours)."""
+
+
 def _download(symbols: list[str], period: str, threads: bool) -> dict[str, pd.DataFrame]:
     raw = yf.download(symbols, period=period, interval="1d", auto_adjust=False, actions=True,
                       group_by="ticker", progress=False, threads=threads)
@@ -121,7 +125,7 @@ def fetch_panel(symbols: list[str], period: str = "2y") -> tuple[Panel, pd.DataF
     close = fields["Close"]
     have = close.iloc[-1].notna().mean() if len(close) else 0
     if len(close) < 250 or have < 0.9:
-        raise RuntimeError(f"Yahoo 数据不完整（{len(close)} 天，最后一天 {have:.0%} 的股票有数据），本次不更新")
+        raise DataIncomplete(f"Yahoo 数据不完整（{len(close)} 天，最后一天 {have:.0%} 的股票有数据），本次不更新")
     factor = close / fields["Adj Close"]  # raw = adjusted * factor
     panel = Panel(fields["Open"] / factor, fields["High"] / factor, fields["Low"] / factor,
                   fields["Adj Close"], fields["Volume"] * factor, factor)

@@ -1,6 +1,7 @@
 import argparse
 import copy
 import itertools
+import os
 from datetime import date
 
 import numpy as np
@@ -293,7 +294,17 @@ def _first_day_on_or_after(panel, day):
 def cmd_paper(cfg: dict, args) -> None:
     """Daily paper-trading update for the watched swing strategies (run after each US close)."""
     start = date.fromisoformat(args.start) if args.start else None
-    v = paper.run(cfg, start=start, reset=args.reset, only=args.only)
+    try:
+        v = paper.run(cfg, start=start, reset=args.reset, only=args.only)
+    except paper.DataIncomplete as e:
+        if not args.soft_incomplete:
+            raise
+        # The first scheduled run: leave it to the backup run instead of failing.
+        print(f"{e}。数据可能还没发布完，交给稍后的备用运行。")
+        if os.environ.get("GITHUB_OUTPUT"):
+            with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                f.write("skip=true\n")
+        return
     print(f"数据截至 {v['as_of']}（美东收盘），下一个交易日 {v['next_session']}，美东时间 09:30 开盘")
     for s in v["strategies"]:
         a = s["account"]
@@ -350,6 +361,7 @@ def main() -> None:
     pp = sub.add_parser("paper", help="每日模拟交易更新：三连跌回调、Martin Luk 风格回调（美股收盘后运行）")
     pp.add_argument("--reset", action="store_true", help="清空模拟账户，重新开始")
     pp.add_argument("--start", help="模拟开始日期 YYYY-MM-DD（默认最近一个交易日）")
+    pp.add_argument("--soft-incomplete", action="store_true", help="数据不完整时不报错，直接结束（留给备用运行）")
     pp.add_argument("--only", choices=[st.key for st in paper.STRATEGIES], help="只重置/重新开始这一个策略")
     ai = sub.add_parser("ai", help="AI 第二意见：用 TradingAgents（DeepSeek）分析今天的新买入信号，只记录")
     ai.add_argument("--held", action="store_true", help="改为分析当前持仓当初的买入信号（补做）")
