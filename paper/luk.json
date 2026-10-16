@@ -1,18 +1,33 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 29.384801667632217,
- "position": {
-  "symbol": "CSCO",
-  "entry_date": "2026-10-14",
-  "entry_price": 115.2076,
-  "shares": 11,
-  "held_days": 1,
-  "entry_fees": 0.12672833417930604,
-  "stop": 112.76
- },
- "pending": [],
- "trades": [],
+ "cash": 1262.5145212316147,
+ "position": null,
+ "pending": [
+  {
+   "action": "buy",
+   "symbol": "PLTR",
+   "reason": "Martin Luk 风格回调信号",
+   "ref_price": 200.5,
+   "est_shares": 6,
+   "stop": 192.6
+  }
+ ],
+ "trades": [
+  {
+   "symbol": "CSCO",
+   "entry_date": "2026-10-14",
+   "entry_price": 115.21,
+   "exit_date": "2026-10-15",
+   "exit_price": 112.11,
+   "shares": 11.0,
+   "held_days": 1,
+   "reason": "盘中跌破止损",
+   "fees": 0.25,
+   "pnl": -34.28,
+   "ret_pct": -2.705
+  }
+ ],
  "skipped": [],
  "equity_curve": [
   {
@@ -24,14 +39,19 @@
    "date": "2026-10-14",
    "equity": 1279.42,
    "qqq": 728.95
+  },
+  {
+   "date": "2026-10-15",
+   "equity": 1262.51,
+   "qqq": 728.0
   }
  ],
  "quota_used_hkd": {
-  "2026-10": 9884.81006598587
+  "2026-10": 19504.18381595993
  },
  "months_charged": [
   "2026-10"
  ],
- "fees_paid": 3.3318565393075112,
- "last_processed": "2026-10-14"
+ "fees_paid": 3.455181843794358,
+ "last_processed": "2026-10-15"
 }
