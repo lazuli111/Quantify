@@ -3,16 +3,7 @@
  "capital": 1300.0,
  "cash": 1262.5145212316147,
  "position": null,
- "pending": [
-  {
-   "action": "buy",
-   "symbol": "PLTR",
-   "reason": "Martin Luk 风格回调信号",
-   "ref_price": 200.5,
-   "est_shares": 6,
-   "stop": 192.6
-  }
- ],
+ "pending": [],
  "trades": [
   {
    "symbol": "CSCO",
@@ -28,7 +19,13 @@
    "ret_pct": -2.705
   }
  ],
- "skipped": [],
+ "skipped": [
+  {
+   "date": "2026-10-16",
+   "symbol": "PLTR",
+   "reason": "开盘价离止损超过 4%"
+  }
+ ],
  "equity_curve": [
   {
    "date": "2026-10-13",
@@ -44,6 +41,11 @@
    "date": "2026-10-15",
    "equity": 1262.51,
    "qqq": 728.0
+  },
+  {
+   "date": "2026-10-16",
+   "equity": 1262.51,
+   "qqq": 709.8
   }
  ],
  "quota_used_hkd": {
@@ -53,5 +55,5 @@
   "2026-10"
  ],
  "fees_paid": 3.455181843794358,
- "last_processed": "2026-10-15"
+ "last_processed": "2026-10-16"
 }
