@@ -10,8 +10,16 @@ env -u ANTHROPIC_BASE_URL -u ANTHROPIC_API_KEY claude setup-token
 echo
 read -rsp "第 2 步：把上面显示的 token 粘贴到这里后按回车（不会显示）: " token; echo
 token="$(printf '%s' "$token" | tr -d '[:space:]')"
-if [ ${#token} -lt 20 ]; then
-  echo "token 看起来不完整，没有保存。"; exit 1
+if [[ "$token" != sk-ant-oat* ]]; then
+  echo "这不是 setup-token 生成的 token（应该以 sk-ant-oat 开头）。"
+  echo "注意：浏览器授权页上显示的验证码是粘贴给第 1 步用的，不是这里要的 token。没有保存。"
+  exit 1
+fi
+echo "正在用这个 token 试调用一次 Claude…"
+reply="$(printf 'Reply with exactly: pong' | env -u ANTHROPIC_BASE_URL -u ANTHROPIC_API_KEY \
+  CLAUDE_CODE_OAUTH_TOKEN="$token" claude -p --tools "" --no-session-persistence 2>&1 || true)"
+if [[ "$reply" != *pong* ]]; then
+  echo "这个 token 用不了，没有保存。Claude 返回：${reply:0:200}"; exit 1
 fi
 printf '%s' "$token" | gh secret set CLAUDE_CODE_OAUTH_TOKEN
 # 清掉屏幕和滚动记录里的 token
