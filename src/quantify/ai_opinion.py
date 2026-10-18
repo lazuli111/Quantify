@@ -1,16 +1,20 @@
-"""AI second opinion on each new buy signal, from TradingAgents running on DeepSeek.
+"""AI second opinion on each new buy signal, from TradingAgents running on Claude or DeepSeek.
 
 Only recorded: the paper accounts never act on it. After a few months the dashboard can compare
 the trades the AI agreed with against the ones it didn't, which is a fair test because every
 opinion is formed before the outcome is known (unlike a backtest, where the model has already
 read about the period it is judging).
 
-Needs the optional dependency (`uv sync --extra ai`) and DEEPSEEK_API_KEY.
+Needs the optional dependency (`uv sync --extra ai`) and at least one model:
+- Claude through your own subscription: the `claude` CLI, signed in (`claude auth login`) or given
+  CLAUDE_CODE_OAUTH_TOKEN from `claude setup-token` (how GitHub Actions signs in). Used first.
+- DeepSeek: DEEPSEEK_API_KEY. Used when Claude is not set up, or for a ticker Claude failed on.
 """
 
 import json
 import os
 import shutil
+import subprocess
 import tempfile
 import time
 from datetime import date
@@ -26,7 +30,9 @@ OPINIONS_PATH = PAPER_DIR / "ai_opinions.json"
 MEMORY_PATH = PAPER_DIR / "ai_memory.md"  # TradingAgents' own log of past calls, kept across runs
 REPORTS_DIR = ROOT / "docs" / "ai"
 CACHE_DIR = ROOT / ".cache" / "tradingagents"
-MODEL = "deepseek-flash"
+DEEPSEEK_MODEL = "deepseek-flash"
+CLAUDE_QUICK, CLAUDE_DEEP = "sonnet", "opus"
+CLAUDE_LABEL = f"Claude {CLAUDE_QUICK}/{CLAUDE_DEEP}（订阅）"
 RATING_ZH = {"Buy": "买入", "Overweight": "增持", "Hold": "持有", "Underweight": "减持", "Sell": "卖出"}
 AGREES = {"Buy", "Overweight"}  # a rating that supports buying
 
@@ -46,19 +52,43 @@ def _balance(key: str) -> tuple[float, str] | None:
         return None
 
 
-def _graph():
+def _claude_ready() -> bool:
+    """Whether the Claude Code CLI is installed and signed in to a Claude subscription."""
+    if not shutil.which("claude"):
+        return False
+    if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"):
+        return True
+    try:
+        return subprocess.run(["claude", "auth", "status"], capture_output=True, timeout=30).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+def _providers() -> list[str]:
+    """The models to try for each ticker, in order."""
+    found = ["claude"] if _claude_ready() else []
+    if os.environ.get("DEEPSEEK_API_KEY"):
+        found.append("deepseek")
+    return found
+
+
+def _graph(provider: str):
     from tradingagents.default_config import DEFAULT_CONFIG
     from tradingagents.graph.trading_graph import TradingAgentsGraph
 
     cfg = DEFAULT_CONFIG.copy()
     cfg.update(
-        llm_provider="deepseek", quick_think_llm=MODEL, deep_think_llm=MODEL,
         output_language="Chinese",
-        max_tokens=8000,        # deepseek-flash can otherwise run away and hang (TradingAgents #1204)
         llm_max_retries=5,
         results_dir=str(CACHE_DIR / "results"), data_cache_dir=str(CACHE_DIR / "data"),
         memory_log_path=str(MEMORY_PATH),
     )
+    if provider == "claude":
+        cfg.update(llm_provider="claude_code", quick_think_llm=CLAUDE_QUICK, deep_think_llm=CLAUDE_DEEP,
+                   llm_max_retries=1)
+    else:
+        cfg.update(llm_provider="deepseek", quick_think_llm=DEEPSEEK_MODEL, deep_think_llm=DEEPSEEK_MODEL,
+                   max_tokens=8000)  # deepseek-flash can otherwise run away and hang (TradingAgents #1204)
     return TradingAgentsGraph(config=cfg)
 
 
@@ -105,10 +135,11 @@ def run(held: bool = False) -> list[dict]:
 
     held=True does the same for the signals behind the current positions instead."""
     _load_env()
-    key = os.environ.get("DEEPSEEK_API_KEY")
-    if not key:
-        print("没有设置 DEEPSEEK_API_KEY，跳过 AI 意见")
+    providers = _providers()
+    if not providers:
+        print("没有可用的模型（Claude 未登录、也没有 DEEPSEEK_API_KEY），跳过 AI 意见")
         return []
+    key = os.environ.get("DEEPSEEK_API_KEY")
     view = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     day = date.fromisoformat(view["as_of"])
     wanted: dict[str, list[str]] = {}
@@ -128,17 +159,27 @@ def run(held: bool = False) -> list[dict]:
         print("没有需要 AI 意见的新信号")
         return []
 
-    graph = _graph()
+    graphs: dict = {}
     added = []
     for sym, names in todo.items():
-        before, t0 = _balance(key), time.time()
-        print(f"AI 分析 {sym}（{'、'.join(names)}）…", flush=True)
-        rating, report = _opine(graph, sym, day)
-        after = _balance(key)
+        for provider in providers:
+            before, t0 = (_balance(key) if provider == "deepseek" else None), time.time()
+            print(f"AI 分析 {sym}（{'、'.join(names)}），用 {'Claude' if provider == 'claude' else 'DeepSeek'}…", flush=True)
+            try:
+                if provider not in graphs:
+                    graphs[provider] = _graph(provider)
+                rating, report = _opine(graphs[provider], sym, day)
+                break
+            except Exception as exc:
+                if provider == providers[-1]:
+                    raise
+                print(f"  {provider} 失败（{type(exc).__name__}: {str(exc)[:200]}），改用下一个模型", flush=True)
+        after = _balance(key) if provider == "deepseek" else None
         cost = round(before[0] - after[0], 4) if before and after and before[1] == after[1] else None
         rec = {"date": day.isoformat(), "symbol": sym, "strategies": names, "rating": rating,
                "rating_zh": RATING_ZH.get(rating, "需复核"), "agrees": rating in AGREES, "report": report,
-               "model": MODEL, "minutes": round((time.time() - t0) / 60, 1),
+               "model": CLAUDE_LABEL if provider == "claude" else DEEPSEEK_MODEL,
+               "minutes": round((time.time() - t0) / 60, 1),
                "cost": cost, "currency": before[1] if before else None}
         print(f"  → {rec['rating_zh']}（{rating}），用时 {rec['minutes']} 分钟"
               + (f"，花费 {cost} {rec['currency']}" if cost is not None else ""), flush=True)
@@ -175,6 +216,7 @@ def attach(view: dict, opinions: list[dict] | None = None) -> dict:
         s["ai_stats"] = {("agree" if k else "disagree"): {"trades": len(v), "avg_ret_pct": round(sum(v) / len(v), 3) if v else None}
                          for k, v in groups.items()}
     costs = [o["cost"] for o in opinions if o.get("cost") is not None]
-    view["ai"] = {"model": MODEL, "runs": len(opinions), "total_cost": round(sum(costs), 2) if costs else None,
+    model = opinions[-1].get("model", DEEPSEEK_MODEL) if opinions else CLAUDE_LABEL
+    view["ai"] = {"model": model, "runs": len(opinions), "total_cost": round(sum(costs), 2) if costs else None,
                   "currency": next((o["currency"] for o in opinions if o.get("currency")), None)}
     return view

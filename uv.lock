@@ -1484,7 +1484,7 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=26.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "requests", specifier = ">=2.34.2" },
-    { name = "tradingagents", marker = "extra == 'ai'", git = "https://github.com/TauricResearch/TradingAgents?rev=v0.6.0" },
+    { name = "tradingagents", marker = "extra == 'ai'", git = "https://github.com/lazuli111/TradingAgents?rev=e61f89df2e7de10fcd0576da3f5ca72bae065416" },
     { name = "yfinance", specifier = ">=1.7.0" },
 ]
 provides-extras = ["ai"]
@@ -1749,7 +1749,7 @@ wheels = [
 [[package]]
 name = "tradingagents"
 version = "0.6.0"
-source = { git = "https://github.com/TauricResearch/TradingAgents?rev=v0.6.0#ff0d0b1b4d7240c16f07f363856639d526934e44" }
+source = { git = "https://github.com/lazuli111/TradingAgents?rev=e61f89df2e7de10fcd0576da3f5ca72bae065416#e61f89df2e7de10fcd0576da3f5ca72bae065416" }
 dependencies = [
     { name = "langchain-anthropic" },
     { name = "langchain-core" },

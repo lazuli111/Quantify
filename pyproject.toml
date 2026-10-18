@@ -27,4 +27,4 @@ requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
 
 [tool.uv.sources]
-tradingagents = { git = "https://github.com/TauricResearch/TradingAgents", rev = "v0.6.0" }
+tradingagents = { git = "https://github.com/lazuli111/TradingAgents", rev = "e61f89df2e7de10fcd0576da3f5ca72bae065416" }  # v0.6.0 + Claude subscription provider + Yahoo news fix
