@@ -8,7 +8,14 @@ cd "$(dirname "$(readlink -f "$0")")/.."
 echo "第 1 步：在浏览器里授权，屏幕上会显示一个 token（只显示这一次）。"
 env -u ANTHROPIC_BASE_URL -u ANTHROPIC_API_KEY claude setup-token
 echo
-read -rsp "第 2 步：把上面显示的 token 粘贴到这里后按回车（不会显示）: " token; echo
+# token 很长，屏幕上会折成几行，复制时会带上换行：一直读到空行，再把各行拼起来。
+echo "第 2 步：把上面显示的 token 粘贴到这里（不会显示），然后再按一次回车（空行结束）:"
+token=""
+while IFS= read -rs line; do
+  [ -z "$line" ] && [ -n "$token" ] && break
+  token+="$line"
+done
+echo
 token="$(printf '%s' "$token" | tr -d '[:space:]')"
 if [[ "$token" != sk-ant-oat* ]]; then
   echo "这不是 setup-token 生成的 token（应该以 sk-ant-oat 开头）。"
