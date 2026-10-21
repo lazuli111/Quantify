@@ -58,5 +58,20 @@
   "minutes": 4.5,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-10-20",
+  "symbol": "MRNA",
+  "strategies": [
+   "Martin Luk 风格回调"
+  ],
+  "rating": "Underweight",
+  "rating_zh": "减持",
+  "agrees": false,
+  "report": "ai/2026-10-20_MRNA.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 3.8,
+  "cost": null,
+  "currency": null
  }
 ]

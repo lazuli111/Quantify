@@ -6,11 +6,11 @@
  "pending": [
   {
    "action": "buy",
-   "symbol": "WDAY",
+   "symbol": "MRNA",
    "reason": "Martin Luk 风格回调信号",
-   "ref_price": 195.2,
-   "est_shares": 6,
-   "stop": 188.8
+   "ref_price": 242.08,
+   "est_shares": 5,
+   "stop": 216.651
   }
  ],
  "trades": [
@@ -32,6 +32,11 @@
   {
    "date": "2026-10-16",
    "symbol": "PLTR",
+   "reason": "开盘价离止损超过 4%"
+  },
+  {
+   "date": "2026-10-20",
+   "symbol": "WDAY",
    "reason": "开盘价离止损超过 4%"
   }
  ],
@@ -60,6 +65,11 @@
    "date": "2026-10-19",
    "equity": 1262.51,
    "qqq": 718.36
+  },
+  {
+   "date": "2026-10-20",
+   "equity": 1262.51,
+   "qqq": 717.63
   }
  ],
  "quota_used_hkd": {
@@ -69,5 +79,5 @@
   "2026-10"
  ],
  "fees_paid": 3.455181843794358,
- "last_processed": "2026-10-19"
+ "last_processed": "2026-10-20"
 }

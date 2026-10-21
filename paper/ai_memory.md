@@ -1,4 +1,4 @@
-[2026-10-13 | AMAT | Underweight | pending]
+[2026-10-13 | AMAT | Underweight | -12.8% | -11.6% | 5d | resolved:2026-10-20]
 
 DECISION:
 **Rating**: Underweight
@@ -19,9 +19,12 @@ DECISION:
 
 FINAL TRANSACTION PROPOSAL: **Underweight**
 
+REFLECTION:
+The Underweight call was directionally right: AMAT fell 12.8% over 5 days, a -11.6% alpha versus SPY, so the stock's weakness was mostly stock-specific rather than market-driven. That supports the short-term thesis that the 10/13 high-volume breakdown below the 10 EMA, 50 SMA and VWMA, together with the MACD death cross, signalled continuing downside momentum, and the 464 entry sat well above the 435.86 invalidation line, so a further leg down was plausible. Five days is too short to judge the longer-term fundamental and earnings-quality arguments, and the plan to trim into 488–505 rallies and avoid chasing at 464 probably left the position under-reduced into the drop. Next time, when volume-confirmed breakdown evidence is this strong, set the trim trigger relative to the breakdown level rather than waiting for a rally that may not come, and write down a pre-committed rule for escalating the underweight if the 435.86 support line is tested.
+
 <!-- ENTRY_END -->
 
-[2026-10-13 | CSCO | Hold | pending]
+[2026-10-13 | CSCO | Hold | -7.3% | -6.1% | 5d | resolved:2026-10-20]
 
 DECISION:
 **Rating**: Hold
@@ -43,6 +46,9 @@ DECISION:
 **Price Target**: not provided
 
 **Time Horizon**: 1-3 个月（触发条件驱动：119.56 放量突破 / 110.73 支撑带）
+
+REFLECTION:
+The Hold call was only partly vindicated: CSCO fell 7.3% raw and lagged SPY by 6.1% alpha, so a flat-to-modestly-up drift was wrong, though five days is too short to judge a 1-3 month thesis. The window supports the timing-and-odds side (weak volume, a stall below 118-119 resistance, and the AI news not lifting the price), but it undercuts the claim that the trend and quality case made 110.73 support a safe floor, since a drop of this size likely tested or breached it. Next time, when the thesis rests on a "bullish direction, bearish timing" split, size the Hold's downside trigger more tightly and treat a fade on good news as an early warning to trim before the support band is reached, not after.
 
 <!-- ENTRY_END -->
 
@@ -73,6 +79,33 @@ DECISION:
 **Price Target**: 207.0
 
 **Time Horizon**: 1-2个月（至11月下旬财报后重新评估）
+
+<!-- ENTRY_END -->
+
+[2026-10-20 | MRNA | Underweight | pending]
+
+DECISION:
+**Rating**: Underweight
+
+**Executive Summary**: MRNA 评级为 Underweight：减持锁利，不清仓也不做空。已有仓位在马德里数据公布前降到标准配置的约 35–40%。可在 240 上方分 2–3 笔挂单卖出，但须设时限：数据公布前一个交易日仍未卖到目标比例的，按市价补足；新资金不建仓。剩余仓位分两层保护：收盘跌破 10EMA（约 221）或单日跌幅超过 8–10% 就再减一半，止损约 206 作为最后防线；仓位大小按跳空 10–15% 的情景反推，不只按 ATR 计算。持有期 1–3 个月，数据公布后重新评估。
+
+**Investment Thesis**: 三位风险分析师都主张减持、不清仓、不做空，需要裁决的是减多少、靠什么保护剩余仓位。
+
+减持的理由：股价两个月从 62.96 涨到 242.08（约 285%），财务数据却没有改善。二季度收入 145、净亏损 782；上半年经营现金流 -1,156；现金降到 1,723；股东权益从 8,650 降到 6,761；负债升到 4,200。现价比高盛目标价 137 高约 77%，且拿不到估值倍数，没有估值锚。收盘价在布林上轨之上，价格创新高但 MACD（20.63 对 22.27）和 RSI（68.22 对 76.42）低于 9 月 29 日的水平，形成背离。10 月 15 日冲高后次日收在 218.01，说明 240 上方抛压真实存在。马德里数据是二元事件，'符合预期'也可能引发'卖事实'。
+
+不清仓的理由：均线多头排列，纳斯达克 100 纳入带来被动买盘，空头在被逼空，个体化癌症疫苗 III 期阳性是对平台的真实验证。
+
+幅度上采纳中性派的折中方案。激进派的 40–50% 低估了跳空风险：8 月 19 日这只股票从 62.96 直接跳空开到 116，10 月 16 日最低 208.92 离 206 只差不到 3 点。保守派的 25–30% 建立在假设的 25–30% 单日下跌上，没有数据支持；'连续两天站不稳 240'的触发条件太灵敏，容易被反复洗出去。
+
+吸取历史教训：AMAT 案例中只等反弹再减导致减仓不足，因此本次挂单设时限、到期按市价补足；CSCO 案例中好消息后价格下跌是早期警示，因此数据公布后若冲高回落要立即减仓。
+
+改变结论的条件：数据明显超预期、价格站稳 245 以上且三季度财报改善（亏损明显收窄、收入超过去年同期的 1,016），可回补到 60–70%；数据仅符合预期且冲高回落，减到 25% 以下；150–200 区间是重新评估分批买入的参考位置。
+
+数据缺口：持仓成本、市值和估值倍数、内部人交易、宏观数据、期权隐含波动率，以及马德里数据的市场预期均缺失。
+
+**Price Target**: 206.0
+
+**Time Horizon**: 1-3 个月（马德里数据公布后重新评估）
 
 <!-- ENTRY_END -->
 
