@@ -73,5 +73,20 @@
   "minutes": 3.8,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-10-21",
+  "symbol": "PLTR",
+  "strategies": [
+   "Martin Luk 风格回调"
+  ],
+  "rating": "Overweight",
+  "rating_zh": "增持",
+  "agrees": true,
+  "report": "ai/2026-10-21_PLTR.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 4.1,
+  "cost": null,
+  "currency": null
  }
 ]
