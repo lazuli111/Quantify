@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-10-22T12:12+00:00",
- "as_of": "2026-10-21",
- "next_session": "2026-10-22",
- "next_open": "2026-10-22T09:30-04:00",
- "new_day": false,
+ "generated_at": "2026-10-23T08:46+00:00",
+ "as_of": "2026-10-22",
+ "next_session": "2026-10-23",
+ "next_open": "2026-10-23T09:30-04:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -19,14 +19,14 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1205.85,
+    "equity": 1139.13,
     "cash": 387.97,
-    "return_pct": -7.24,
-    "qqq_return_pct": -2.47,
+    "return_pct": -12.37,
+    "qqq_return_pct": -5.26,
     "fees_paid": 3.3,
     "quota_used_hkd": 7088,
     "quota_hkd": 250000,
-    "round_trips_left": 12
+    "round_trips_left": 13
    },
    "tonight": [],
    "position": {
@@ -34,13 +34,13 @@
     "entry_date": "2026-10-14",
     "entry_price": 454.37,
     "shares": 2.0,
-    "last": 408.94,
-    "held_days": 6,
+    "last": 375.58,
+    "held_days": 7,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -90.85,
-    "unrealized_pct": -10.0,
-    "rule": "下一个交易日收盘若高于 [[$414.00]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -157.57,
+    "unrealized_pct": -17.34,
+    "rule": "下一个交易日收盘若高于 [[$389.82]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Underweight",
      "rating_zh": "减持",
@@ -64,15 +64,15 @@
    "candidates": [
     {
      "symbol": "DXCM",
-     "close": 80.26,
-     "chg3_pct": -6.72,
-     "above_sma200_pct": 8.1
+     "close": 78.32,
+     "chg3_pct": -8.91,
+     "above_sma200_pct": 5.5
     },
     {
      "symbol": "FANG",
-     "close": 200.93,
-     "chg3_pct": -1.48,
-     "above_sma200_pct": 7.9
+     "close": 197.14,
+     "chg3_pct": -2.94,
+     "above_sma200_pct": 5.7
     }
    ],
    "watch_title": "观察名单",
@@ -97,22 +97,10 @@
    ],
    "watchlist": [
     {
-     "symbol": "DASH",
-     "close": 184.45,
-     "chg2_pct": -4.69,
-     "above_sma200_pct": 0.1
-    },
-    {
-     "symbol": "ROST",
-     "close": 234.18,
-     "chg2_pct": -1.88,
-     "above_sma200_pct": 6.3
-    },
-    {
-     "symbol": "LIN",
-     "close": 500.57,
-     "chg2_pct": -0.57,
-     "above_sma200_pct": 2.6
+     "symbol": "AMZN",
+     "close": 250.38,
+     "chg2_pct": -4.66,
+     "above_sma200_pct": 2.9
     }
    ],
    "trades": [],
@@ -152,6 +140,11 @@
      "date": "2026-10-21",
      "equity": 1205.85,
      "qqq": 725.2
+    },
+    {
+     "date": "2026-10-22",
+     "equity": 1139.13,
+     "qqq": 704.47
     }
    ],
    "live_stats": {
@@ -197,28 +190,13 @@
     "equity": 1262.51,
     "cash": 1262.51,
     "return_pct": -2.88,
-    "qqq_return_pct": -2.47,
+    "qqq_return_pct": -5.26,
     "fees_paid": 3.46,
     "quota_used_hkd": 19504,
     "quota_hkd": 250000,
     "round_trips_left": 11
    },
-   "tonight": [
-    {
-     "action": "buy",
-     "symbol": "PLTR",
-     "reason": "Martin Luk 风格回调信号",
-     "ref_price": 201.72,
-     "est_shares": 6,
-     "stop": 189.88,
-     "ai": {
-      "rating": "Overweight",
-      "rating_zh": "增持",
-      "agrees": true,
-      "report": "ai/2026-10-21_PLTR.html"
-     }
-    }
-   ],
+   "tonight": [],
    "position": null,
    "candidate_cols": [
     {
@@ -237,22 +215,7 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [
-    {
-     "symbol": "PLTR",
-     "close": 201.72,
-     "stop": 189.88,
-     "stop_pct": -5.87,
-     "ret63_pct": 63.51
-    },
-    {
-     "symbol": "MSFT",
-     "close": 532.95,
-     "stop": 525.02,
-     "stop_pct": -1.49,
-     "ret63_pct": 39.93
-    }
-   ],
+   "candidates": [],
    "watch_title": "接近支撑的强势股",
    "watch_sub": "已满足强势条件，收盘离 9 日 EMA 不到 3%。下一个交易日盘中跌破 9 日 EMA 后收回，就会出现信号。",
    "watch_cols": [
@@ -277,36 +240,7 @@
      "fmt": "pct1"
     }
    ],
-   "watchlist": [
-    {
-     "symbol": "MSFT",
-     "close": 532.95,
-     "support": 532.19,
-     "gap_pct": 0.14,
-     "ret63_pct": 39.93
-    },
-    {
-     "symbol": "SHOP",
-     "close": 174.29,
-     "support": 171.3,
-     "gap_pct": 1.75,
-     "ret63_pct": 55.62
-    },
-    {
-     "symbol": "PLTR",
-     "close": 201.72,
-     "support": 197.07,
-     "gap_pct": 2.36,
-     "ret63_pct": 63.51
-    },
-    {
-     "symbol": "KDP",
-     "close": 34.47,
-     "support": 33.66,
-     "gap_pct": 2.39,
-     "ret63_pct": 17.02
-    }
-   ],
+   "watchlist": [],
    "trades": [
     {
      "symbol": "CSCO",
@@ -329,6 +263,11 @@
     }
    ],
    "skipped": [
+    {
+     "date": "2026-10-22",
+     "symbol": "PLTR",
+     "reason": "开盘价离止损超过 4%"
+    },
     {
      "date": "2026-10-21",
      "symbol": "MRNA",
@@ -380,6 +319,11 @@
      "date": "2026-10-21",
      "equity": 1262.51,
      "qqq": 725.2
+    },
+    {
+     "date": "2026-10-22",
+     "equity": 1262.51,
+     "qqq": 704.47
     }
    ],
    "live_stats": {
