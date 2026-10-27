@@ -7,11 +7,25 @@
   "entry_date": "2026-10-14",
   "entry_price": 454.3671,
   "shares": 2,
-  "held_days": 8,
+  "held_days": 9,
   "entry_fees": 0.09087341693115235,
   "stop": null
  },
- "pending": [],
+ "pending": [
+  {
+   "action": "sell",
+   "symbol": "AMAT",
+   "reason": "收盘高于前一天最高价",
+   "ref_price": 387.59
+  },
+  {
+   "action": "buy",
+   "symbol": "MRNA",
+   "reason": "三连跌回调信号",
+   "ref_price": 198.85,
+   "est_shares": 5
+  }
+ ],
  "trades": [],
  "skipped": [],
  "equity_curve": [
@@ -59,6 +73,11 @@
    "date": "2026-10-23",
    "equity": 1142.45,
    "qqq": 704.4
+  },
+  {
+   "date": "2026-10-26",
+   "equity": 1163.15,
+   "qqq": 712.2
   }
  ],
  "quota_used_hkd": {
@@ -68,5 +87,5 @@
   "2026-10"
  ],
  "fees_paid": 3.2960016220593578,
- "last_processed": "2026-10-23"
+ "last_processed": "2026-10-26"
 }

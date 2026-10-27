@@ -52,7 +52,7 @@ The Hold call was only partly vindicated: CSCO fell 7.3% raw and lagged SPY by 6
 
 <!-- ENTRY_END -->
 
-[2026-10-15 | PLTR | Underweight | pending]
+[2026-10-15 | PLTR | Underweight | -2.1% | -1.1% | 5d | resolved:2026-10-22]
 
 DECISION:
 **Rating**: Underweight
@@ -65,9 +65,12 @@ DECISION:
 
 **Time Horizon**: 1-3 个月完成减仓，6 个月再评估
 
+REFLECTION:
+The Underweight call was directionally right but only modestly: PLTR fell 2.1% over 5 days and lagged SPY by 1.1% alpha, which is a small, short-window result that cannot validate or refute a 1-3 month de-risking thesis. This supports the near-term view that momentum was fading and the price was extended, with the stalling MACD and the weak relative performance against rallying software peers, but it says nothing about the valuation-compression or 181.97 50 SMA breakdown scenarios. The lesson is that for a high-multiple name with ~3.4% daily range, a 1.1% alpha gap is within noise, so future analyses should set the scale-out tiers and any thesis check against explicit price levels, such as the 193.13 Bollinger midline and the 181.97 50 SMA, rather than reading short-window alpha as confirmation.
+
 <!-- ENTRY_END -->
 
-[2026-10-19 | WDAY | Hold | pending]
+[2026-10-19 | WDAY | Hold | +6.8% | +7.0% | 5d | resolved:2026-10-26]
 
 DECISION:
 **Rating**: Hold
@@ -79,6 +82,9 @@ DECISION:
 **Price Target**: 207.0
 
 **Time Horizon**: 1-2个月（至11月下旬财报后重新评估）
+
+REFLECTION:
+The +7.0% alpha (6.8% raw) in five days says the Hold was directionally too cautious: the stock rallied hard while I advised no chasing above 195 and a sub-full position, so the call cost relative performance. The window is too short to judge the thesis, since the November earnings event, which was the core risk, had not yet occurred. The move toward the 206–207 resistance supports the intact-trend and healthy-fundamentals argument, but it does not test the valuation, cash-burn, or buyback-sustainability concerns. Next time, when a Hold rests on a pre-earnings gap risk, set the add-on trigger as a price-and-volume rule that can be acted on quickly, and size the trim so a strong run into resistance doesn't leave the position underweight before the catalyst resolves.
 
 <!-- ENTRY_END -->
 
@@ -131,6 +137,67 @@ DECISION:
 **Price Target**: 225.0
 
 **Time Horizon**: 3-6个月
+
+<!-- ENTRY_END -->
+
+[2026-10-26 | MRNA | Underweight | pending]
+
+DECISION:
+**Rating**: Underweight
+
+**Executive Summary**: 减持 MRNA,不清仓、不做空。现价约 199 附近分 2 到 3 个交易日分批减仓,降到标准配置的约 50% 到 60%。若反弹到 213 至 214 不能放量站稳,或 Q3 收入明显低于 2025Q3 的 10.16 亿美元、毛利率仍为负,再降到约 40%;若放量跌破 174,降到 20% 到 25%。放量站稳 214.5 是减仓方案的失效线,届时停止减仓、重新评估。全程不用杠杆、不裸卖空,Q3 财报前不加仓,期限 1 到 3 个月。我不知道你的实际持仓,请按自己的仓位套用上述比例。
+
+**Investment Thesis**: 三位分析师一致认为应该减仓,分歧只在减多少。我判断看空的一方更有道理,但证据不足以清仓。
+
+支持减仓的证据:
+1. 利好落地后没有涨。III 期数据不错(风险降低 42%,两年无癌生存率 82.2%),股价仍从 254.48 跌到 198.85,并跌破 10 EMA(214.03)和 VWMA(213.40);MACD 柱从 +1.20 扩大到 -4.83。
+2. 上方有套牢盘。Capital Group 在约 245 增持 1.21 亿美元,目前浮亏,213 至 214 一带会有卖压。
+3. 基本面没有跟上涨幅。股价自 8 月从 63 涨到接近 250,但上半年净亏损 21.25 亿美元、同比扩大约 18%;现金从 25.95 亿降到 17.23 亿美元;股东权益一年下降约 28%;Q1 毛利为负。
+4. 10 年期美债收益率接近 5%,对未盈利成长股不利。
+5. CSCO 的教训:好消息出来却跌,就该提前减仓,而不是等支撑位被测试。
+
+不给 Sell、也不一步减到 40% 到 50% 的原因:
+1. "市场不买账"的证据偏薄。正式发布后只有一个交易日,且与 10 月 22 日收盘只差不到 2%。
+2. 抛压在减弱。两天盘中都在 181 附近有承接,成交量从 4995 万股降到 1708 万股。
+3. 中期趋势没有坏。MACD 线仍为正值 12.84,价格仍在 50 SMA 之上,技术报告和基本面报告都评 Hold。
+4. 没有流动性危机。流动比率约 2.3,经营现金流的消耗同比减少约 41%,也没有稀释性融资。
+5. 反弹风险大。ATR 约占股价 10.7%,止损挡不住跳空,仓位本身要按跳空情形来定。
+6. WDAY 的教训:催化剂落地前不要减得过多。
+
+所以采纳中性派的分段方案:第一段按波动率和信息缺口来减,与方向判断无关;第二段由价格或财报触发。
+
+改变判断的条件:
+- 转回 Hold 或 Overweight,需同时满足:Q3 收入同比增长且毛利率转正;价格放量收复 214 并站稳;出现总生存期数据或监管、定价方面的明确正面信息。
+- 降到 20% 或清仓,出现任一即可:Q3 收入大幅低于 10.16 亿美元;毛利率继续为负;价格放量跌破 174(下一参考区间 156 到 167,只是参考,不是预测)。
+
+材料中缺失:市值和估值倍数、总生存期数据、ESMO 会后分析师反应、Q3 财报确切日期、8 月跳空的原因。因此下行幅度无法量化,只给 Underweight。另外,10 月 29 日默沙东财报会带来联动波动,但影响小于 Moderna 自己的 Q3。
+
+**Price Target**: 174.0
+
+**Time Horizon**: 1-3 个月
+
+<!-- ENTRY_END -->
+
+[2026-10-26 | PLTR | Overweight | pending]
+
+DECISION:
+**Rating**: Overweight
+
+**Executive Summary**: PLTR 评级 Overweight:方向偏多,力度比 Buy 方案小。财报(11月2日)前,空仓者只建标准仓位约 20–25%,196 附近买一半,回踩 186–190 再买另一半,不追 205–210;已按 10-15 Underweight 减到 50% 以下的,财报前不加仓。仓位按"财报后跳空到 165–170"倒推,不按 ATR 倒推,180 止损管不住财报缺口,仓位大的账户可用 11 月到期、行权价约 180 的认沽对冲。财报后加仓条件四项满足任意两项(收入同比≥70%、营业利润率≥45%、毛利率≥83%、指引上调),且收盘站稳 50 SMA 约 185,就加到约 60%;放量收复 210 后再加到 75–80%。收盘跌破 181 减到约 10%,跌破 160 全部离场。期限 3–6 个月。
+
+**Investment Thesis**: 一、方向偏多的依据:三位分析师都不否认基本面。Q2 收入 19.35 亿美元,同比约 +93%,环比 +18.5%;营业利润率一年内从 26.8% 升到 47.1%;上半年经营现金流 21.15 亿,资本开支只有约 2200 万;流动比率约 7.2。技术面完整多头排列:198.84 > 10 EMA 197.16 > 50 SMA 185.25 > 200 SMA 153.26,10 月 16 日放量跌到 184.45 后很快收复。过去一个月 PLTR 约 +7%,同期纳指 100 约 -2%。中立派的反驳成立:毛利率 84.7% 仍然极高;"等财报后再买"不是免费的,8 月 4 日从 125.65 跳空到 162.66 后没有回踩机会。WDAY 的教训也说明,财报前 Hold 过于保守会损失相对收益,所以不选 Hold。
+
+二、不给 Buy 的理由:保守派和中立派对激进派的批评成立。(1) 止损在财报缺口面前会失效,ATR 约 8 只衡量日常波动。(2) 风险收益偏紧:196 入场、180 止损,风险 16 美元;到均价目标 207 只有 11 美元,到前高 209–210 约 13–14 美元,都不到 1:1。(3) 边际走弱的信号是真的:毛利率从 86.8% 降到 84.7%,收入成本环比 +37%,快于收入;净利率 54.9% 里有利息收入;MACD 柱状图为负,反弹缩量,没能收复 209/210.7;ARK、MISL 在减持。估值倍数没有直接数据,研究经理按 Q2 EPS 年化推算约 120 倍,上次推算的 TTM P/E 约 173 倍,失望缓冲很小。
+
+三、与上次决策的衔接:10-15 的 Underweight 是在动能减弱时减仓,之后 5 天下跌 2.1%,方向对但在噪音范围内。这次价格回到 50 SMA 上方完成消化,RSI 从 76 回到 56,符合上次写下的升级条件"50 SMA 附近缩量企稳",所以上调到 Overweight。已减仓的账户不必在财报前补回。结论:采纳中立派方案,小仓位参与趋势,不靠止损单管理事件风险,财报验证后再加仓。
+
+四、什么会改变判断:财报后收入增速明显放缓、指引没有上调,毛利率连续两个季度下滑且成本增速持续快于收入,放量收盘跌破 181,或 10 年期美债收益率继续上行,则下调到 Hold 或 Underweight。财报满足加仓条件且放量收复 210,则上调到 Buy。
+
+五、数据缺口:没有提供估值倍数、市值和股数、股权激励和稀释、内部人交易、10 年期美债收益率、VIX,也不知道账户持仓,所以只给比例层面的仓位指引,不满配。
+
+**Price Target**: 230.0
+
+**Time Horizon**: 3-6 个月
 
 <!-- ENTRY_END -->
 

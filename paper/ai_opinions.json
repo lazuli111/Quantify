@@ -88,5 +88,35 @@
   "minutes": 4.1,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-10-26",
+  "symbol": "MRNA",
+  "strategies": [
+   "三连跌回调"
+  ],
+  "rating": "Underweight",
+  "rating_zh": "减持",
+  "agrees": false,
+  "report": "ai/2026-10-26_MRNA.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 3.8,
+  "cost": null,
+  "currency": null
+ },
+ {
+  "date": "2026-10-26",
+  "symbol": "PLTR",
+  "strategies": [
+   "Martin Luk 风格回调"
+  ],
+  "rating": "Overweight",
+  "rating_zh": "增持",
+  "agrees": true,
+  "report": "ai/2026-10-26_PLTR.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 3.9,
+  "cost": null,
+  "currency": null
  }
 ]
