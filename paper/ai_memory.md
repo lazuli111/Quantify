@@ -88,7 +88,7 @@ The +7.0% alpha (6.8% raw) in five days says the Hold was directionally too caut
 
 <!-- ENTRY_END -->
 
-[2026-10-20 | MRNA | Underweight | pending]
+[2026-10-20 | MRNA | Underweight | -14.1% | -14.2% | 5d | resolved:2026-10-27]
 
 DECISION:
 **Rating**: Underweight
@@ -112,6 +112,9 @@ DECISION:
 **Price Target**: 206.0
 
 **Time Horizon**: 1-3 个月（马德里数据公布后重新评估）
+
+REFLECTION:
+The Underweight call was right: a -14.2% alpha against SPY over 5 days (raw -14.1%) is a large move in the intended direction, though 5 days only covers the first leg of a 1-3 month thesis and can't confirm it. The window supports the core argument that a roughly 285% run with deteriorating financials and no valuation anchor was exposed to a sharp reversal, and it justified sizing for a 10-15% gap rather than relying on ATR. The 206 stop and the 8-10% single-day trigger were the parts that mattered most, so the lesson is that after a parabolic run into a binary catalyst, stage the reduction before the event with a hard deadline and pre-set gap-based triggers, rather than waiting for a bounce above resistance.
 
 <!-- ENTRY_END -->
 
@@ -198,6 +201,21 @@ DECISION:
 **Price Target**: 230.0
 
 **Time Horizon**: 3-6 个月
+
+<!-- ENTRY_END -->
+
+[2026-10-27 | PAYX | Hold | pending]
+
+DECISION:
+**Rating**: Hold
+
+**Executive Summary**: 维持 Hold，按"带条件持有"执行：ADP 财报前不加仓，超过标准配置的部分硬性减掉，满配者可小幅降到标准配置的 85%–90%；没有仓位的，财报落地前不建仓。按收盘价执行阶梯减仓：跌破 106.45 减到 75%，有效跌破 200SMA 101.17 减到 50% 或更低，99.5 只当最后一道防线。收复 112.4 并站稳两日，同时 RSI 回到 55 以上、MACD 柱状图走强，才分两步加仓，最多到标准配置的 115%–125%。观察周期 1–3 个月。
+
+**Investment Thesis**: 证据经过权衡后仍接近平衡。多头一方：最新季度营收 +7.8%、营业利润 +8.2%、EPS +10%，季度利润率 39.2% 对去年同期 39.0%，资本开支不到经营现金流的 9%，价格仍在走平的 200SMA（101.17）上方约 8%。空头一方：价格跌破 10EMA（111.45）和下行中的 50SMA（112.42），MACD 柱状图从 2.06 开始连续收缩，当天收在日内低点附近，成交量偏高；ADP 处在 52 周高位、预期已被抬高；盈利口径派息率约 97%（前提是 1.19 为季度股息）；现金从 1,742 降到 601。估值、利率敏感度和债务附注都缺失。激进派说"大资金在接盘""下跌已提前反映担忧"，都没有证据支撑，他也没有回答约 3% 上行空间对约 9% 止损距离的不对称，所以不能原样保留全部敞口。保守派对跳空风险的提醒有实证（9 月 23 日单日约 -8.8%，9 月 30 日收于 97.51，低于止损位），但他引用的经营现金流同比 -24% 是按列顺序推断的，报告自己说可能有误差，不足以支撑财报前直接砍到 75%。因此采用中性派的折中方案：超配部分清掉、满配小幅收紧，用收盘价触发的阶梯减仓管理下行，用多重确认管理加仓。吸取 WDAY 的教训，加仓规则设计成可以快速执行的价格加指标条件；吸取 MRNA 的教训，在二元事件前先适度降低风险。上调到 Overweight 的条件：ADP 指引稳健且 PAYX 收复 112.4 并站稳，或在 101–106.45 区间企稳，同时估值数据显示并不昂贵。下调到 Underweight 的条件：收盘跌破 106.45 且 ADP 拖累板块，有效跌破 101.17，或债务附注、经营现金流核实后确认恶化。
+
+**Price Target**: not provided
+
+**Time Horizon**: 1-3 个月
 
 <!-- ENTRY_END -->
 

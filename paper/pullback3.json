@@ -1,32 +1,46 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 387.9698290664173,
+ "cash": 16.288077550915887,
  "position": {
-  "symbol": "AMAT",
-  "entry_date": "2026-10-14",
-  "entry_price": 454.3671,
-  "shares": 2,
-  "held_days": 9,
-  "entry_fees": 0.09087341693115235,
+  "symbol": "MRNA",
+  "entry_date": "2026-10-27",
+  "entry_price": 192.3261,
+  "shares": 6,
+  "held_days": 1,
+  "entry_fees": 0.1153956664352417,
   "stop": null
  },
  "pending": [
   {
    "action": "sell",
-   "symbol": "AMAT",
+   "symbol": "MRNA",
    "reason": "收盘高于前一天最高价",
-   "ref_price": 387.59
+   "ref_price": 207.97
   },
   {
    "action": "buy",
-   "symbol": "MRNA",
+   "symbol": "PAYX",
    "reason": "三连跌回调信号",
-   "ref_price": 198.85,
-   "est_shares": 5
+   "ref_price": 109.26,
+   "est_shares": 11
   }
  ],
- "trades": [],
+ "trades": [
+  {
+   "symbol": "AMAT",
+   "entry_date": "2026-10-14",
+   "entry_price": 454.37,
+   "exit_date": "2026-10-27",
+   "exit_price": 391.23,
+   "shares": 2.0,
+   "held_days": 9,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.17,
+   "pnl": -126.43,
+   "ret_pct": -13.913
+  }
+ ],
  "skipped": [],
  "equity_curve": [
   {
@@ -78,14 +92,19 @@
    "date": "2026-10-26",
    "equity": 1163.15,
    "qqq": 712.2
+  },
+  {
+   "date": "2026-10-27",
+   "equity": 1264.11,
+   "qqq": 721.25
   }
  ],
  "quota_used_hkd": {
-  "2026-10": 7088.126520629882
+  "2026-10": 22192.243234378053
  },
  "months_charged": [
   "2026-10"
  ],
- "fees_paid": 3.2960016220593578,
- "last_processed": "2026-10-26"
+ "fees_paid": 3.489644144030488,
+ "last_processed": "2026-10-27"
 }
