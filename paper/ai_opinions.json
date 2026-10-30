@@ -133,5 +133,35 @@
   "minutes": 3.9,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-10-29",
+  "symbol": "WDAY",
+  "strategies": [
+   "三连跌回调"
+  ],
+  "rating": "Hold",
+  "rating_zh": "持有",
+  "agrees": false,
+  "report": "ai/2026-10-29_WDAY.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 4.0,
+  "cost": null,
+  "currency": null
+ },
+ {
+  "date": "2026-10-29",
+  "symbol": "CRWD",
+  "strategies": [
+   "Martin Luk 风格回调"
+  ],
+  "rating": "Hold",
+  "rating_zh": "持有",
+  "agrees": false,
+  "report": "ai/2026-10-29_CRWD.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 4.2,
+  "cost": null,
+  "currency": null
  }
 ]
