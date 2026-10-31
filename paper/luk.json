@@ -3,16 +3,7 @@
  "capital": 1300.0,
  "cash": 1229.8468409830693,
  "position": null,
- "pending": [
-  {
-   "action": "buy",
-   "symbol": "CRWD",
-   "reason": "Martin Luk 风格回调信号",
-   "ref_price": 261.15,
-   "est_shares": 4,
-   "stop": 250.1
-  }
- ],
+ "pending": [],
  "trades": [
   {
    "symbol": "CSCO",
@@ -60,6 +51,11 @@
   {
    "date": "2026-10-22",
    "symbol": "PLTR",
+   "reason": "开盘价离止损超过 4%"
+  },
+  {
+   "date": "2026-10-30",
+   "symbol": "CRWD",
    "reason": "开盘价离止损超过 4%"
   }
  ],
@@ -128,6 +124,11 @@
    "date": "2026-10-29",
    "equity": 1229.85,
    "qqq": 715.34
+  },
+  {
+   "date": "2026-10-30",
+   "equity": 1229.85,
+   "qqq": 690.49
   }
  ],
  "quota_used_hkd": {
@@ -137,5 +138,5 @@
   "2026-10"
  ],
  "fees_paid": 3.6898014038632057,
- "last_processed": "2026-10-29"
+ "last_processed": "2026-10-30"
 }
