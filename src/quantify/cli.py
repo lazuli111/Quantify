@@ -340,6 +340,8 @@ def cmd_notify(cfg: dict, args) -> None:
         print(f"找到对话：TELEGRAM_CHAT_ID={chat}" if chat else "没找到对话。先在 Telegram 里给机器人发一条 /start，再试一次。")
     elif args.failed is not None:
         notify.send_failure(args.failed)
+    elif args.note is not None:
+        notify.send_note(args.note)
     elif notify.send_daily(force=args.force):
         print("推送已发送")
 
@@ -369,6 +371,7 @@ def main() -> None:
     nt.add_argument("--find-chat", action="store_true", help="设置时用：找出你和机器人的对话编号")
     nt.add_argument("--force", action="store_true", help="没有新的交易日也推送")
     nt.add_argument("--failed", metavar="说明", help="发送「自动更新失败」的提醒")
+    nt.add_argument("--note", metavar="文字", help="发送一条提醒")
     args = p.parse_args()
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,

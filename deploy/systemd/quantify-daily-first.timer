@@ -1,0 +1,10 @@
+[Unit]
+Description=Quantify 每日更新：第一次（美东 23:10，周一到周五）
+
+[Timer]
+# Yahoo 对部分股票的当天日线要到美东晚上 9–10 点半才给出。错开 10 分钟，避开交易机器人整点处理 4 小时 K 线。
+OnCalendar=Mon..Fri 23:10 America/New_York
+Unit=quantify-daily@first.service
+
+[Install]
+WantedBy=timers.target

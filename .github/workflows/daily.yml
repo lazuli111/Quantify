@@ -1,13 +1,12 @@
-name: 每日模拟交易更新
+name: 每日模拟交易更新（后备）
 
-# 美股收盘后运行。Yahoo 对部分股票的当天日线要到美东晚上 9–10 点半才给出，所以：
-# 03:30 UTC（美东夏令时 23:30 / 冬令时 22:30）第一次运行；数据还不全就安静结束，不报错。
-# 06:30 UTC 再跑一次作为备用：第一次已成功时它发现没有新交易日，什么都不做；否则由它补上，
-# 这次仍然不全才算失败并提醒。
+# 平时由东京服务器在美股收盘后更新（deploy/：美东 23:10，备用 01:30），推回仓库后由 pages.yml 发布网页。
+# GitHub 只做后备：每天定时看一眼，服务器最近 20 小时里更新过就什么都不做；没有（服务器停了或连续失败），
+# 就在这里照原样更新一次，并在 Telegram 里提醒检查服务器。
+# 定在 09:00 UTC（美东凌晨 4–5 点，服务器的两次运行都已结束）；GitHub 的定时任务通常还会再晚几个小时才开始。
 on:
   schedule:
-    - cron: "30 3 * * 2-6"
-    - cron: "30 6 * * 2-6"
+    - cron: "0 9 * * 2-6"
   workflow_dispatch:
     inputs:
       notify:
@@ -25,7 +24,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      fresh: ${{ steps.server.outputs.fresh }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: docs/data.json
+          sparse-checkout-cone-mode: false
+
+      - name: 东京服务器最近更新过吗
+        id: server
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          from datetime import datetime, timezone
+          v = json.load(open("docs/data.json"))
+          hours = (datetime.now(timezone.utc) - datetime.fromisoformat(v["generated_at"])).total_seconds() / 3600
+          print(f"上次更新是 {hours:.1f} 小时前")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"fresh={'true' if hours < 20 else 'false'}\n")
+          EOF
+
   update:
+    needs: check
+    # 手动运行时总是更新
+    if: github.event_name == 'workflow_dispatch' || needs.check.outputs.fresh != 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -38,19 +63,24 @@ jobs:
       - name: 安装依赖
         run: uv sync --frozen --extra ai
 
+      - name: 提醒：东京服务器没有按时更新
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run quantify notify --note "东京服务器超过 20 小时没有更新，这次改由 GitHub 代跑。请检查服务器。"
+
       - name: 更新模拟账户
-        id: paper
-        run: uv run quantify paper ${{ github.event.schedule == '30 3 * * 2-6' && '--soft-incomplete' || '' }}
+        run: uv run quantify paper
 
       - name: 安装 Claude Code（用 Claude 订阅做 AI 第二意见）
-        if: steps.paper.outputs.skip != 'true'
         continue-on-error: true
         run: npm install -g @anthropic-ai/claude-code@2.1.301
 
       # 先用 Claude 订阅（CLAUDE_CODE_OAUTH_TOKEN，由 claude setup-token 生成）；
       # 没有设置，或某只股票 Claude 分析失败时，改用 DeepSeek。
       - name: AI 第二意见（只记录，不影响模拟交易）
-        if: steps.paper.outputs.skip != 'true'
         continue-on-error: true
         timeout-minutes: 45
         env:
@@ -59,7 +89,6 @@ jobs:
         run: uv run quantify ai
 
       - name: 保存记录到仓库
-        if: steps.paper.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -71,20 +100,18 @@ jobs:
             git push
           fi
 
+      # 用 GITHUB_TOKEN 推送不会触发 pages.yml，所以这里自己发布网页
       - uses: actions/configure-pages@v5
-        if: steps.paper.outputs.skip != 'true'
 
       - uses: actions/upload-pages-artifact@v3
-        if: steps.paper.outputs.skip != 'true'
         with:
           path: docs
 
       - id: deploy
-        if: steps.paper.outputs.skip != 'true'
         uses: actions/deploy-pages@v4
 
       - name: 发送 Telegram 推送
-        if: steps.paper.outputs.skip != 'true' && (github.event_name == 'schedule' || inputs.notify)
+        if: github.event_name == 'schedule' || inputs.notify
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -93,9 +120,8 @@ jobs:
         run: uv run quantify notify ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: 更新失败时推送提醒
-        # 第一次定时运行失败时先不提醒，等备用运行；备用运行或手动运行失败才提醒
-        if: failure() && (github.event_name != 'schedule' || github.event.schedule == '30 6 * * 2-6')
+        if: failure()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: uv run quantify notify --failed "已自动重试仍然失败。运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: uv run quantify notify --failed "GitHub 后备运行也失败了。运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,0 +1,31 @@
+[Unit]
+Description=Quantify 回调观察台每日更新（%i）
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=quantify
+Group=quantify
+WorkingDirectory=/opt/quantify/app
+Environment=HOME=/opt/quantify
+Environment=PATH=/opt/quantify/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=DISABLE_AUTOUPDATER=1
+ExecStart=/opt/quantify/app/deploy/daily.sh %i
+TimeoutStartSec=90min
+
+# 这台机器上还跑着交易机器人，要让着它们：CPU 和磁盘用最低优先级；内存超过上限只会结束这个任务自己
+# （实测：更新账户约 350 MB，AI 意见约 450 MB）；万一整台机器内存不够，最先被结束的也是它。
+Nice=19
+CPUWeight=20
+IOSchedulingClass=idle
+MemoryHigh=450M
+MemoryMax=900M
+OOMScoreAdjust=1000
+
+# 只能写自己的目录
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/quantify

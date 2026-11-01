@@ -1,0 +1,11 @@
+[Unit]
+Description=Quantify 每日更新：备用（美东 01:30，周二到周六）
+
+[Timer]
+OnCalendar=Tue..Sat 01:30 America/New_York
+# 服务器在这个时间关着的话，开机后补跑一次
+Persistent=true
+Unit=quantify-daily@backup.service
+
+[Install]
+WantedBy=timers.target

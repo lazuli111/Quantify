@@ -106,6 +106,10 @@ def send_failure(details: str) -> bool:
     return send(f"<b>回调观察台：今天的自动更新失败了</b>\n模拟账户没有改动。{escape(details)}")
 
 
+def send_note(text: str) -> bool:
+    return send(f"<b>回调观察台</b>\n{escape(text)}")
+
+
 def find_chat_id() -> str | None:
     """The chat id of whoever last messaged the bot (send it /start first)."""
     token, _ = _credentials()
