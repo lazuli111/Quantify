@@ -31,7 +31,7 @@ echo "2/7 下载代码到 $APP"
 
 echo "3/7 安装 uv $UV_VERSION 和项目依赖（第一次要几分钟）"
 if [ "$(as_q "$BIN/uv" --version 2>/dev/null | cut -d' ' -f2)" != "$UV_VERSION" ]; then
-  as_q sh -c "curl -LsSf https://astral.sh/uv/$UV_VERSION/install.sh | sh -s -- --no-modify-path --quiet"
+  as_q sh -c "curl -LsSf https://astral.sh/uv/$UV_VERSION/install.sh | UV_NO_MODIFY_PATH=1 sh -s -- --quiet"
 fi
 as_q sh -c "cd $APP && $BIN/uv sync --frozen --extra ai --quiet"
 
@@ -76,7 +76,9 @@ elif grep -q '^CLAUDE_CODE_OAUTH_TOKEN=' "$APP/.env"; then
   fi
 fi
 
-echo "7/7 定时运行（美东 23:10，备用 01:30）"
+echo "7/7 定时运行（美东 23:10，备用 01:30）和网页目录"
+# 每次更新后 deploy/daily.sh 把 docs/ 复制到这里；要在网页上打开，再按 deploy/nginx/quantify.conf 配置 nginx
+install -d -o "$USER_NAME" -g "$USER_NAME" -m 755 /var/www/quantify
 install -m 644 "$APP"/deploy/systemd/quantify-daily@.service "$APP"/deploy/systemd/quantify-daily-*.timer /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable --now --quiet quantify-daily-first.timer quantify-daily-backup.timer

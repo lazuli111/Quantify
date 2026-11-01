@@ -23,9 +23,9 @@ MemoryHigh=450M
 MemoryMax=900M
 OOMScoreAdjust=1000
 
-# 只能写自己的目录
+# 只能写自己的目录和网页目录
 NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=strict
 ProtectHome=yes
-ReadWritePaths=/opt/quantify
+ReadWritePaths=/opt/quantify -/var/www/quantify

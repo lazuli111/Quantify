@@ -12,7 +12,7 @@
 - **三连跌回调**（`swing_strategies.Pullback3`）：消除幸存者偏差后唯一通过检验的策略；
 - **Martin Luk 风格回调**（`swing_strategies.LukPullback`，回调到 9 日 EMA 买、跌破 21 日 EMA 卖、止损不超过 4%）：回测证据很弱，用来观察。
 
-东京服务器每个交易日美股收盘后自动运行（美东 23:10；Yahoo 的当天数据有时要到美东晚上 10 点半才齐，没齐就由美东 01:30 的备用运行补上；部署方法见 [deploy/install.sh](deploy/install.sh)） `uv run quantify paper`：
+东京服务器每个交易日美股收盘后自动运行（美东 23:10；Yahoo 的当天数据有时要到美东晚上 10 点半才齐，没齐就由美东 01:30 的备用运行补上；部署方法见 [deploy/install.sh](deploy/install.sh)；服务器上的网页在 `/quantify/`，nginx 配置见 [deploy/nginx/](deploy/nginx/)） `uv run quantify paper`：
 1. 用 Yahoo 日线按回测里同样的信号代码找信号；
 2. 模拟交易：下一个交易日按开盘价成交，Luk 策略另有盘中止损，计入 0.05% 滑点和汇丰 Trade25 的费用与免佣额度；
 3. 把各策略的账户状态存到 `paper/<策略>.json`，网页数据存到 `docs/data.json`，并发布到 GitHub Pages。

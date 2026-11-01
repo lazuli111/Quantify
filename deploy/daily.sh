@@ -46,6 +46,12 @@ else
   git push --quiet || { git pull --rebase --quiet && git push --quiet; }
 fi
 
+# 服务器自己的网页（nginx 的 /quantify/，见 deploy/nginx/）：只复制 docs/，代码和密钥不会对外
+web_dir=/var/www/quantify
+if [ -d "$web_dir" ]; then
+  rsync -a --delete docs/ "$web_dir/"
+fi
+
 # 定时运行只在出现新交易日时推送；手动运行总是推送
 if [ "$run" = manual ]; then
   .venv/bin/quantify notify --force || echo "Telegram 推送失败"
