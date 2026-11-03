@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-11-01T12:10+00:00",
- "as_of": "2026-10-30",
- "next_session": "2026-11-02",
- "next_open": "2026-11-02T09:30-05:00",
- "new_day": false,
+ "generated_at": "2026-11-03T04:10+00:00",
+ "as_of": "2026-11-02",
+ "next_session": "2026-11-03",
+ "next_open": "2026-11-03T09:30-05:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -19,14 +19,14 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1265.24,
-    "cash": 78.32,
-    "return_pct": -2.67,
-    "qqq_return_pct": -7.14,
-    "fees_paid": 3.97,
-    "quota_used_hkd": 59992,
+    "equity": 1263.9,
+    "cash": 75.12,
+    "return_pct": -2.78,
+    "qqq_return_pct": -8.4,
+    "fees_paid": 7.18,
+    "quota_used_hkd": 0,
     "quota_hkd": 250000,
-    "round_trips_left": 9
+    "round_trips_left": 12
    },
    "tonight": [],
    "position": {
@@ -34,13 +34,13 @@
     "entry_date": "2026-10-30",
     "entry_price": 200.17,
     "shares": 6.0,
-    "last": 197.82,
-    "held_days": 1,
+    "last": 198.13,
+    "held_days": 2,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -14.1,
-    "unrealized_pct": -1.17,
-    "rule": "下一个交易日收盘若高于 [[$201.88]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -12.24,
+    "unrealized_pct": -1.02,
+    "rule": "下一个交易日收盘若高于 [[$203.21]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Hold",
      "rating_zh": "持有",
@@ -63,58 +63,58 @@
    ],
    "candidates": [
     {
-     "symbol": "FTNT",
-     "close": 136.08,
-     "chg3_pct": -26.44,
-     "above_sma200_pct": 6.0
+     "symbol": "DDOG",
+     "close": 216.1,
+     "chg3_pct": -22.38,
+     "above_sma200_pct": 8.7
     },
     {
-     "symbol": "DDOG",
-     "close": 235.27,
-     "chg3_pct": -16.22,
-     "above_sma200_pct": 18.6
+     "symbol": "AMD",
+     "close": 466.84,
+     "chg3_pct": -19.29,
+     "above_sma200_pct": 13.4
+    },
+    {
+     "symbol": "MU",
+     "close": 833.59,
+     "chg3_pct": -15.22,
+     "above_sma200_pct": 11.3
     },
     {
      "symbol": "PANW",
-     "close": 365.87,
-     "chg3_pct": -8.92,
-     "above_sma200_pct": 35.6
+     "close": 351.72,
+     "chg3_pct": -10.84,
+     "above_sma200_pct": 30.0
     },
     {
      "symbol": "PLTR",
-     "close": 184.11,
-     "chg3_pct": -7.36,
-     "above_sma200_pct": 19.9
+     "close": 178.34,
+     "chg3_pct": -9.38,
+     "above_sma200_pct": 16.1
     },
     {
      "symbol": "CRWD",
-     "close": 250.43,
-     "chg3_pct": -6.56,
-     "above_sma200_pct": 49.7
+     "close": 241.81,
+     "chg3_pct": -9.32,
+     "above_sma200_pct": 44.0
     },
     {
      "symbol": "CSCO",
-     "close": 104.51,
-     "chg3_pct": -6.17,
-     "above_sma200_pct": 4.0
+     "close": 101.61,
+     "chg3_pct": -7.87,
+     "above_sma200_pct": 0.9
     },
     {
-     "symbol": "NVDA",
-     "close": 204.64,
-     "chg3_pct": -6.1,
-     "above_sma200_pct": 0.3
-    },
-    {
-     "symbol": "TSLA",
-     "close": 399.81,
-     "chg3_pct": -1.88,
-     "above_sma200_pct": 3.8
+     "symbol": "SHOP",
+     "close": 156.22,
+     "chg3_pct": -7.13,
+     "above_sma200_pct": 20.3
     },
     {
      "symbol": "MSFT",
-     "close": 521.91,
-     "chg3_pct": -1.77,
-     "above_sma200_pct": 19.5
+     "close": 507.12,
+     "chg3_pct": -4.5,
+     "above_sma200_pct": 16.0
     }
    ],
    "watch_title": "观察名单",
@@ -139,34 +139,40 @@
    ],
    "watchlist": [
     {
-     "symbol": "MRVL",
-     "close": 196.4,
-     "chg2_pct": -21.96,
-     "above_sma200_pct": 7.2
+     "symbol": "SNPS",
+     "close": 466.08,
+     "chg2_pct": -4.92,
+     "above_sma200_pct": 5.1
     },
     {
-     "symbol": "ALAB",
-     "close": 258.7,
-     "chg2_pct": -12.95,
-     "above_sma200_pct": 1.4
+     "symbol": "ADI",
+     "close": 412.85,
+     "chg2_pct": -4.72,
+     "above_sma200_pct": 11.2
     },
     {
-     "symbol": "AMD",
-     "close": 504.8,
-     "chg2_pct": -12.73,
-     "above_sma200_pct": 23.0
+     "symbol": "NXPI",
+     "close": 257.24,
+     "chg2_pct": -3.29,
+     "above_sma200_pct": 5.0
     },
     {
-     "symbol": "MU",
-     "close": 884.74,
-     "chg2_pct": -10.02,
-     "above_sma200_pct": 18.5
+     "symbol": "AAPL",
+     "close": 338.32,
+     "chg2_pct": -3.04,
+     "above_sma200_pct": 14.0
     },
     {
-     "symbol": "SHOP",
-     "close": 157.49,
-     "chg2_pct": -6.38,
-     "above_sma200_pct": 21.3
+     "symbol": "CSX",
+     "close": 51.62,
+     "chg2_pct": -1.19,
+     "above_sma200_pct": 13.4
+    },
+    {
+     "symbol": "MRNA",
+     "close": 220.83,
+     "chg2_pct": -0.87,
+     "above_sma200_pct": 152.4
     }
    ],
    "trades": [
@@ -299,6 +305,11 @@
      "date": "2026-10-30",
      "equity": 1265.24,
      "qqq": 690.49
+    },
+    {
+     "date": "2026-11-02",
+     "equity": 1263.9,
+     "qqq": 681.09
     }
    ],
    "live_stats": {
@@ -348,11 +359,11 @@
     "equity": 1229.85,
     "cash": 1229.85,
     "return_pct": -5.4,
-    "qqq_return_pct": -7.14,
+    "qqq_return_pct": -8.4,
     "fees_paid": 3.69,
-    "quota_used_hkd": 37805,
+    "quota_used_hkd": 0,
     "quota_hkd": 250000,
-    "round_trips_left": 11
+    "round_trips_left": 13
    },
    "tonight": [],
    "position": null,
@@ -400,25 +411,32 @@
    ],
    "watchlist": [
     {
+     "symbol": "MRNA",
+     "close": 220.83,
+     "support": 217.25,
+     "gap_pct": 1.65,
+     "ret63_pct": 287.49
+    },
+    {
      "symbol": "ADP",
-     "close": 293.84,
-     "support": 291.46,
-     "gap_pct": 0.82,
-     "ret63_pct": 9.62
+     "close": 298.78,
+     "support": 292.92,
+     "gap_pct": 2.0,
+     "ret63_pct": 11.11
     },
     {
      "symbol": "CTAS",
-     "close": 219.82,
-     "support": 217.42,
-     "gap_pct": 1.11,
-     "ret63_pct": 8.03
+     "close": 224.77,
+     "support": 218.89,
+     "gap_pct": 2.69,
+     "ret63_pct": 10.66
     },
     {
-     "symbol": "MRNA",
-     "close": 221.72,
-     "support": 216.36,
-     "gap_pct": 2.48,
-     "ret63_pct": 302.1
+     "symbol": "AMGN",
+     "close": 465.45,
+     "support": 452.3,
+     "gap_pct": 2.91,
+     "ret63_pct": 20.04
     }
    ],
    "trades": [
@@ -558,6 +576,11 @@
      "date": "2026-10-30",
      "equity": 1229.85,
      "qqq": 690.49
+    },
+    {
+     "date": "2026-11-02",
+     "equity": 1229.85,
+     "qqq": 681.09
     }
    ],
    "live_stats": {

@@ -1,13 +1,13 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 78.32035235095486,
+ "cash": 75.11522414582666,
  "position": {
   "symbol": "WDAY",
   "entry_date": "2026-10-30",
   "entry_price": 200.17,
   "shares": 6,
-  "held_days": 1,
+  "held_days": 2,
   "entry_fees": 0.12010202539672851,
   "stop": null
  },
@@ -124,14 +124,20 @@
    "date": "2026-10-30",
    "equity": 1265.24,
    "qqq": 690.49
+  },
+  {
+   "date": "2026-11-02",
+   "equity": 1263.9,
+   "qqq": 681.09
   }
  ],
  "quota_used_hkd": {
   "2026-10": 59992.19397083817
  },
  "months_charged": [
-  "2026-10"
+  "2026-10",
+  "2026-11"
  ],
- "fees_paid": 3.974258897062028,
- "last_processed": "2026-10-30"
+ "fees_paid": 7.179387102190233,
+ "last_processed": "2026-11-02"
 }
