@@ -3,7 +3,16 @@
  "capital": 1300.0,
  "cash": 1229.8468409830693,
  "position": null,
- "pending": [],
+ "pending": [
+  {
+   "action": "buy",
+   "symbol": "ADP",
+   "reason": "Martin Luk 风格回调信号",
+   "ref_price": 296.01,
+   "est_shares": 4,
+   "stop": 292.29
+  }
+ ],
  "trades": [
   {
    "symbol": "CSCO",
@@ -134,6 +143,11 @@
    "date": "2026-11-02",
    "equity": 1229.85,
    "qqq": 681.09
+  },
+  {
+   "date": "2026-11-03",
+   "equity": 1229.85,
+   "qqq": 685.28
   }
  ],
  "quota_used_hkd": {
@@ -143,5 +157,5 @@
   "2026-10"
  ],
  "fees_paid": 3.6898014038632057,
- "last_processed": "2026-11-02"
+ "last_processed": "2026-11-03"
 }

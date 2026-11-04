@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-11-03T06:30+00:00",
- "as_of": "2026-11-02",
- "next_session": "2026-11-03",
- "next_open": "2026-11-03T09:30-05:00",
- "new_day": false,
+ "generated_at": "2026-11-04T04:10+00:00",
+ "as_of": "2026-11-03",
+ "next_session": "2026-11-04",
+ "next_open": "2026-11-04T09:30-05:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -19,10 +19,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1263.9,
+    "equity": 1262.76,
     "cash": 75.12,
-    "return_pct": -2.78,
-    "qqq_return_pct": -8.4,
+    "return_pct": -2.86,
+    "qqq_return_pct": -7.84,
     "fees_paid": 7.18,
     "quota_used_hkd": 0,
     "quota_hkd": 250000,
@@ -34,13 +34,13 @@
     "entry_date": "2026-10-30",
     "entry_price": 200.17,
     "shares": 6.0,
-    "last": 198.13,
-    "held_days": 2,
+    "last": 197.94,
+    "held_days": 3,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -12.24,
-    "unrealized_pct": -1.02,
-    "rule": "下一个交易日收盘若高于 [[$203.21]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -13.38,
+    "unrealized_pct": -1.11,
+    "rule": "下一个交易日收盘若高于 [[$199.57]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Hold",
      "rating_zh": "持有",
@@ -63,58 +63,40 @@
    ],
    "candidates": [
     {
-     "symbol": "DDOG",
-     "close": 216.1,
-     "chg3_pct": -22.38,
-     "above_sma200_pct": 8.7
-    },
-    {
-     "symbol": "AMD",
-     "close": 466.84,
-     "chg3_pct": -19.29,
-     "above_sma200_pct": 13.4
-    },
-    {
-     "symbol": "MU",
-     "close": 833.59,
-     "chg3_pct": -15.22,
-     "above_sma200_pct": 11.3
-    },
-    {
-     "symbol": "PANW",
-     "close": 351.72,
-     "chg3_pct": -10.84,
-     "above_sma200_pct": 30.0
+     "symbol": "SHOP",
+     "close": 142.57,
+     "chg3_pct": -14.57,
+     "above_sma200_pct": 9.8
     },
     {
      "symbol": "PLTR",
-     "close": 178.34,
-     "chg3_pct": -9.38,
-     "above_sma200_pct": 16.1
+     "close": 175.4,
+     "chg3_pct": -10.7,
+     "above_sma200_pct": 14.2
     },
     {
-     "symbol": "CRWD",
-     "close": 241.81,
-     "chg3_pct": -9.32,
-     "above_sma200_pct": 44.0
+     "symbol": "PANW",
+     "close": 350.2,
+     "chg3_pct": -7.98,
+     "above_sma200_pct": 29.0
     },
     {
-     "symbol": "CSCO",
-     "close": 101.61,
-     "chg3_pct": -7.87,
-     "above_sma200_pct": 0.9
+     "symbol": "SNPS",
+     "close": 462.88,
+     "chg3_pct": -5.57,
+     "above_sma200_pct": 4.5
     },
     {
-     "symbol": "SHOP",
-     "close": 156.22,
-     "chg3_pct": -7.13,
-     "above_sma200_pct": 20.3
+     "symbol": "AAPL",
+     "close": 331.9,
+     "chg3_pct": -4.88,
+     "above_sma200_pct": 11.7
     },
     {
-     "symbol": "MSFT",
-     "close": 507.12,
-     "chg3_pct": -4.5,
-     "above_sma200_pct": 16.0
+     "symbol": "CSX",
+     "close": 50.72,
+     "chg3_pct": -2.91,
+     "above_sma200_pct": 11.3
     }
    ],
    "watch_title": "观察名单",
@@ -139,40 +121,34 @@
    ],
    "watchlist": [
     {
-     "symbol": "SNPS",
-     "close": 466.08,
-     "chg2_pct": -4.92,
-     "above_sma200_pct": 5.1
+     "symbol": "FANG",
+     "close": 192.34,
+     "chg2_pct": -9.31,
+     "above_sma200_pct": 1.9
     },
     {
-     "symbol": "ADI",
-     "close": 412.85,
-     "chg2_pct": -4.72,
-     "above_sma200_pct": 11.2
+     "symbol": "VRTX",
+     "close": 530.76,
+     "chg2_pct": -5.03,
+     "above_sma200_pct": 10.5
     },
     {
-     "symbol": "NXPI",
-     "close": 257.24,
-     "chg2_pct": -3.29,
-     "above_sma200_pct": 5.0
+     "symbol": "GILD",
+     "close": 167.47,
+     "chg2_pct": -1.88,
+     "above_sma200_pct": 20.4
     },
     {
-     "symbol": "AAPL",
-     "close": 338.32,
-     "chg2_pct": -3.04,
-     "above_sma200_pct": 14.0
+     "symbol": "XEL",
+     "close": 78.76,
+     "chg2_pct": -1.33,
+     "above_sma200_pct": 1.8
     },
     {
-     "symbol": "CSX",
-     "close": 51.62,
-     "chg2_pct": -1.19,
-     "above_sma200_pct": 13.4
-    },
-    {
-     "symbol": "MRNA",
-     "close": 220.83,
-     "chg2_pct": -0.87,
-     "above_sma200_pct": 152.4
+     "symbol": "AMGN",
+     "close": 461.26,
+     "chg2_pct": -1.02,
+     "above_sma200_pct": 23.6
     }
    ],
    "trades": [
@@ -310,6 +286,11 @@
      "date": "2026-11-02",
      "equity": 1263.9,
      "qqq": 681.09
+    },
+    {
+     "date": "2026-11-03",
+     "equity": 1262.76,
+     "qqq": 685.28
     }
    ],
    "live_stats": {
@@ -359,13 +340,23 @@
     "equity": 1229.85,
     "cash": 1229.85,
     "return_pct": -5.4,
-    "qqq_return_pct": -8.4,
+    "qqq_return_pct": -7.84,
     "fees_paid": 3.69,
     "quota_used_hkd": 0,
     "quota_hkd": 250000,
     "round_trips_left": 13
    },
-   "tonight": [],
+   "tonight": [
+    {
+     "action": "buy",
+     "symbol": "ADP",
+     "reason": "Martin Luk 风格回调信号",
+     "ref_price": 296.01,
+     "est_shares": 4,
+     "stop": 292.29,
+     "ai": null
+    }
+   ],
    "position": null,
    "candidate_cols": [
     {
@@ -384,7 +375,15 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [],
+   "candidates": [
+    {
+     "symbol": "ADP",
+     "close": 296.01,
+     "stop": 292.29,
+     "stop_pct": -1.26,
+     "ret63_pct": 10.3
+    }
+   ],
    "watch_title": "接近支撑的强势股",
    "watch_sub": "已满足强势条件，收盘离 9 日 EMA 不到 3%。下一个交易日盘中跌破 9 日 EMA 后收回，就会出现信号。",
    "watch_cols": [
@@ -411,32 +410,25 @@
    ],
    "watchlist": [
     {
-     "symbol": "MRNA",
-     "close": 220.83,
-     "support": 217.25,
-     "gap_pct": 1.65,
-     "ret63_pct": 287.49
-    },
-    {
      "symbol": "ADP",
-     "close": 298.78,
-     "support": 292.92,
-     "gap_pct": 2.0,
-     "ret63_pct": 11.11
-    },
-    {
-     "symbol": "CTAS",
-     "close": 224.77,
-     "support": 218.89,
-     "gap_pct": 2.69,
-     "ret63_pct": 10.66
+     "close": 296.01,
+     "support": 293.54,
+     "gap_pct": 0.84,
+     "ret63_pct": 10.3
     },
     {
      "symbol": "AMGN",
-     "close": 465.45,
-     "support": 452.3,
-     "gap_pct": 2.91,
-     "ret63_pct": 20.04
+     "close": 461.26,
+     "support": 454.1,
+     "gap_pct": 1.58,
+     "ret63_pct": 13.76
+    },
+    {
+     "symbol": "CTAS",
+     "close": 223.74,
+     "support": 219.86,
+     "gap_pct": 1.77,
+     "ret63_pct": 11.38
     }
    ],
    "trades": [
@@ -581,6 +573,11 @@
      "date": "2026-11-02",
      "equity": 1229.85,
      "qqq": 681.09
+    },
+    {
+     "date": "2026-11-03",
+     "equity": 1229.85,
+     "qqq": 685.28
     }
    ],
    "live_stats": {
