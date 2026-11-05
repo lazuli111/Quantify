@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-11-04T04:10+00:00",
- "as_of": "2026-11-03",
- "next_session": "2026-11-04",
- "next_open": "2026-11-04T09:30-05:00",
+ "generated_at": "2026-11-05T09:10+00:00",
+ "as_of": "2026-11-04",
+ "next_session": "2026-11-05",
+ "next_open": "2026-11-05T09:30-05:00",
  "new_day": true,
  "strategies": [
   {
@@ -19,28 +19,44 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1262.76,
+    "equity": 1286.16,
     "cash": 75.12,
-    "return_pct": -2.86,
-    "qqq_return_pct": -7.84,
+    "return_pct": -1.06,
+    "qqq_return_pct": -6.94,
     "fees_paid": 7.18,
     "quota_used_hkd": 0,
     "quota_hkd": 250000,
     "round_trips_left": 12
    },
-   "tonight": [],
+   "tonight": [
+    {
+     "action": "sell",
+     "symbol": "WDAY",
+     "reason": "收盘高于前一天最高价",
+     "ref_price": 201.84,
+     "ai": null
+    },
+    {
+     "action": "buy",
+     "symbol": "PLTR",
+     "reason": "三连跌回调信号",
+     "ref_price": 171.7,
+     "est_shares": 7,
+     "ai": null
+    }
+   ],
    "position": {
     "symbol": "WDAY",
     "entry_date": "2026-10-30",
     "entry_price": 200.17,
     "shares": 6.0,
-    "last": 197.94,
-    "held_days": 3,
+    "last": 201.84,
+    "held_days": 4,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -13.38,
-    "unrealized_pct": -1.11,
-    "rule": "下一个交易日收盘若高于 [[$199.57]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": 10.02,
+    "unrealized_pct": 0.83,
+    "rule": "下一个交易日收盘若高于 [[$208.74]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Hold",
      "rating_zh": "持有",
@@ -63,40 +79,16 @@
    ],
    "candidates": [
     {
-     "symbol": "SHOP",
-     "close": 142.57,
-     "chg3_pct": -14.57,
-     "above_sma200_pct": 9.8
-    },
-    {
      "symbol": "PLTR",
-     "close": 175.4,
-     "chg3_pct": -10.7,
-     "above_sma200_pct": 14.2
+     "close": 171.7,
+     "chg3_pct": -6.74,
+     "above_sma200_pct": 11.8
     },
     {
      "symbol": "PANW",
-     "close": 350.2,
-     "chg3_pct": -7.98,
-     "above_sma200_pct": 29.0
-    },
-    {
-     "symbol": "SNPS",
-     "close": 462.88,
-     "chg3_pct": -5.57,
-     "above_sma200_pct": 4.5
-    },
-    {
-     "symbol": "AAPL",
-     "close": 331.9,
-     "chg3_pct": -4.88,
-     "above_sma200_pct": 11.7
-    },
-    {
-     "symbol": "CSX",
-     "close": 50.72,
-     "chg3_pct": -2.91,
-     "above_sma200_pct": 11.3
+     "close": 348.04,
+     "chg3_pct": -4.87,
+     "above_sma200_pct": 27.8
     }
    ],
    "watch_title": "观察名单",
@@ -121,34 +113,16 @@
    ],
    "watchlist": [
     {
-     "symbol": "FANG",
-     "close": 192.34,
-     "chg2_pct": -9.31,
-     "above_sma200_pct": 1.9
+     "symbol": "TSLA",
+     "close": 385.19,
+     "chg2_pct": -4.61,
+     "above_sma200_pct": 0.1
     },
     {
-     "symbol": "VRTX",
-     "close": 530.76,
-     "chg2_pct": -5.03,
-     "above_sma200_pct": 10.5
-    },
-    {
-     "symbol": "GILD",
-     "close": 167.47,
-     "chg2_pct": -1.88,
-     "above_sma200_pct": 20.4
-    },
-    {
-     "symbol": "XEL",
-     "close": 78.76,
-     "chg2_pct": -1.33,
-     "above_sma200_pct": 1.8
-    },
-    {
-     "symbol": "AMGN",
-     "close": 461.26,
-     "chg2_pct": -1.02,
-     "above_sma200_pct": 23.6
+     "symbol": "AEP",
+     "close": 129.24,
+     "chg2_pct": -0.84,
+     "above_sma200_pct": 1.6
     }
    ],
    "trades": [
@@ -291,6 +265,11 @@
      "date": "2026-11-03",
      "equity": 1262.76,
      "qqq": 685.28
+    },
+    {
+     "date": "2026-11-04",
+     "equity": 1286.16,
+     "qqq": 691.95
     }
    ],
    "live_stats": {
@@ -337,27 +316,30 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1229.85,
-    "cash": 1229.85,
-    "return_pct": -5.4,
-    "qqq_return_pct": -7.84,
-    "fees_paid": 3.69,
-    "quota_used_hkd": 0,
+    "equity": 1238.68,
+    "cash": 24.52,
+    "return_pct": -4.72,
+    "qqq_return_pct": -6.94,
+    "fees_paid": 7.02,
+    "quota_used_hkd": 9376,
     "quota_hkd": 250000,
-    "round_trips_left": 13
+    "round_trips_left": 12
    },
-   "tonight": [
-    {
-     "action": "buy",
-     "symbol": "ADP",
-     "reason": "Martin Luk 风格回调信号",
-     "ref_price": 296.01,
-     "est_shares": 4,
-     "stop": 292.29,
-     "ai": null
-    }
-   ],
-   "position": null,
+   "tonight": [],
+   "position": {
+    "symbol": "ADP",
+    "entry_date": "2026-11-04",
+    "entry_price": 300.5,
+    "shares": 4.0,
+    "last": 303.54,
+    "held_days": 1,
+    "max_hold": null,
+    "stop": 292.29,
+    "unrealized": 12.16,
+    "unrealized_pct": 1.01,
+    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$289.12]]），下一个交易日开盘卖出。没有持有天数上限。",
+    "ai": null
+   },
    "candidate_cols": [
     {
      "key": "stop",
@@ -375,15 +357,7 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [
-    {
-     "symbol": "ADP",
-     "close": 296.01,
-     "stop": 292.29,
-     "stop_pct": -1.26,
-     "ret63_pct": 10.3
-    }
-   ],
+   "candidates": [],
    "watch_title": "接近支撑的强势股",
    "watch_sub": "已满足强势条件，收盘离 9 日 EMA 不到 3%。下一个交易日盘中跌破 9 日 EMA 后收回，就会出现信号。",
    "watch_cols": [
@@ -410,25 +384,18 @@
    ],
    "watchlist": [
     {
+     "symbol": "WDAY",
+     "close": 201.84,
+     "support": 200.23,
+     "gap_pct": 0.8,
+     "ret63_pct": 18.56
+    },
+    {
      "symbol": "ADP",
-     "close": 296.01,
-     "support": 293.54,
-     "gap_pct": 0.84,
-     "ret63_pct": 10.3
-    },
-    {
-     "symbol": "AMGN",
-     "close": 461.26,
-     "support": 454.1,
-     "gap_pct": 1.58,
-     "ret63_pct": 13.76
-    },
-    {
-     "symbol": "CTAS",
-     "close": 223.74,
-     "support": 219.86,
-     "gap_pct": 1.77,
-     "ret63_pct": 11.38
+     "close": 303.54,
+     "support": 295.54,
+     "gap_pct": 2.71,
+     "ret63_pct": 11.69
     }
    ],
    "trades": [
@@ -578,6 +545,11 @@
      "date": "2026-11-03",
      "equity": 1229.85,
      "qqq": 685.28
+    },
+    {
+     "date": "2026-11-04",
+     "equity": 1238.68,
+     "qqq": 691.95
     }
    ],
    "live_stats": {
