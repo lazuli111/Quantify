@@ -146,7 +146,7 @@ The -2.3% alpha (raw -2.4%) over 5 days is a small miss on the Overweight call, 
 
 <!-- ENTRY_END -->
 
-[2026-10-26 | MRNA | Underweight | pending]
+[2026-10-26 | MRNA | Underweight | +11.1% | +12.8% | 5d | resolved:2026-11-02]
 
 DECISION:
 **Rating**: Underweight
@@ -182,9 +182,12 @@ DECISION:
 
 **Time Horizon**: 1-3 个月
 
+REFLECTION:
+The Underweight call was wrong over this window: MRNA rose +11.1% raw and +12.8% alpha versus SPY, so trimming cost money, and five days is too short to judge a 1-3 month thesis tied to Q3 earnings. The window undercuts the technical leg (post-ESMO breakdown below the 10 EMA/VWMA and the overhead supply near 213-214), though it says nothing yet about the fundamental leg of cash burn and negative gross margin. The lesson is that for a high-ATR (~10.7%) name ahead of an unresolved catalyst, a staged trim is better sized to the gap risk than to a directional view, and a one-day "good news, stock fell" signal should not drive the call without confirming volume, especially when the selling was already fading and there was support near 181.
+
 <!-- ENTRY_END -->
 
-[2026-10-26 | PLTR | Overweight | pending]
+[2026-10-26 | PLTR | Overweight | -10.3% | -8.6% | 5d | resolved:2026-11-02]
 
 DECISION:
 **Rating**: Overweight
@@ -205,9 +208,12 @@ DECISION:
 
 **Time Horizon**: 3-6 个月
 
+REFLECTION:
+The Overweight call lost: a -10.3% raw return and -8.6% alpha vs SPY over 5 days is a clear directional miss, though the window is short and spans the November 2 earnings gap, so it tests event risk more than the 3-6 month thesis. The window supports the memo's warning that a 180 stop cannot contain an earnings gap and that valuation at roughly 120-173x leaves little cushion for disappointment, while it undercuts the idea that RSI reset and 50 SMA support were enough to justify adding exposure before the print. The lesson: when the thesis itself says event risk dominates and valuation is stretched, hold the pre-earnings position at minimal size or wait for the confirmation conditions rather than upgrading ahead of the report.
+
 <!-- ENTRY_END -->
 
-[2026-10-27 | PAYX | Hold | pending]
+[2026-10-27 | PAYX | Hold | +5.8% | +7.8% | 5d | resolved:2026-11-03]
 
 DECISION:
 **Rating**: Hold
@@ -219,6 +225,9 @@ DECISION:
 **Price Target**: not provided
 
 **Time Horizon**: 1-3 个月
+
+REFLECTION:
+The +7.8% alpha (raw +5.8%) says the Hold with trim-into-earnings leaned the wrong way on direction: the stock rallied sharply, so trimming overweight and refusing new entries gave up upside, though five days is too short to judge a 1–3 month thesis. The window undercuts the bearish technical read (price below the 10EMA and 50SMA, shrinking MACD histogram) and supports the view that evidence was balanced and the 101.17 200SMA support held, since the downside triggers never fired. Lesson: when a pre-event de-risking rule is set, pair it with a pre-defined re-entry trigger on a fast reclaim of the 10EMA/50SMA, and avoid weighting a single shrinking-momentum indicator heavily against an intact long-term trend and solid fundamentals.
 
 <!-- ENTRY_END -->
 
@@ -269,6 +278,31 @@ DECISION:
 **Price Target**: 278.86
 
 **Time Horizon**: 1-3 个月
+
+<!-- ENTRY_END -->
+
+[2026-11-04 | PLTR | Overweight | pending]
+
+DECISION:
+**Rating**: Overweight
+
+**Executive Summary**: PLTR 评级 Overweight，按中立派的修正结构执行。首批只建标准仓位的 15–20%（不是 30%）：一半挂 170–172，另一半挂 165 以下，或等 11 月 4 日长下影线被后续 2–3 个收盘确认后再成交。已按 10-26 方案降到约 10% 的账户，补到 15–20% 即可。第二批加到约 40%，条件是收盘连续两日站回布林下轨、MACD 柱状图连续收窄、RSI ≥40；或回踩 153–158 缩量企稳，这一批单独设止损约 148。第三批在放量收复 185–187 后加到 60–75%；补齐估值和股权激励数据前，总仓位不超过 75%。收盘有效跌破 200 SMA（153.61）先减半，跌破 150 降到 10% 以下；所有批次合计的最大亏损要设组合层面上限。期限 3–6 个月。
+
+**Investment Thesis**: 一、方向偏多：财报事件风险已过，10-26 决策写下的财报后四项加仓条件全部满足：营收同比 +96%（环比 +19.5%，连续加速），营业利润率约 47%，毛利率 83.4%，指引上调。前九个月经营现金流 33.2 亿美元，资本开支约 0.3 亿美元，现金 36 亿美元，流动比率 7.1，美国商业收入首次超过政府收入。保守派也承认公司优秀。商业逻辑得到验证，所以不给 Hold 或 Sell。
+
+二、不给 Buy、首批缩小：保守派和中立派的批评成立。(1) 合理的第一目标 185–187 离 170 约 17 点，而到 150 止损是 20 点，回报风险比不到 1:1；激进派用 209 前高算出的约 2:1 不现实。(2) 止损约 2.2 倍 ATR（不是 2.4 倍），占入场价约 12%，ATR 已从约 7 升到 9，仓位应按止损宽度反推缩小。(3) 下行动量在加速：价格低于 10 EMA 185.70 和 50 SMA 186.84，MACD 柱状图从 -0.96 扩大到 -3.72，RSI 33.47 仍在下行，11 月 3 日放量 5300 万股。(4) 财报前已涨约 60%，利好兑现后下跌；七日 -11.7% 明显大于 DDOG（-3%）和 SNOW（-2%），估值压缩主要落在 PLTR 自身。(5) 原方案两笔限价单在现价附近几乎同时成交，时间上没有分散。
+
+三、不采纳观望：毛利率下滑（86.8%→84.7%→83.4%）需要跟踪，但营业利润率稳在 47%、现金流同比约 +145%；订单放缓的说法是媒体转述，没有剩余履约义务数据支撑；价格已从约 209 回落约 18%。
+
+四、过往教训：10-26 在财报前上调 Overweight，5 天 -10.3%，说明事件风险主导时不应提前加仓。这次事件已过、基本面已验证，但"站稳 50 SMA 约 185"的价格条件还没满足，所以只建试探仓。PAYX 的教训是减仓要配重新入场触发，所以写明收复 185–187 后追加。MRNA 的教训是单日"好消息股价跌"不能单独定评级，仓位按缺口风险定。
+
+五、改变判断的条件：下调到 Hold/Underweight——收盘有效跌破 153.61、营收环比增速低于约 10%、毛利率低于 82%、营业利润率低于 45%、下调指引、股权激励明显侵蚀自由现金流，或估值处于极端高位（此时总仓位上限降到 50–60%）。上调到 Buy——放量收复 185–187、MACD 转正、RSI 回到 50 以上，且订单数据没有恶化。
+
+六、数据缺口：估值倍数、股权激励和稀释、剩余履约义务和分部数据、宏观数据（利率、10 年期美债、VIX）都缺失；情绪数据样本很小；账户持仓未知，请按自己的仓位折算。
+
+**Price Target**: 205.0
+
+**Time Horizon**: 3-6 个月
 
 <!-- ENTRY_END -->
 

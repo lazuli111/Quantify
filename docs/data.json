@@ -42,7 +42,12 @@
      "reason": "三连跌回调信号",
      "ref_price": 171.7,
      "est_shares": 7,
-     "ai": null
+     "ai": {
+      "rating": "Overweight",
+      "rating_zh": "增持",
+      "agrees": true,
+      "report": "ai/2026-11-04_PLTR.html"
+     }
     }
    ],
    "position": {
@@ -585,7 +590,7 @@
  ],
  "ai": {
   "model": "Claude sonnet/opus（订阅）",
-  "runs": 11,
+  "runs": 12,
   "total_cost": 2.23,
   "currency": "CNY"
  }
