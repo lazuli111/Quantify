@@ -10,6 +10,7 @@ from html import escape
 
 import requests
 
+from .ai_opinion import load_opinions
 from .data import _load_env
 from .paper import DATA_PATH
 
@@ -29,6 +30,10 @@ def _usd(v: float) -> str:
 
 def _pct(v: float) -> str:
     return f"{v:+.2f}%"
+
+
+def stance(ai: dict) -> str:
+    return "同意买入" if ai["agrees"] else "中立" if ai["rating"] == "Hold" else "不同意买入"
 
 
 def build_message(v: dict) -> str:
@@ -63,8 +68,7 @@ def build_message(v: dict) -> str:
                     lines.append(f"▶ 开盘<b>买入 {o['symbol']}</b> 约 {o['est_shares']} 股，参考价 {_usd(o['ref_price'])}{stop}")
                     ai = o.get("ai")
                     if ai:
-                        stance = "同意买入" if ai["agrees"] else "中立" if ai["rating"] == "Hold" else "不同意买入"
-                        lines.append(f"   AI 意见：{ai['rating_zh']}（{stance}，仅供参考）")
+                        lines.append(f"   AI 意见：{ai['rating_zh']}（{stance(ai)}，仅供参考）")
                 else:
                     lines.append(f"▶ 开盘<b>卖出 {o['symbol']}</b>（{escape(o['reason'])}）")
         else:
@@ -108,6 +112,20 @@ def send_failure(details: str) -> bool:
 
 def send_note(text: str) -> bool:
     return send(f"<b>回调观察台</b>\n{escape(text)}")
+
+
+def send_ai_opinions() -> bool:
+    """The AI runs on GitHub after the server's daily update, so its opinions arrive as a second message."""
+    v = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    opinions = [o for o in load_opinions() if o["date"] == v["as_of"]]
+    if not opinions:
+        print("这个交易日没有 AI 意见，不推送")
+        return False
+    lines = [f"<b>回调观察台 · AI 第二意见（{_md(v['next_session'])} 开盘）</b>"]
+    for o in opinions:
+        report = f' <a href="{DASHBOARD_URL}{o["report"]}">报告</a>' if o["report"] else ""
+        lines.append(f"{o['symbol']}：{o['rating_zh']}（{stance(o)}，仅供参考）{report}")
+    return send("\n".join(lines))
 
 
 def find_chat_id() -> str | None:

@@ -1,0 +1,93 @@
+name: AI 第二意见
+
+# 东京服务器内存不够跑 TradingAgents（4 个分析师同时开 Claude 进程，峰值超过 1 GB），所以放在这里跑。
+# 服务器每次推回每日记录都会触发（推送触发不像定时任务那样晚几个小时）：没有新买入信号就立刻结束；
+# 有就分析、保存、重新发布网页，再发一条 Telegram。服务器下一次运行时会拉到结果。
+on:
+  push:
+    branches: [main]
+    paths: ["docs/data.json"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily-paper
+  cancel-in-progress: false
+
+jobs:
+  opinion:
+    if: startsWith(github.event.head_commit.message, '每日模拟更新')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: 安装依赖
+        run: uv sync --frozen --extra ai
+
+      - name: 安装 Claude Code（用 Claude 订阅做 AI 第二意见）
+        continue-on-error: true
+        run: npm install -g @anthropic-ai/claude-code@2.1.301
+
+      # 先用 Claude 订阅（CLAUDE_CODE_OAUTH_TOKEN，由 claude setup-token 生成）；
+      # 没有设置，或某只股票 Claude 分析失败时，改用 DeepSeek。
+      - name: AI 第二意见（只记录，不影响模拟交易）
+        id: ai
+        continue-on-error: true
+        timeout-minutes: 45
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: uv run quantify ai
+
+      - name: 保存记录到仓库
+        id: save
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add paper docs
+          if git diff --cached --quiet; then
+            echo "没有变化"
+          else
+            git commit -m "AI 第二意见 $(date -u +%F)"
+            git pull --rebase
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # 用 GITHUB_TOKEN 推送不会触发 pages.yml，所以这里自己发布网页
+      - uses: actions/configure-pages@v5
+        if: steps.save.outputs.changed == 'true'
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.save.outputs.changed == 'true'
+        with:
+          path: docs
+
+      - id: deploy
+        if: steps.save.outputs.changed == 'true'
+        uses: actions/deploy-pages@v4
+
+      - name: 发送 AI 意见到 Telegram
+        if: steps.save.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run quantify notify --ai
+
+      - name: 失败时推送提醒
+        if: failure() || steps.ai.outcome == 'failure'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run quantify notify --note "这次 AI 第二意见失败了（不影响模拟交易和开盘操作）。运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# 东京服务器上的每日更新，由 systemd 定时器在美股收盘后调用（deploy/systemd/）。
-# 做的事和 .github/workflows/daily.yml 一样：更新模拟账户 → AI 第二意见 → 把记录推回 GitHub
-# （GitHub 收到后自动发布网页）→ Telegram 推送。参数是这次运行的类型：
+# 东京服务器上的每日更新，由 systemd 定时器在美股收盘后调用（deploy/systemd/）：
+# 更新模拟账户 → 把记录推回 GitHub → Telegram 推送。
+# GitHub 收到后发布网页（pages.yml），有新买入信号时再跑 AI 第二意见（ai.yml）。AI 不放在这台机器上：
+# 它要同时开 4 个 Claude 进程，峰值超过 1 GB，这台 1.6 GB 的机器上还跑着交易机器人。
+# 参数是这次运行的类型：
 #   first   第一次（美东 23:10）：Yahoo 的当天数据还不全就安静结束，留给备用运行
 #   backup  备用（美东 01:30）：第一次已成功时它发现没有新交易日，什么都不做；仍然不全才算失败并提醒
 #   manual  手动（sudo systemctl start quantify-daily@manual）：总是推送
@@ -20,8 +22,11 @@ alert() {
 }
 trap alert ERR
 
+# 上一次运行如果中途被打断，会留下没提交的改动，挡住 git pull。账户记录以已提交的为准，下面会重新算一遍。
+git checkout -- paper docs
+git clean -fdq paper docs
 git pull --rebase --quiet
-uv sync --frozen --extra ai --quiet
+uv sync --frozen --quiet
 
 # --soft-incomplete 跳过时会在 GITHUB_OUTPUT 指向的文件里写 skip=true（GitHub 上也是这样用的）
 skip_file="$(mktemp)"
@@ -33,9 +38,6 @@ if grep -q '^skip=true' "$skip_file"; then
   exit 0
 fi
 rm -f "$skip_file"
-
-# AI 第二意见只记录、不影响模拟交易，失败了也继续
-timeout 45m .venv/bin/quantify ai || echo "AI 第二意见失败，跳过"
 
 git add paper docs
 if git diff --cached --quiet; then

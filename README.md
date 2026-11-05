@@ -19,7 +19,7 @@
 
 每次更新后会通过 Telegram 推送当晚的操作、上一个交易日的成交和账户现状（`uv run quantify notify`）；更新失败也会推送提醒。需要 `TELEGRAM_BOT_TOKEN` 和 `TELEGRAM_CHAT_ID`：服务器上在 `/opt/quantify/app/.env`（用 [scripts/setup_server_secrets.sh](scripts/setup_server_secrets.sh) 传上去），GitHub 后备运行用仓库的 Secrets，本地测试写在 `.env`。
 
-服务器把记录推回仓库后，GitHub 自动发布网页（[pages.yml](.github/workflows/pages.yml)）。GitHub Actions 还每天检查一次：服务器超过 20 小时没有更新，就由 GitHub 代跑并在 Telegram 提醒（[daily.yml](.github/workflows/daily.yml)）。
+服务器把记录推回仓库后，GitHub 自动发布网页（[pages.yml](.github/workflows/pages.yml)）；有新买入信号时再跑 AI 第二意见，结果用第二条 Telegram 推送（[ai.yml](.github/workflows/ai.yml)，服务器内存不够跑 AI）。GitHub Actions 还每天检查一次：服务器超过 20 小时没有更新，就由 GitHub 代跑并在 Telegram 提醒（[daily.yml](.github/workflows/daily.yml)）。
 
 **AI 第二意见**：每出现新的买入信号，开源项目 [TradingAgents](https://github.com/TauricResearch/TradingAgents)（v0.6.0 加上 [Claude 订阅和 Yahoo 新闻修复](https://github.com/lazuli111/TradingAgents/tree/claude-subscription)；优先用 Claude 订阅，没有时用 DeepSeek）会对这只股票给出五档评级（买入 / 增持 / 持有 / 减持 / 卖出）和一份中文分析报告（`uv run quantify ai`，需要 `uv sync --extra ai`，以及登录好的 `claude` 命令行（GitHub 上用 `CLAUDE_CODE_OAUTH_TOKEN`）或 `DEEPSEEK_API_KEY`）。**只记录，不影响模拟交易**；观察一段时间后，比较 AI 同意和不同意的交易各自的表现。AI 模型训练时看过历史，所以不能用来回测，只能这样往前记录。
 

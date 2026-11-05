@@ -329,8 +329,7 @@ def cmd_ai(cfg: dict, args) -> None:
     """AI second opinion (TradingAgents on Claude, or DeepSeek) on today's new buy signals. Recorded only."""
     from . import ai_opinion
     for o in ai_opinion.run(held=args.held):
-        stance = "同意买入" if o["agrees"] else "中立" if o["rating"] == "Hold" else "不同意买入"
-        print(f"{o['symbol']}：{o['rating_zh']}（{stance}），报告 docs/{o['report']}")
+        print(f"{o['symbol']}：{o['rating_zh']}（{notify.stance(o)}），报告 docs/{o['report']}")
 
 
 def cmd_notify(cfg: dict, args) -> None:
@@ -342,6 +341,8 @@ def cmd_notify(cfg: dict, args) -> None:
         notify.send_failure(args.failed)
     elif args.note is not None:
         notify.send_note(args.note)
+    elif args.ai:
+        notify.send_ai_opinions()
     elif notify.send_daily(force=args.force):
         print("推送已发送")
 
@@ -372,6 +373,7 @@ def main() -> None:
     nt.add_argument("--force", action="store_true", help="没有新的交易日也推送")
     nt.add_argument("--failed", metavar="说明", help="发送「自动更新失败」的提醒")
     nt.add_argument("--note", metavar="文字", help="发送一条提醒")
+    nt.add_argument("--ai", action="store_true", help="发送这个交易日的 AI 第二意见")
     args = p.parse_args()
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,
