@@ -1,31 +1,17 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 75.11522414582666,
+ "cash": 135.35283455989997,
  "position": {
-  "symbol": "WDAY",
-  "entry_date": "2026-10-30",
-  "entry_price": 200.17,
-  "shares": 6,
-  "held_days": 4,
-  "entry_fees": 0.12010202539672851,
+  "symbol": "PLTR",
+  "entry_date": "2026-11-05",
+  "entry_price": 166.7984,
+  "shares": 7,
+  "held_days": 1,
+  "entry_fees": 0.11675884768524171,
   "stop": null
  },
- "pending": [
-  {
-   "action": "sell",
-   "symbol": "WDAY",
-   "reason": "收盘高于前一天最高价",
-   "ref_price": 201.84
-  },
-  {
-   "action": "buy",
-   "symbol": "PLTR",
-   "reason": "三连跌回调信号",
-   "ref_price": 171.7,
-   "est_shares": 7
-  }
- ],
+ "pending": [],
  "trades": [
   {
    "symbol": "AMAT",
@@ -65,6 +51,19 @@
    "fees": 0.24,
    "pnl": 39.91,
    "ret_pct": 3.351
+  },
+  {
+   "symbol": "WDAY",
+   "entry_date": "2026-10-30",
+   "entry_price": 200.17,
+   "exit_date": "2026-11-05",
+   "exit_price": 204.68,
+   "shares": 6.0,
+   "held_days": 4,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.24,
+   "pnl": 26.8,
+   "ret_pct": 2.232
   }
  ],
  "skipped": [],
@@ -153,15 +152,21 @@
    "date": "2026-11-04",
    "equity": 1286.16,
    "qqq": 691.95
+  },
+  {
+   "date": "2026-11-05",
+   "equity": 1220.28,
+   "qqq": 647.05
   }
  ],
  "quota_used_hkd": {
-  "2026-10": 59992.19397083817
+  "2026-10": 59992.19397083817,
+  "2026-11": 18686.102210348512
  },
  "months_charged": [
   "2026-10",
   "2026-11"
  ],
- "fees_paid": 7.179387102190233,
- "last_processed": "2026-11-04"
+ "fees_paid": 7.4189525151434195,
+ "last_processed": "2026-11-05"
 }
