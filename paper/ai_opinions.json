@@ -178,5 +178,20 @@
   "minutes": 4.2,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-11-06",
+  "symbol": "CRWD",
+  "strategies": [
+   "三连跌深回调"
+  ],
+  "rating": "Hold",
+  "rating_zh": "持有",
+  "agrees": false,
+  "report": "ai/2026-11-06_CRWD.html",
+  "model": "Claude sonnet/opus（订阅）",
+  "minutes": 4.4,
+  "cost": null,
+  "currency": null
  }
 ]

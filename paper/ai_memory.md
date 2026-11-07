@@ -231,7 +231,7 @@ The +7.8% alpha (raw +5.8%) says the Hold with trim-into-earnings leaned the wro
 
 <!-- ENTRY_END -->
 
-[2026-10-29 | WDAY | Hold | pending]
+[2026-10-29 | WDAY | Hold | +2.4% | +7.1% | 5d | resolved:2026-11-05]
 
 DECISION:
 **Rating**: Hold
@@ -256,9 +256,12 @@ DECISION:
 
 **Time Horizon**: 约5周(至财报后重新评估)
 
+REFLECTION:
+The Hold call was directionally fine but cost us upside: WDAY returned +2.4% with +7.1% alpha vs SPY, so the stock beat the market by a wide margin while we stayed at or below standard sizing. Five days is too short to judge the earnings-driven thesis, but it does undercut the "further sector de-rating" worry, since WDAY held up while the market moved against that fear, and it supports the view that the 10/29 drop was sector sympathy selling rather than a company-specific break. The lesson is that this is the second Hold followed by a clear rally (after the 10/19 one), so when the trend is intact (above the 200 SMA, 50 SMA rising) and no company-specific negative exists, pre-set mechanical upside triggers and a small starter position should be in place rather than waiting for the earnings confirmation.
+
 <!-- ENTRY_END -->
 
-[2026-10-29 | CRWD | Hold | pending]
+[2026-10-29 | CRWD | Hold | -16.8% | -12.1% | 5d | resolved:2026-11-05]
 
 DECISION:
 **Rating**: Hold
@@ -278,6 +281,9 @@ DECISION:
 **Price Target**: 278.86
 
 **Time Horizon**: 1-3 个月
+
+REFLECTION:
+The Hold call was directionally right: CRWD fell 16.8% in 5 days, underperforming SPY by 12.1% alpha, so avoiding Overweight and capping size at standard avoided a sharp drawdown. Five days is too short to judge the 1–3 month thesis, but the drop supports the valuation-stretch and binary-event-risk arguments (price 57% above the 200-day, unknown earnings date) over the quality and fundamentals-strength side. The 235 close-based half-reduction rule likely triggered, which validates mechanical stops; next time, with a stretched multiple and an unknown earnings date, I should lean toward a pre-committed trim near resistance rather than only "no add," since a Hold with a held position still absorbed the full gap.
 
 <!-- ENTRY_END -->
 
@@ -303,6 +309,31 @@ DECISION:
 **Price Target**: 205.0
 
 **Time Horizon**: 3-6 个月
+
+<!-- ENTRY_END -->
+
+[2026-11-06 | CRWD | Hold | pending]
+
+DECISION:
+**Rating**: Hold
+
+**Executive Summary**: CRWD评级为Hold。已有持仓的，在216.90附近维持现有仓位，不追跌加仓，也不低位割肉；仓位明显高于标准配置的，借反弹减回标准配置。减仓按收盘价执行：收盘跌破213.12且次日没有收回，先减约1/4；收盘跌破205，再减到标准配置约0.65倍；收盘跌破200日均线170.24且基本面同时恶化，重新评估持有逻辑。加仓分两级：连续两天收盘站上约227且MACD柱状图连续两天收窄，可试探加仓，不超过标准配置的10%–15%；收盘站回238.58且柱状图继续收敛，再分批加仓，总仓位先不超过1.1倍。反弹到243–245而柱状图还没转好，先减一小部分。每笔加减仓不超过标准配置的25%，财报日期未知，财报前总仓位不超过标准配置，时间框架1–3个月。
+
+**Investment Thesis**: 一、为什么不卖出或减配：营收同比增长约25%，毛利率74%–75%；上半年自由现金流约8.99亿美元，同比约+50%，利润率约31%；现金约50亿美元。价格仍比上行中的200日均线170.24高约27%。11月5日PLTR、OKTA与CRWD同日下跌9%–10%，带有明显的板块性质。价格从278.86跌到216.90，已跌约22%，现在贴近布林下轨213.12，追空的风险回报较差。三位分析师都不支持卖出。
+
+二、为什么不加仓或超配：MACD柱状图从-1.34扩大到-4.47，价格低于10日EMA和50日均线，11月5日从241放量跳空，收在217。Deutsche Bank上调评级、给出300美元目标价，当天股价照跌；Fortinet业绩超预期后仍跌近20%，说明利好已经托不住价格。GAAP营业利润停在约-33百万美元，净利润很可能靠利息收入；SBC和估值倍数缺数据，社交媒体上的40倍以上市销率未经核实；资本支出同比约+91%。
+
+三、对三方分歧的裁决：否决激进派"确认前先开25%试探仓"，在跳空环境下止损单不能保证在设定价位成交。否决保守派"跌破213.12立即减1/3"和"永久取消1.25倍上限"，布林下轨正在快速下移，贴着下轨走是常态；缺数据是双向的不确定性，应该放慢节奏，而不是取消加仓选项。采纳中性派的分级方案，用"收盘跌破+次日确认"和227中间台阶，解决原计划中205与213两个触发位的矛盾。
+
+四、对过往教训的吸收：10月29日CRWD在261给出Hold后5日内下跌16.8%，所以这次加入243–245的反弹减仓条款；WDAY和PAYX的Hold都错过了随后的上涨，所以保留两级可以机械执行的加仓触发；PLTR在财报前上调到Overweight后亏损，所以财报前总仓位不超过标准配置。
+
+五、什么情况下改变评级：收盘跌破205并站稳，或下次财报显示净新增ARR走弱、营业利润继续恶化，下调到Underweight。收盘站回238.58、MACD柱状图连续收敛，同时补齐的估值和SBC数据显示估值溢价合理，上调到Overweight。
+
+六、目前仍缺的数据：估值倍数、SBC与股份稀释、宏观（FRED）数据、预测市场、内部人交易、下次财报日期、11月5日放量下跌的具体原因，以及7月2日拆股字段对应的历史价格口径。
+
+**Price Target**: 238.58
+
+**Time Horizon**: 1-3个月
 
 <!-- ENTRY_END -->
 

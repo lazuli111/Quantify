@@ -725,7 +725,12 @@
      "reason": "三连跌深回调信号",
      "ref_price": 216.9,
      "est_shares": 5,
-     "ai": null
+     "ai": {
+      "rating": "Hold",
+      "rating_zh": "持有",
+      "agrees": false,
+      "report": "ai/2026-11-06_CRWD.html"
+     }
     }
    ],
    "position": null,
@@ -882,7 +887,7 @@
  ],
  "ai": {
   "model": "Claude sonnet/opus（订阅）",
-  "runs": 12,
+  "runs": 13,
   "total_cost": 2.23,
   "currency": "CNY"
  }
