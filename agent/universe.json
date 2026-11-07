@@ -1,0 +1,1175 @@
+{
+ "updated": "2026-11-07T12:49+00:00",
+ "symbols": [
+  {
+   "symbol": "AAOIUSDT",
+   "ticker": "AAOI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AAPLUSDT",
+   "ticker": "AAPL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ABBVUSDT",
+   "ticker": "ABBV",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ACNUSDT",
+   "ticker": "ACN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ADBEUSDT",
+   "ticker": "ADBE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AGPUUSDT",
+   "ticker": "AGPU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AKAMUSDT",
+   "ticker": "AKAM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ALABUSDT",
+   "ticker": "ALAB",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMATUSDT",
+   "ticker": "AMAT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMCUSDT",
+   "ticker": "AMC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMDUSDT",
+   "ticker": "AMD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMGNUSDT",
+   "ticker": "AMGN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMZNUSDT",
+   "ticker": "AMZN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ANETUSDT",
+   "ticker": "ANET",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "APLDUSDT",
+   "ticker": "APLD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "APPUSDT",
+   "ticker": "APP",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ARMUSDT",
+   "ticker": "ARM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ASMLUSDT",
+   "ticker": "ASML",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ASTSUSDT",
+   "ticker": "ASTS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AVGOUSDT",
+   "ticker": "AVGO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AXTIUSDT",
+   "ticker": "AXTI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BABAUSDT",
+   "ticker": "BABA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BACUSDT",
+   "ticker": "BAC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BBXUSDT",
+   "ticker": "BBX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BEUSDT",
+   "ticker": "BE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BITOUSDT",
+   "ticker": "BITO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BMNRUSDT",
+   "ticker": "BMNR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BNCUSDT",
+   "ticker": "BNC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BOTUSDT",
+   "ticker": "BOT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BRKBUSDT",
+   "ticker": "BRK-B",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BSPUSDT",
+   "ticker": "BSP",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BWETUSDT",
+   "ticker": "BWET",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "BXUSDT",
+   "ticker": "BX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CATUSDT",
+   "ticker": "CAT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CBRSUSDT",
+   "ticker": "CBRS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CEGUSDT",
+   "ticker": "CEG",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CIENUSDT",
+   "ticker": "CIEN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "COHRUSDT",
+   "ticker": "COHR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "COINUSDT",
+   "ticker": "COIN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "COSTUSDT",
+   "ticker": "COST",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRCLUSDT",
+   "ticker": "CRCL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRDOUSDT",
+   "ticker": "CRDO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRMLUSDT",
+   "ticker": "CRML",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRMUSDT",
+   "ticker": "CRM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRWDUSDT",
+   "ticker": "CRWD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CRWVUSDT",
+   "ticker": "CRWV",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CSCOUSDT",
+   "ticker": "CSCO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CVNAUSDT",
+   "ticker": "CVNA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CYPHUSDT",
+   "ticker": "CYPH",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DDOGUSDT",
+   "ticker": "DDOG",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DELLUSDT",
+   "ticker": "DELL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DISUSDT",
+   "ticker": "DIS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DJTUSDT",
+   "ticker": "DJT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DKNGUSDT",
+   "ticker": "DKNG",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "DRAMUSDT",
+   "ticker": "DRAM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EBAYUSDT",
+   "ticker": "EBAY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EIDOUSDT",
+   "ticker": "EIDO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EQTUSDT",
+   "ticker": "EQT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EWJUSDT",
+   "ticker": "EWJ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EWTUSDT",
+   "ticker": "EWT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EWYUSDT",
+   "ticker": "EWY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EWZSUSDT",
+   "ticker": "EWZS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "EWZUSDT",
+   "ticker": "EWZ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "FLEXUSDT",
+   "ticker": "FLEX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "FLNCUSDT",
+   "ticker": "FLNC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "FWDIUSDT",
+   "ticker": "FWDI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GDXUSDT",
+   "ticker": "GDX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GEVUSDT",
+   "ticker": "GEV",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GLWUSDT",
+   "ticker": "GLW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GMEUSDT",
+   "ticker": "GME",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GOOGLUSDT",
+   "ticker": "GOOGL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GPROUSDT",
+   "ticker": "GPRO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GSUSDT",
+   "ticker": "GS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "GTLBUSDT",
+   "ticker": "GTLB",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "HDUSDT",
+   "ticker": "HD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "HIMSUSDT",
+   "ticker": "HIMS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "HOODUSDT",
+   "ticker": "HOOD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "HPEUSDT",
+   "ticker": "HPE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "HUTUSDT",
+   "ticker": "HUT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IBKRUSDT",
+   "ticker": "IBKR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IBMUSDT",
+   "ticker": "IBM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "INTCUSDT",
+   "ticker": "INTC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "INTWUSDT",
+   "ticker": "INTW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IONQUSDT",
+   "ticker": "IONQ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IRENUSDT",
+   "ticker": "IREN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IWMUSDT",
+   "ticker": "IWM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "JPMUSDT",
+   "ticker": "JPM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "KLACUSDT",
+   "ticker": "KLAC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "KORUUSDT",
+   "ticker": "KORU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "KOUSDT",
+   "ticker": "KO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "KSTRUSDT",
+   "ticker": "KSTR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "LITEUSDT",
+   "ticker": "LITE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "LLYUSDT",
+   "ticker": "LLY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "LRCXUSDT",
+   "ticker": "LRCX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "LYTEUSDT",
+   "ticker": "LYTE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MARAUSDT",
+   "ticker": "MARA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MCDUSDT",
+   "ticker": "MCD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MDBUSDT",
+   "ticker": "MDB",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MDTUSDT",
+   "ticker": "MDT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MELIUSDT",
+   "ticker": "MELI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "METAUSDT",
+   "ticker": "META",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MPUSDT",
+   "ticker": "MP",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MRKUSDT",
+   "ticker": "MRK",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MRNAUSDT",
+   "ticker": "MRNA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MRVLUSDT",
+   "ticker": "MRVL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MSFTUSDT",
+   "ticker": "MSFT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MSTRUSDT",
+   "ticker": "MSTR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MSTUUSDT",
+   "ticker": "MSTU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MUUSDT",
+   "ticker": "MU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MUUUSDT",
+   "ticker": "MUU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "MVLLUSDT",
+   "ticker": "MVLL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NBISUSDT",
+   "ticker": "NBIS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NETUSDT",
+   "ticker": "NET",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NFLXUSDT",
+   "ticker": "NFLX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NKEUSDT",
+   "ticker": "NKE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NOKUSDT",
+   "ticker": "NOK",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NOWUSDT",
+   "ticker": "NOW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NVDAUSDT",
+   "ticker": "NVDA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NVDLUSDT",
+   "ticker": "NVDL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NVOUSDT",
+   "ticker": "NVO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "OKLOUSDT",
+   "ticker": "OKLO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ONDSUSDT",
+   "ticker": "ONDS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ORCLUSDT",
+   "ticker": "ORCL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "OXYUSDT",
+   "ticker": "OXY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PANWUSDT",
+   "ticker": "PANW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PATHUSDT",
+   "ticker": "PATH",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PAYPUSDT",
+   "ticker": "PAYP",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PDDUSDT",
+   "ticker": "PDD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PENGUSDT",
+   "ticker": "PENG",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PFEUSDT",
+   "ticker": "PFE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PLTRUSDT",
+   "ticker": "PLTR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "PYPLUSDT",
+   "ticker": "PYPL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "QCOMUSDT",
+   "ticker": "QCOM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "QNTXUSDT",
+   "ticker": "QNTX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "QQQUSDT",
+   "ticker": "QQQ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RAMUSDT",
+   "ticker": "RAM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RDDTUSDT",
+   "ticker": "RDDT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RDWUSDT",
+   "ticker": "RDW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RIVNUSDT",
+   "ticker": "RIVN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RKLBUSDT",
+   "ticker": "RKLB",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "RUMUSDT",
+   "ticker": "RUM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SECZUSDT",
+   "ticker": "SECZ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SHAZUSDT",
+   "ticker": "SHAZ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SHOPUSDT",
+   "ticker": "SHOP",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SKDDUSDT",
+   "ticker": "SKDD",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SKHYUSDT",
+   "ticker": "SKHY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SKUUUSDT",
+   "ticker": "SKUU",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SMCIUSDT",
+   "ticker": "SMCI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SMHUSDT",
+   "ticker": "SMH",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SMRUSDT",
+   "ticker": "SMR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SNDKUSDT",
+   "ticker": "SNDK",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SNOWUSDT",
+   "ticker": "SNOW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SNPSUSDT",
+   "ticker": "SNPS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SNXXUSDT",
+   "ticker": "SNXX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SOFIUSDT",
+   "ticker": "SOFI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SONYUSDT",
+   "ticker": "SONY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SOXLUSDT",
+   "ticker": "SOXL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SOXSUSDT",
+   "ticker": "SOXS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SPCXUSDT",
+   "ticker": "SPCX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SPYUSDT",
+   "ticker": "SPY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SQQQUSDT",
+   "ticker": "SQQQ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "STMUSDT",
+   "ticker": "STM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "STRCUSDT",
+   "ticker": "STRC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TBTUSDT",
+   "ticker": "TBT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TEAMUSDT",
+   "ticker": "TEAM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TEMUSDT",
+   "ticker": "TEM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TERUSDT",
+   "ticker": "TER",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TMFUSDT",
+   "ticker": "TMF",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TQQQUSDT",
+   "ticker": "TQQQ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TSLAUSDT",
+   "ticker": "TSLA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TSLLUSDT",
+   "ticker": "TSLL",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TSMUSDT",
+   "ticker": "TSM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TTWOUSDT",
+   "ticker": "TTWO",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TWSTUSDT",
+   "ticker": "TWST",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TXNUSDT",
+   "ticker": "TXN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "TZAUSDT",
+   "ticker": "TZA",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "UBERUSDT",
+   "ticker": "UBER",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "UNHUSDT",
+   "ticker": "UNH",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "URNMUSDT",
+   "ticker": "URNM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "USARUSDT",
+   "ticker": "USAR",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "USDEXUSDT",
+   "ticker": "USDEX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "UVXYUSDT",
+   "ticker": "UVXY",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "VKTXUSDT",
+   "ticker": "VKTX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "VRTUSDT",
+   "ticker": "VRT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "VSTUSDT",
+   "ticker": "VST",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "VUSDT",
+   "ticker": "V",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "WDCUSDT",
+   "ticker": "WDC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "WENUSDT",
+   "ticker": "WEN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "WMTUSDT",
+   "ticker": "WMT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "XBIUSDT",
+   "ticker": "XBI",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "XLEUSDT",
+   "ticker": "XLE",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "XOMUSDT",
+   "ticker": "XOM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ZCSHUSDT",
+   "ticker": "ZCSH",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ZMUSDT",
+   "ticker": "ZM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ZSUSDT",
+   "ticker": "ZS",
+   "step": 0.01,
+   "min_qty": 0.01
+  }
+ ]
+}

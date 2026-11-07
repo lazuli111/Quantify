@@ -1,0 +1,16 @@
+{
+ "capital": 5000.0,
+ "cash": 5000.0,
+ "start": null,
+ "last_session": "2026-11-06",
+ "positions": [],
+ "trades": [],
+ "curve": [],
+ "peak": 5000.0,
+ "halted": null,
+ "no_new_for": null,
+ "bench": null,
+ "fees": 0.0,
+ "funding": 0.0,
+ "events": []
+}
