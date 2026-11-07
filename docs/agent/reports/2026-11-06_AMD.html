@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>AMD 2026-11-06 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">AMD</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-06</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-07 12:53</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>AMD 技术分析报告(分析日期:2026-11-06)</h4>
+<p>说明:所有精确的价格和指标数值均以 get_verified_market_snapshot 为准。各指标工具的输出与快照的最新值一致,未发现冲突。</p>
+<h5>一、核心结论摘要</h5>
+<p>AMD 正处于一轮急剧的回调中。价格从 2026-10-06 的收盘 649.42 一路下跌到 2026-11-06 的收盘 449.04。短期动能与中期趋势均转弱,但价格仍在 200 日均线(415.98)上方。11 月 5 日出现放量暴跌,收盘 404.40,盘中最低 402.10,成交量 71,237,400,是近半年样本中最高的一天之一。次日 11 月 6 日反弹至 449.04,成交量 45,682,000,仍处于高位。</p>
+<h5>二、选用的指标(8 个,互补不冗余)</h5>
+<ol>
+<li><strong>close_10_ema、close_50_sma、close_200_sma</strong>:分别覆盖短、中、长期趋势。</li>
+<li><strong>macd</strong>:衡量趋势动能(本次只调用了 macd 线,快照中也提供 macds 与 macdh)。</li>
+<li><strong>rsi</strong>:衡量超买超卖。</li>
+<li><strong>boll</strong>(配合快照中的 boll_ub、boll_lb):衡量波动区间与均值回归基准。</li>
+<li><strong>atr</strong>:衡量波动率,用于止损和仓位。</li>
+<li><strong>vwma</strong>:把成交量纳入趋势判断。</li>
+</ol>
+<h5>三、趋势分析</h5>
+<h6>1. 均线结构(趋势偏空)</h6>
+<ul>
+<li>收盘价 449.04,低于 10 EMA(487.93)、50 SMA(546.81)和 20 日布林中轨(527.30),三者均在价格上方,构成下行压力。</li>
+<li>10 EMA 从 10 月 7 日的 622.68 持续下滑到 487.93,短期趋势明确向下。</li>
+<li>50 SMA 仍在缓慢上升,为 546.81(10 月 7 日为 522.64)。这是滞后效应,不代表当前趋势向上。价格已比 50 SMA 低约 18%,偏离幅度大。</li>
+<li>200 SMA 为 415.98,仍在上升。价格在其上方,长期趋势尚未被破坏。11 月 5 日盘中最低 402.10 曾短暂跌破该均线,收盘 404.40 也低于它,但次日收复。这个现象只是单日观察,不能据此断言 200 SMA 已构成&quot;有效支撑&quot;。</li>
+<li>价格与 200 SMA 之间的距离约 33 点,低于 1 个 ATR(36.61)。</li>
+</ul>
+<h6>2. MACD(动能偏空)</h6>
+<ul>
+<li>MACD 为 -30.20,信号线为 -17.45,柱状图为 -12.76。MACD 在信号线下方且差距在扩大。</li>
+<li>MACD 从 10 月 7 日的 +36.55 持续下滑,10 月 20 日前后转为负值。11 月 6 日的值是近 30 天最低。</li>
+<li>空头动能仍在加速,尚无看涨交叉或背离的迹象。</li>
+</ul>
+<h6>3. RSI(接近超卖,但未确认反转)</h6>
+<ul>
+<li>RSI 为 38.41。11 月 5 日触及 29.75,短暂进入超卖区(低于 30),次日回升。</li>
+<li>RSI 从 10 月 7 日的 70.70 降到当前水平,说明此前有过超买状态,之后回落。</li>
+<li>回升只是单日反应。在下跌趋势中,RSI 可长时间处于低位,不能单独作为买入依据。</li>
+</ul>
+<h6>4. 布林带与波动率</h6>
+<ul>
+<li>布林带:下轨 425.70,中轨 527.30,上轨 628.89。收盘价在下轨与中轨之间,靠近下轨。11 月 5 日收盘 404.40,低于当时的下轨区域,但我们没有当天的下轨数值,所以不做精确陈述。</li>
+<li>带宽较大(上下轨相差约 203 点),反映波动已显著放大。</li>
+<li>ATR 从 10 月 7 日的 23.43 升到 36.61,波动率上升约 56%。ATR 上升表明近期日内波动加剧。</li>
+<li>以 1 倍 ATR 估算,日常波动区间约为 ±36.6 点。止损设置应考虑这一点,太近的止损容易被正常波动触发。</li>
+</ul>
+<h6>5. 成交量与 VWMA</h6>
+<ul>
+<li>VWMA 为 492.59,高于收盘价 449.04,也高于 10 EMA(487.93)。这说明近期成交量较大的交易日成交价偏高,放量交易集中在更高价位,持有这些仓位的投资者目前处于浮亏状态,形成潜在的上方抛压。</li>
+<li>11 月 5 日放量下跌(71.2M 股)属于抛售特征。11 月 6 日成交量 45.7M 仍高,显示分歧仍大。放量既可能代表恐慌性抛售接近尾声,也可能代表机构持续出货,仅凭现有数据无法区分。</li>
+</ul>
+<h6>6. 价格行为(来自 OHLCV)</h6>
+<ul>
+<li>10 月 6 日高点收盘 649.42 之后,价格经历了多次大幅下跌:10 月 30 日收盘 504.80(单日约 -10.9%,由 566.42 下跌而来)、11 月 5 日收盘 404.40(单日约 -17.3%,由 488.78 下跌而来)。这些百分比由上述收盘价直接计算得到。</li>
+<li>11 月 6 日开盘 444.43,盘中最高 459.80,最低 433.30,收盘 449.04。出现了从低开到收复部分跌幅的走势,但仍低于 11 月 4 日收盘 488.78。</li>
+<li>关键价位(仅基于数据中的价格点,不宣称历史有效性):
+<ul>
+<li>下方:404.40(11 月 5 日收盘)、402.10(11 月 5 日最低)、415.98(200 SMA)、425.70(布林下轨)。</li>
+<li>上方:459.80(11 月 6 日最高)、487.93(10 EMA)、488.78(11 月 4 日收盘)、492.59(VWMA)、527.30(布林中轨)、546.81(50 SMA)。</li>
+</ul>
+</li>
+</ul>
+<h5>四、情景与可操作的观察点</h5>
+<ul>
+<li><strong>偏空情景</strong>:若价格再次跌破 402.10 至 404.40 区域,并且收盘在 200 SMA(约 416)下方,则长期趋势转弱,下方空间会打开。此时 MACD 仍为负且扩大,将确认空头延续。</li>
+<li><strong>反弹情景</strong>:若价格站上 10 EMA(约 488)并伴随 MACD 柱状图收窄,则短期动能可能修复。第一个有意义的阻力区在 488 至 493 附近(10 EMA、VWMA 和 11 月 4 日收盘重叠)。</li>
+<li><strong>震荡情景</strong>:价格在 404 至 460 之间整理,以消化大幅下跌。</li>
+<li><strong>风险管理</strong>:ATR 36.61,建议使用 1.5 至 2 倍 ATR(约 55 至 73 点)作为参考止损距离,并相应缩小仓位。事件驱动的缺口风险较高,11 月 5 日的跳空低开(开盘 452.50,前收 488.78)即是例子。</li>
+<li>本报告没有新闻或财报数据,无法判断 11 月 5 日下跌的原因。交易者应另行核查是否有基本面或事件催化剂。</li>
+</ul>
+<h5>五、局限性</h5>
+<ul>
+<li>所有&quot;支撑/阻力&quot;仅为价格位置的描述,未经历史验证。</li>
+<li>工具只返回了部分指标(未单独调用 macds、macdh、boll_ub、boll_lb,数值来自快照)。</li>
+<li>没有基本面信息,不能判断下跌是否为趋势性变化。</li>
+</ul>
+<h5>六、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值/状态</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价(11/06)</td>
+<td>449.04</td>
+<td>当日反弹,但仍远低于近期高点</td>
+</tr>
+<tr>
+<td>10 EMA</td>
+<td>487.93</td>
+<td>价格在下方,短期偏空</td>
+</tr>
+<tr>
+<td>50 SMA</td>
+<td>546.81</td>
+<td>价格在下方约 18%,中期偏空</td>
+</tr>
+<tr>
+<td>200 SMA</td>
+<td>415.98</td>
+<td>价格在上方,长期结构尚存</td>
+</tr>
+<tr>
+<td>MACD / 信号线 / 柱</td>
+<td>-30.20 / -17.45 / -12.76</td>
+<td>空头动能仍在扩大</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>38.41(11/05 为 29.75)</td>
+<td>接近超卖,反转未确认</td>
+</tr>
+<tr>
+<td>布林 下轨/中轨/上轨</td>
+<td>425.70 / 527.30 / 628.89</td>
+<td>价格靠近下轨,波动放大</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>36.61</td>
+<td>波动率显著上升,止损需放宽</td>
+</tr>
+<tr>
+<td>VWMA</td>
+<td>492.59</td>
+<td>高于价格,放量成交价位偏高,上方有抛压</td>
+</tr>
+<tr>
+<td>关键下方价位</td>
+<td>402.10、404.40、415.98</td>
+<td>11/05 低点与 200 SMA</td>
+</tr>
+<tr>
+<td>关键上方价位</td>
+<td>487.93–492.59、527.30、546.81</td>
+<td>均线与 VWMA 重叠阻力区</td>
+</tr>
+<tr>
+<td>整体判断</td>
+<td>短中期偏空,长期尚未破坏</td>
+<td>等待企稳信号,控制仓位</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mixed</strong> (Score: 4.6/10)
+<strong>Confidence:</strong> Medium</p>
+<p><strong>数据范围与局限</strong>:新闻为部分覆盖(仅回溯至2026-11-04 12:17 UTC,此前新闻未获取,并不代表没有新闻);StockTwits在该期间不可用(并非没有相关讨论);Reddit共14篇帖子(wallstreetbets 5篇、stocks 5篇、investing 4篇),无投票数/评论数。因此散户快速情绪信号缺失,整体置信度为中等。此外,各来源对11月5日/6日的日期和涨跌幅表述存在不一致(见下文),需谨慎对待。</p>
+<p><strong>1. 新闻来源(机构视角)</strong></p>
+<ul>
+<li>基本面强劲:AMD第三季度营收创纪录,约134亿美元(同比+45%),非GAAP毛利率56%,数据中心业务营收接近翻倍(+107%),Helios机架开始出货。管理层指引下一季度约170亿美元(同比约+66%),并展望2027年营收增长超过80%。</li>
+<li>分析师:Bank of America和Wedbush上调盈利预测并维持目标价;HSBC将目标价从500美元上调至540美元,但维持Hold评级并提示风险;Zacks称券商平均评级偏买入。Motley Fool的文章指出AMD与Palantir的远期市盈率都处于溢价水平。</li>
+<li>财报后的反应:Simply Wall St称财报后股价仅上涨约1%,收于488.85美元,“估值限制了涨幅”。</li>
+<li>宏观/行业冲击:选举结果(民主党占多数、对AI数据中心的监管担忧)引发芯片股暴跌。Nasdaq单日下跌超过5%,为18个月来最差单日,进入修正区间;Dow下跌约1,800点。随后出现反弹,Nasdaq 100期货上涨约1.7%,另有一篇报道称AMD上涨8%/11%。</li>
+<li>负面细节:与OpenAI和Meta的AI芯片交易产生约10亿美元的费用,且客户可能持有约10%的股权;一家规模170亿美元的对冲基金在亏损后退还资金,涉及Micron、AMD、KLA的持仓拥挤问题;Michael Burry对AI产业链的乐观假设提出警告;量子计算股和CoreWeave也出现大幅下跌。</li>
+</ul>
+<p><strong>2. Reddit(散户/社区)</strong></p>
+<ul>
+<li>r/stocks:一篇帖子称AMD周三收于488.78美元,周四收于404.40美元(下跌17.3%),跌破财报前水平;另一篇提到Dow下跌1,728点、Nasdaq下跌5.2%,原因是民主党多数对AI数据中心持批评态度。</li>
+<li>r/investing:一篇帖子认为抛售过度,指出买方资本开支在第三季度翻倍至约2,020亿美元,并且大型云厂商近期完成了新的债务融资;另一篇提到AMD下跌16%,CoreWeave一个月内下跌55%,在讨论“AI交易是否正在破裂,还是对选举的过度反应”。</li>
+<li>r/wallstreetbets:语气偏悲观/自嘲,有人在看跌市场中被爆仓(“一周亏损7.5万美元”),有人在讨论是否有技术信号预示这次抛售,还有一篇戏谑地将下跌归因于一款游戏的发布(玩笑性质,不具参考价值)。另有帖子称“AMD符合我今年的预期”以及转发财报后上涨7%的报道。</li>
+<li>注意:关于11月5日/6日具体日期和涨跌幅,Reddit和新闻之间存在冲突(例如有来源称AMD反弹8-11%,而Reddit称11月6日收盘下跌17.3%),无法确认,说明数据存在时间错位或口径不一致。</li>
+</ul>
+<p><strong>3. 跨来源对比</strong></p>
+<ul>
+<li>基本面(财报、指引、分析师)明显偏多;而价格行为与市场情绪(巨幅回撤、拥挤、估值担忧、监管风险)偏空。二者背离是核心信号。</li>
+<li>散户社区的态度是恐慌与逢低买入的争论并存,没有一致方向;StockTwits缺失,无法验证。</li>
+</ul>
+<p><strong>4. 主导主题</strong>
+(1)创纪录业绩与2027年增长指引;(2)选举引发的AI/芯片监管恐慌;(3)估值过高、持仓拥挤;(4)AI资本开支可持续性及融资风险(Burry、CoreWeave暴跌);(5)OpenAI/Meta交易的费用和稀释。</p>
+<p><strong>5. 催化剂与风险</strong></p>
+<ul>
+<li>催化剂:2027年80%以上增长指引、Helios机架放量、分析师上调预测、逢低买盘、美国就业数据。</li>
+<li>风险:监管和数据中心政策、AI资本开支周期放缓、估值溢价、客户集中和稀释、对冲基金去杠杆、市场波动加剧。</li>
+</ul>
+<p><strong>6. 总结表</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创纪录第三季度业绩</td>
+<td>偏多</td>
+<td>新闻</td>
+<td>营收134亿美元,+45%;数据中心+107%</td>
+</tr>
+<tr>
+<td>2027年增长指引</td>
+<td>偏多</td>
+<td>新闻</td>
+<td>增长&gt;80%,下季度指引约170亿美元</td>
+</tr>
+<tr>
+<td>分析师上调</td>
+<td>偏多</td>
+<td>新闻</td>
+<td>BofA、Wedbush上调预测;HSBC目标价540美元(Hold)</td>
+</tr>
+<tr>
+<td>财报后反应平淡</td>
+<td>中性/偏空</td>
+<td>新闻</td>
+<td>仅上涨约1%,估值限制</td>
+</tr>
+<tr>
+<td>选举/监管引发抛售</td>
+<td>偏空</td>
+<td>新闻、Reddit</td>
+<td>Nasdaq单日-5%以上;AMD约-16%至-17%</td>
+</tr>
+<tr>
+<td>反弹报道</td>
+<td>偏多</td>
+<td>新闻</td>
+<td>期货+1.7%,AMD+8%/11%(与Reddit数据存在冲突)</td>
+</tr>
+<tr>
+<td>对冲基金/拥挤风险</td>
+<td>偏空</td>
+<td>新闻</td>
+<td>170亿美元基金亏损并退还资金</td>
+</tr>
+<tr>
+<td>OpenAI/Meta费用</td>
+<td>偏空</td>
+<td>新闻</td>
+<td>约10亿美元费用,客户或持10%股权</td>
+</tr>
+<tr>
+<td>抛售过度论</td>
+<td>偏多</td>
+<td>Reddit(r/investing)</td>
+<td>资本开支翻倍至约2,020亿美元</td>
+</tr>
+<tr>
+<td>散户恐慌/爆仓</td>
+<td>偏空</td>
+<td>Reddit(WSB)</td>
+<td>看跌期权亏损、爆仓帖</td>
+</tr>
+<tr>
+<td>StockTwits</td>
+<td>无数据</td>
+<td>StockTwits</td>
+<td>不可用</td>
+</tr>
+</tbody>
+</table></div>
+<p>总体:基本面叙事偏多,但短期价格与情绪因监管恐慌和高波动而偏空,综合判断为“混合”。以上仅为情绪信号,不构成价格预测。</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>AMD 本周新闻与宏观研究报告(截至 2026-11-06)</h4>
+<h5>一、数据说明与局限</h5>
+<ul>
+<li>公司新闻:Yahoo 来源只覆盖了 2026-11-04 12:17 UTC 之后的报道。10-30 至 11-04 上午的新闻没有取到。这不代表那段时间没有消息。</li>
+<li>宏观指标(联邦基金利率、10 年期美债、失业率、VIX):FRED 接口返回 DATA_UNAVAILABLE,原因是未设置 API Key。本报告没有这些数值,也不做推测。</li>
+<li>预测市场(降息、衰退概率):2026-11-06 的赔率被屏蔽,因此没有市场隐含概率。</li>
+<li>全球新闻接口返回的内容大多与宏观无关,主要是量子计算、IBM 和贵金属,只能作为背景。宏观判断主要来自个股和市场新闻里的描述。</li>
+</ul>
+<h5>二、AMD 公司层面</h5>
+<p><strong>1. 第三季度财报(11 月 4 日盘后公布)</strong></p>
+<ul>
+<li>营收创纪录,约 134 亿美元。非 GAAP 毛利率约 56%,是公司历史上规模最大、盈利最高的一个季度。</li>
+<li>数据中心销售额同比增长约 107%,接近翻倍。管理层称供应已逼近极限。Helios 机架方案开始出货。</li>
+<li>管理层预期 2027 年营收增速超过 80%,AI 业务和服务器 CPU 业务都是增长动力。</li>
+<li>财报后首个交易日,常规时段股价仅涨约 1%,收于约 488.85 美元,反应温和。Simply Wall St. 的解读是估值限制了涨幅。</li>
+</ul>
+<p><strong>2. 市场反应路径(波动很大)</strong></p>
+<ul>
+<li>11 月 5 日:纳斯达克出现 18 个月来最差的一天。部分报道称纳指跌幅超过 5%,道指跌约 1,800 点,抹去了选举后的涨幅。
+<ul>
+<li>原因是中期选举结果引发对监管的担忧。半导体和 AI 股受冲击最大,量子计算股也跟着下跌。</li>
+</ul>
+</li>
+<li>11 月 6 日:AMD 单日大涨,各报道的涨幅在 8% 到 11% 之间(Motley Fool 称约 11%)。
+<ul>
+<li>纳指期货早盘上涨约 1.7%,纳指收涨,芯片股从前一日的大跌中反弹。</li>
+<li>当天晚些时候将公布美国就业报告,这是下一个宏观催化剂。</li>
+</ul>
+</li>
+</ul>
+<p><strong>3. 分析师观点</strong></p>
+<ul>
+<li>美国银行(Bank of America)和 Wedbush 上调了盈利预测,维持看多。</li>
+<li>汇丰(HSBC)把目标价从 500 美元上调至 540 美元,但评级仍为 Hold,并提示了风险。</li>
+<li>Zacks 称华尔街平均评级偏看多,但提醒分析师建议往往过于乐观。</li>
+<li>Motley Fool 指出,AMD 的远期市盈率处于高位。</li>
+</ul>
+<p><strong>4. 风险点</strong></p>
+<ul>
+<li>与 OpenAI 和 Meta 的 AI 芯片合同带来约 10 亿美元的费用,客户可能获得约 10% 的股权(认股权证类安排)。这会带来摊薄和客户集中度风险。</li>
+<li>一家管理 170 亿美元的对冲基金经历了 2020 年以来最差的一个月,正在退还资金并裁减选股团队。报道称这与 AI 芯片股同日暴跌有关,涉及 Micron、AMD、KLA 等持仓。拥挤持仓的去杠杆可能放大波动。</li>
+<li>Michael Burry 对 Anthropic 更新后的 S-1 提出质疑,认为其支出承诺巨大,需要&quot;超常&quot;增长才能覆盖。这反映市场对 AI 资本开支回报的担忧。</li>
+<li>监管政策不确定:中期选举后的监管预期是本周下跌的直接导火索,目前还没有具体政策细节。</li>
+<li>同期 Alphabet 经历了历史上最差的一周,最低时市值蒸发约 4,770 亿美元,说明大型科技股整体情绪脆弱。</li>
+</ul>
+<p><strong>5. 行业与产业链</strong></p>
+<ul>
+<li>AI 基础设施需求依然强劲。Core Scientific 的托管收入增长 60%,为 CoreWeave 合同计费 485 MW。Riot 签下 280 亿美元的 AI 租约。Bloom Energy 获得 900 MW 的订单。</li>
+<li>这些消息支持 AI 算力需求的长期逻辑,但同期市场对相关个股的反应分化明显。例如 Cipher 下跌 13%,MARA 下跌 5%。</li>
+</ul>
+<h5>三、宏观判断(有限证据)</h5>
+<ul>
+<li>本周没有可用的利率、通胀、就业和 VIX 数据,也没有降息或衰退概率。我无法确认美联储路径,下游决策者需要自行补充这些数据。</li>
+<li>可以确认的事实只有:一是风险偏好在选举结果和监管预期上剧烈摆动;二是 AI 和半导体板块是波动的核心;三是 11 月 6 日的美国就业报告是关键事件。</li>
+</ul>
+<h5>四、交易启示(供决策者参考,非最终决策)</h5>
+<ul>
+<li>基本面强:数据中心营收翻倍、2027 年指引超过 80% 增长、多家券商上调预测。</li>
+<li>估值与情绪:财报后常规时段仅涨 1%,此后两天大幅震荡(先暴跌后反弹),说明筹码拥挤、对消息敏感。</li>
+<li>短期关注:就业数据与利率预期的反应、监管细节、对冲基金去杠杆的延续、OpenAI/Meta 认股权证带来的摊薄。</li>
+<li>若仓位较重,波动加大时需要控制规模并设置止损。价格在 488 美元附近到反弹后的区间内大幅摆动,追高需谨慎。</li>
+</ul>
+<h5>五、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>要点</th>
+<th>方向</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>财报</td>
+<td>Q3 营收约 134 亿美元,非 GAAP 毛利率约 56%</td>
+<td>利多</td>
+<td>公司历史最佳季度</td>
+</tr>
+<tr>
+<td>数据中心</td>
+<td>销售额同比增长约 107%,Helios 机架开始出货</td>
+<td>利多</td>
+<td>供应接近上限</td>
+</tr>
+<tr>
+<td>指引</td>
+<td>2027 年营收增速超过 80%</td>
+<td>利多</td>
+<td>BofA、Wedbush 上调盈利预测</td>
+</tr>
+<tr>
+<td>股价反应</td>
+<td>财报后收于约 488.85 美元(+1%);11 月 6 日反弹 8% 至 11%</td>
+<td>中性偏多</td>
+<td>前一日市场大跌</td>
+</tr>
+<tr>
+<td>分析师</td>
+<td>汇丰目标价 540 美元,评级 Hold</td>
+<td>中性</td>
+<td>提示风险</td>
+</tr>
+<tr>
+<td>估值</td>
+<td>远期市盈率偏高</td>
+<td>利空</td>
+<td>限制上行空间</td>
+</tr>
+<tr>
+<td>客户交易</td>
+<td>OpenAI 和 Meta 合同约 10 亿美元费用,客户可能获得约 10% 股权</td>
+<td>利空</td>
+<td>摊薄与客户集中</td>
+</tr>
+<tr>
+<td>市场</td>
+<td>11 月 5 日纳指为 18 个月来最差一天,11 月 6 日反弹</td>
+<td>高波动</td>
+<td>中期选举后的监管担忧</td>
+</tr>
+<tr>
+<td>资金面</td>
+<td>170 亿美元对冲基金遭遇 2020 年以来最差月份并退还资金</td>
+<td>利空</td>
+<td>拥挤持仓去杠杆风险</td>
+</tr>
+<tr>
+<td>事件</td>
+<td>美国就业报告</td>
+<td>待定</td>
+<td>本周关键宏观催化剂</td>
+</tr>
+<tr>
+<td>宏观数据</td>
+<td>FRED 指标和预测市场均不可用</td>
+<td>数据缺口</td>
+<td>未做任何推测</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>AMD(Advanced Micro Devices)基本面研究报告</h4>
+<p>数据截至 2026-11-06,来源为 SEC EDGAR 已披露的季报数据。单位为百万美元,每股数据除外。</p>
+<h5>0. 数据可得性说明</h5>
+<ul>
+<li><strong>get_fundamentals 被屏蔽。</strong> 市值、估值倍数、52 周区间和分析师预期都拿不到,因此本报告不能做估值判断。</li>
+<li><strong>get_insider_transactions 被屏蔽。</strong> 无法判断近期内部人是买入还是卖出。</li>
+<li><strong>财报序列不完整。</strong> 12 月季度(Q4)没有单独列示,只能引用 Q1 到 Q3 的单季数据,无法给出完整的 TTM 数据。</li>
+<li><strong>缺少负债明细。</strong> 总负债未标注,也没有有息债务的拆分。</li>
+</ul>
+<h5>1. 最新季度业绩(FQ3 2026,截至 2026-09-26)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>FQ3'26</th>
+<th>FQ2'26</th>
+<th>FQ1'26</th>
+<th>FQ3'25</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营收</td>
+<td>13,377</td>
+<td>11,536</td>
+<td>10,253</td>
+<td>9,246</td>
+</tr>
+<tr>
+<td>毛利</td>
+<td>7,210</td>
+<td>6,203</td>
+<td>5,416</td>
+<td>4,780</td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>约53.9%</td>
+<td>约53.8%</td>
+<td>约52.8%</td>
+<td>约51.7%</td>
+</tr>
+<tr>
+<td>营业利润</td>
+<td>2,832</td>
+<td>1,990</td>
+<td>1,476</td>
+<td>1,270</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>约21.2%</td>
+<td>约17.3%</td>
+<td>约14.4%</td>
+<td>约13.7%</td>
+</tr>
+<tr>
+<td>净利润</td>
+<td>2,428</td>
+<td>2,297</td>
+<td>1,383</td>
+<td>1,243</td>
+</tr>
+<tr>
+<td>摊薄 EPS(美元)</td>
+<td>1.46</td>
+<td>1.38</td>
+<td>0.84</td>
+<td>0.75</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>要点:</strong></p>
+<ul>
+<li><strong>营收增速:</strong> FQ3'26 同比约 +44.7%,环比约 +16%,增速持续加速。</li>
+<li><strong>盈利杠杆明显:</strong> 营业利润同比约 +123%,营业利润率从 13.7% 升到 21.2%。</li>
+<li><strong>EPS:</strong> 1.46 美元,同比约 +95%。</li>
+<li><strong>对比基数:</strong> FQ2'25 营业利润为 -134,毛利只有 3,059,当时有一次性减值,同比基数较低。</li>
+<li><strong>长期趋势:</strong> 2023 年中期营收约 53 亿美元,现在约 134 亿美元。</li>
+</ul>
+<h5>2. 资产负债表(2026-09-26)</h5>
+<ul>
+<li><strong>总资产</strong> 94,812,环比约 +12%(上季 84,464)。</li>
+<li><strong>流动资产</strong> 39,471(上季 31,522)。</li>
+<li><strong>现金及等价物</strong> 7,404(上季 5,086)。</li>
+<li><strong>流动负债</strong> 14,486(上季 12,081)。流动比率约 2.7。</li>
+<li><strong>股东权益</strong> 68,389(上季 67,224),约占总资产 72%。</li>
+<li><strong>商誉风险:</strong> 2022 年总资产跳升到约 669 亿,来自 Xilinx 收购,商誉占比大,若业务不及预期有减值风险。</li>
+<li><strong>本季总资产增加约 103 亿而权益仅增约 12 亿,</strong> 说明负债端扩张明显。结合融资现金流转正,可能是新增债务或应付款项,具体构成需要核实。</li>
+</ul>
+<h5>3. 现金流(年初至今)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>9M'26</th>
+<th>9M'25</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经营现金流</td>
+<td>6,523</td>
+<td>5,109</td>
+</tr>
+<tr>
+<td>资本开支</td>
+<td>1,845</td>
+<td>752</td>
+</tr>
+<tr>
+<td>自由现金流(OCF - 资本开支)</td>
+<td>约 4,678</td>
+<td>约 4,357</td>
+</tr>
+<tr>
+<td>投资现金流</td>
+<td>-6,658</td>
+<td>-3,992</td>
+</tr>
+<tr>
+<td>融资现金流</td>
+<td>+1,983</td>
+<td>-103</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>要点:</strong></p>
+<ul>
+<li><strong>单季经营现金流放缓:</strong> FQ1'26 约 2,955,FQ2'26 约 2,366,FQ3'26 约 1,202。本季 OCF 仅约净利润的一半,可能与应收账款、库存扩张或预付款有关,是盈利质量的警示信号。</li>
+<li><strong>资本开支:</strong> 9M'26 约为上年同期的 2.5 倍。FQ3 单季约 648,低于 FQ2 的约 808。</li>
+<li><strong>本季自由现金流:</strong> 约 554,明显低于前两个季度。</li>
+<li><strong>融资现金流转为净流入(+1,983),</strong> 此前多为净流出,可能是发债或股权融资,与资产负债表扩张一致。资金具体用途无法确认。</li>
+</ul>
+<h5>4. 交易者视角的结论</h5>
+<p><strong>利多因素</strong></p>
+<ol>
+<li>营收增速加速,毛利率和营业利润率持续上升。</li>
+<li>EPS 同比近乎翻倍。</li>
+<li>权益比率高、流动比率约 2.7,财务相对稳健。</li>
+<li>现金余额环比增加约 2,300。</li>
+</ol>
+<p><strong>风险因素</strong></p>
+<ol>
+<li>经营现金流和利润背离(OCF 约 12 亿对净利润 24 亿)。</li>
+<li>资产负债表快速膨胀,融资转为净流入,债务和利息成本需要核实。</li>
+<li>资本开支和投资规模大幅上升。</li>
+<li>商誉占比高。</li>
+<li>估值、内部人交易、分析师预期缺失,无法给出完整的交易判断。</li>
+</ol>
+<p><strong>后续建议:</strong> 补充当前股价与估值倍数、FQ3 财报电话会指引(数据中心和 AI GPU)、债务与融资明细,以及内部人交易(如能获取披露日)。</p>
+<h5>5. 汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>关键数据</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营收 FQ3'26</td>
+<td>13,377(同比 +44.7%,环比 +16%)</td>
+<td>增长加速</td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>约53.9%(FQ3'25 约51.7%)</td>
+<td>稳步改善</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>约21.2%(FQ3'25 约13.7%)</td>
+<td>盈利杠杆强</td>
+</tr>
+<tr>
+<td>净利润 / EPS</td>
+<td>2,428 / 1.46 美元</td>
+<td>EPS 同比约 +95%</td>
+</tr>
+<tr>
+<td>现金</td>
+<td>7,404</td>
+<td>环比增加约 2,300</td>
+</tr>
+<tr>
+<td>总资产 / 权益</td>
+<td>94,812 / 68,389</td>
+<td>权益比约 72%</td>
+</tr>
+<tr>
+<td>流动比率</td>
+<td>约 2.7</td>
+<td>短期偿债无忧</td>
+</tr>
+<tr>
+<td>9M 经营现金流</td>
+<td>6,523(FQ3 单季约 1,202)</td>
+<td>单季明显放缓,需关注</td>
+</tr>
+<tr>
+<td>9M 资本开支</td>
+<td>1,845(上年同期 752)</td>
+<td>扩张加速</td>
+</tr>
+<tr>
+<td>9M 自由现金流</td>
+<td>约 4,678</td>
+<td>同比略增</td>
+</tr>
+<tr>
+<td>融资现金流</td>
+<td>+1,983</td>
+<td>由净流出转为净流入,需核实来源</td>
+</tr>
+<tr>
+<td>估值 / 内部人交易</td>
+<td>数据被屏蔽</td>
+<td>无法判断</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # 多头观点:AMD 的下跌是情绪冲击,不是基本面断裂</p>
+<p>空头还没发言,我先把多头框架摆出来,也提前回应他们最可能提出的几点。</p>
+<h5>一、增长潜力:业绩在加速,不是在见顶</h5>
+<ul>
+<li><strong>营收</strong>:FQ3'26 营收 133.77 亿美元,同比约 +44.7%,环比约 +16%。FQ1 到 FQ3 依次为 102.5 亿、115.4 亿、133.8 亿美元,增速逐季抬升。对比 2023 年中期约 53 亿美元,体量已翻了 2.5 倍。</li>
+<li><strong>数据中心</strong>:新闻称同比增长约 107%,管理层称供应接近极限。这说明瓶颈在供给,而不在需求。Helios 机架已开始出货,这是从卖芯片走向卖整机方案的关键一步。</li>
+<li><strong>指引</strong>:下季度约 170 亿美元(同比约 +66%),并预期 2027 年营收增长超过 80%。管理层敢给出这种数字,说明订单能见度很高。</li>
+<li><strong>需求端的外部印证</strong>:买方资本开支在第三季度翻倍至约 2,020 亿美元,大型云厂商刚完成新的融资。Core Scientific、Riot(280 亿美元租约)、Bloom Energy(900 MW)的订单也都指向算力需求仍在扩张。</li>
+</ul>
+<h5>二、盈利杠杆:增长在变成利润</h5>
+<ul>
+<li>营业利润率从 13.7% 升到 21.2%,营业利润同比约 +123%(12.7 亿到 28.3 亿美元)。</li>
+<li>摊薄 EPS 1.46 美元,同比约 +95%。</li>
+<li>毛利率持续改善,从 51.7% 升至约 53.9%(新闻口径非 GAAP 为 56%)。</li>
+<li>资产负债表稳健:股东权益占总资产约 72%,流动比率约 2.7,现金环比增加约 23 亿美元至 74 亿美元。</li>
+</ul>
+<p>这是典型的经营杠杆释放阶段。收入再增长,利润增长会更快。</p>
+<h5>三、竞争优势</h5>
+<ol>
+<li><strong>多元化的 AI 客户</strong>:OpenAI、Meta 等头部客户已经签约。客户愿意绑定长期合作,并接受认股权证安排,本身说明他们需要在 NVIDIA 之外有第二来源。</li>
+<li><strong>产品组合完整</strong>:服务器 CPU、AI GPU、机架级方案(Helios)、嵌入式(Xilinx)。AI 与服务器 CPU 是并行的两个增长引擎。</li>
+<li><strong>供应紧张是定价权的体现</strong>:产能接近上限,意味着产品供不应求。</li>
+</ol>
+<h5>四、这次下跌的性质</h5>
+<p>价格从 10 月 6 日的 649.42 美元跌到 11 月 5 日的 404.40 美元,但这段下跌的触发因素是:</p>
+<ul>
+<li>中期选举后的监管担忧(Nasdaq 单日跌超 5%,18 个月来最差)。</li>
+<li>对冲基金去杠杆与拥挤持仓(一家 170 亿美元基金被迫退还资金)。</li>
+<li>整个板块被拖累:Alphabet、CoreWeave、量子计算股同时大跌。</li>
+</ul>
+<p>这些都是<strong>宏观与仓位问题</strong>,没有一条说明 AMD 的订单、毛利或客户出了问题。财报本身是公司史上最好的一季。相反,价格对基本面的&quot;背离&quot;正是机会所在。</p>
+<p>技术面上也有支撑:</p>
+<ul>
+<li>11 月 5 日 RSI 触及 29.75,进入超卖区。</li>
+<li>200 日均线(415.98)是长期趋势线,盘中最低 402.10 后次日收复,11 月 6 日收盘 449.04,日内从低点回升。</li>
+<li>新闻称 11 月 6 日反弹 8% 到 11%,与恐慌性抛售后的修复一致。</li>
+</ul>
+<h5>五、预判空头的论点</h5>
+<p><strong>1. &quot;估值太贵,财报后只涨 1%。&quot;</strong>
+估值数据本次拿不到,我不虚构倍数。但财报日只涨 1% 发生在股价已经大涨之后,说明利好被提前消化,并不说明利好无效。现在价格比 10 月高点低约 31%,而 2027 年指引增长超过 80%,估值压力已大幅缓解。</p>
+<p><strong>2. &quot;经营现金流只有净利润的一半。&quot;</strong>
+这个点我承认值得跟踪:FQ3 OCF 约 12 亿美元,对比净利润 24 亿美元。但要看背景:营收环比增长 16%、供应紧张的阶段,应收账款与库存增加是扩产期的常见现象。9M 经营现金流 65.2 亿美元,同比 +28%,自由现金流约 46.8 亿美元,同比仍增长。资本开支升至 2.5 倍是为 Helios 与产能做投入。只要下季度 OCF 回升就能验证,这是需要观察的指标,不是结论。</p>
+<p><strong>3. &quot;OpenAI 与 Meta 的认股权证带来约 10 亿美元费用和约 10% 的摊薄。&quot;</strong>
+这是用股权换取长期锁定的需求,对应的是数百亿美元级别的潜在订单。10 亿美元的费用相对于季度营收 134 亿美元很小。摊薄是真实成本,但换来的是客户绑定与规模。客户集中度是风险,不过这些客户的资金实力强,也有强烈的动机让 AMD 成功。</p>
+<p><strong>4. &quot;AI 资本开支泡沫,Burry 警告,CoreWeave 暴跌。&quot;</strong>
+Burry 质疑的是 Anthropic 的 S-1,不是 AMD 的订单。CoreWeave 的杠杆和融资结构与 AMD 完全不同。AMD 的流动比率约 2.7、权益占比 72%,没有生存性风险。云厂商的资本开支翻倍并且融资顺畅,说明周期仍在上行。</p>
+<p><strong>5. &quot;技术面全面偏空:MACD 为负、价格在 10 EMA 和 50 SMA 下方。&quot;</strong>
+我同意,短期趋势确实偏弱,这是我不会否认的。但这些指标是滞后的,反映的是已经发生的 -31%。长期趋势(200 SMA)仍在上升,价格仍在其上方。对于长期投资者,技术指标是择时与仓位工具,而非投资逻辑本身。</p>
+<h5>六、承认的风险与执行方式</h5>
+<p>我不会假装风险不存在:ATR 升至 36.6,波动加大;监管细节未明;对冲基金去杠杆可能延续;估值倍数、内部人交易与宏观数据本次缺失。因此多头主张<strong>分批建仓、控制仓位</strong>,以 1.5 到 2 倍 ATR(约 55 到 73 点)作为风险参考,关键防线在 402 到 416 区域,跌破并收于其下就重新评估。</p>
+<h5>七、结论</h5>
+<p>基本面是:营收加速、利润率扩张、EPS 近乎翻倍、指引强劲、需求端有外部印证、资产负债表稳健。市场面是:监管恐慌、拥挤仓位的踩踏、波动放大。<strong>当两者背离到这个程度,通常是基本面一方最终胜出。</strong> 空头必须证明订单或盈利质量正在恶化,而目前的证据并不支持这一点。</p>
+<p>我期待听到空头对现金流与估值的具体数据反驳,我会逐条回应。</p>
+<p><strong>Rating</strong>: Buy</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # 空头观点:AMD 的&quot;基本面与价格背离&quot;叙事,恰恰忽略了最危险的部分</p>
+<p>多头把这次下跌定性为&quot;情绪冲击&quot;,并说&quot;空头必须证明订单或盈利质量正在恶化&quot;。我接受这个挑战。下面我逐条回应,并指出多头自己引用的数据中有哪些前后不一致,哪些其实是在支持空头。</p>
+<h5>一、先说多头论证中最薄弱的一环:数据口径</h5>
+<p>多头反复引用&quot;11 月 6 日反弹 8%–11%&quot;作为修复证据。但行情数据显示:11 月 4 日收盘 488.78,11 月 5 日收盘 404.40,11 月 6 日收盘 449.04。从 404.40 到 449.04 约为 +11%,这个反弹是真实的,但它只收复了前一日跌幅的约一半(-84.38 中的 +44.64),收盘仍比财报日低约 8%。</p>
+<p>更重要的是,社交报告明确指出各来源对 11 月 5 日和 6 日的日期与涨跌幅存在冲突。多头把这种口径不一致的信息当作&quot;恐慌修复&quot;的证据,这是选择性使用数据。一天的反弹,在 ATR 已升至 36.6(约 +56%)的环境里,是噪音,不是趋势反转。</p>
+<h5>二、&quot;这只是宏观与仓位问题&quot;——这个说法站不住</h5>
+<p>多头说&quot;没有一条说明 AMD 的订单、毛利或客户出了问题&quot;。但请看事实:</p>
+<ol>
+<li><strong>财报日本身就是警报。</strong> 史上最好的一季、数据中心 +107%、2027 年指引增长超过 80%,常规时段股价只涨约 1%。当最好的消息都推不动股价,说明预期已经被透支。多头说&quot;利好被提前消化&quot;,这恰恰是我的论点:价格里已经没有安全边际。</li>
+<li><strong>估值数据缺失不是中性,而是风险。</strong> 多头说&quot;我不虚构倍数&quot;,这很诚实,但随后又断言&quot;估值压力已大幅缓解&quot;。没有倍数,这个结论无从成立。Motley Fool 已指出 AMD 的远期市盈率处于溢价水平,HSBC 把目标价上调到 540 美元却依然只给 Hold。股价从 649 跌到 449,仍高于 HSBC 的评级所反映的谨慎立场吗?这至少说明连看多的机构都没有喊&quot;便宜&quot;。</li>
+<li><strong>监管风险不是一天的情绪。</strong> 选举结果引发的是对 AI 数据中心的政策担忧,目前没有具体细节。这意味着不确定性还会持续,每一次政策表态都可能重演 11 月 5 日的 -17.3%。多头把它称为&quot;一次性冲击&quot;,但它是一个尚未定价完毕的悬空风险。</li>
+</ol>
+<h5>三、现金流:多头轻描淡写,我认为这是最大的警示</h5>
+<p>FQ3 数据:净利润 24.28 亿美元,经营现金流约 12.02 亿美元,约为净利润的 49%。看趋势更清楚:</p>
+<ul>
+<li>FQ1 OCF 约 29.55 亿</li>
+<li>FQ2 OCF 约 23.66 亿</li>
+<li>FQ3 OCF 约 12.02 亿</li>
+</ul>
+<p><strong>连续两个季度大幅下滑,而同期营收是上升的。</strong> 营收环比 +16%、利润上升,现金流却腰斩,这是典型的盈利质量背离。多头说这是&quot;扩产期的常见现象,可能是应收账款与库存&quot;,但他自己也承认不知道原因。&quot;可能&quot;不是证据。如果是应收账款膨胀,意味着向客户提供了宽松的付款条件;如果是库存堆积,则与&quot;供应紧张、供不应求&quot;的叙事直接矛盾。<strong>这两种解释都不利于多头。</strong></p>
+<p>另外,多头引用 9M 自由现金流&quot;同比仍增长&quot;,即 46.8 亿对 43.6 亿,增幅仅约 7%,而同期营收和净利润增长了 40% 到 90%。现金转化率在明显恶化。同时 FQ3 单季自由现金流只有约 5.5 亿美元,对 2,428 百万的净利润而言是很低的转化。</p>
+<h5>四、资产负债表:&quot;稳健&quot;的说法需要打折</h5>
+<p>多头强调权益占比 72%、流动比率 2.7。但请看变化:</p>
+<ul>
+<li>总资产环比增加约 103 亿美元,权益只增加约 12 亿美元。</li>
+<li>融资现金流从去年同期的 -1.03 亿转为 +19.83 亿。</li>
+<li>报告明确指出总负债和有息债务的拆分缺失,债务和利息成本需要核实。</li>
+</ul>
+<p>也就是说,<strong>本季约 90 亿美元的资产扩张主要由负债端支撑</strong>,而多头没有交代这些负债是什么。公司一边现金流变弱,一边融资流入、资本开支升至去年同期的 2.5 倍,这是在加杠杆换增长。再加上 2022 年 Xilinx 收购留下的大额商誉,一旦增长不及预期,减值风险是真实存在的。</p>
+<p>多头说&quot;没有生存性风险&quot;,我同意。但我们谈的不是破产,而是 449 美元的价格能否被合理支撑。</p>
+<h5>五、OpenAI 与 Meta 交易:不是&quot;绑定&quot;,是&quot;买单&quot;</h5>
+<p>多头把认股权证解读为&quot;客户需要 NVIDIA 之外的第二来源&quot;。反过来看同样合理:<strong>如果产品真的供不应求,为什么需要送出约 10% 的股权来锁定订单?</strong> 这更像是在为市场份额付费。</p>
+<ul>
+<li>约 10 亿美元的费用只是会计上的第一笔,摊薄是长期的,约 10% 的潜在股权稀释对每股收益的影响会在未来多年持续。</li>
+<li>客户集中度同时提高:收入增长越依赖少数几家 AI 巨头,任何一家削减资本开支,冲击就越直接。</li>
+<li>多头说&quot;这些客户资金实力强&quot;,但这些客户本身就处在被市场质疑的 AI 资本开支循环中。Burry 质疑的虽然是 Anthropic 的 S-1,但他质疑的是整条链条的回报假设,即支出承诺需要&quot;超常&quot;增长才能覆盖。AMD 的增长恰恰建立在这条链条上。</li>
+</ul>
+<h5>六、&quot;资本开支翻倍至 2,020 亿&quot;是双刃剑</h5>
+<p>多头把买方资本开支翻倍当成需求证据。我的看法正相反:</p>
+<ul>
+<li>这个数字来自一篇 Reddit 帖子,不是经过核实的财务数据。</li>
+<li>资本开支越高,越需要未来回报来证明。大型云厂商&quot;刚完成新的债务融资&quot;也意味着这轮扩张越来越依赖外部融资,而不是内生现金流。</li>
+<li>170 亿美元对冲基金爆亏并退还资金,涉及 Micron、AMD、KLA 的拥挤持仓;CoreWeave 一个月内下跌 55%;Alphabet 经历史上最差的一周。这说明<strong>AI 链条的融资与风险偏好正在同步收缩</strong>。当融资环境转紧,订单的增长曲线最先受到影响的,正是处于链条上游、预期最高的供应商。</li>
+</ul>
+<p>多头说 CoreWeave 的融资结构与 AMD 不同,这没错。但 CoreWeave 是 AMD 这类供应商的下游需求方之一,它的融资一旦受阻,传导到上游只是时间问题。</p>
+<h5>七、技术面:多头选择性强调支撑,忽略了结构性破坏</h5>
+<p>多头说&quot;200 日均线收复,说明有支撑&quot;。但技术报告本身的措辞更谨慎:</p>
+<ul>
+<li>11 月 5 日<strong>收盘价 404.40 低于 200 SMA(415.98)</strong>,盘中最低 402.10。这是一次真实的收盘跌破,而不只是&quot;盘中触及&quot;。</li>
+<li>报告明确表示:单日观察不能据此断言 200 SMA 已构成&quot;有效支撑&quot;。</li>
+<li>MACD -30.20,低于信号线 -17.45,柱状图 -12.76 仍在扩大;空头动能&quot;尚无看涨交叉或背离的迹象&quot;。</li>
+<li>价格低于 10 EMA(487.93)、50 SMA(546.81)、布林中轨(527.30)以及 VWMA(492.59)。<strong>488 到 493 美元是多条均线与前期收盘价重叠的阻力带</strong>,比当前价高出约 9%。</li>
+<li>VWMA 高于收盘价,意味着放量成交集中在更高价位,大量持仓者处于浮亏,每次反弹都会遇到解套盘。</li>
+</ul>
+<p>RSI 回到 38.41,并不是买入信号;技术报告自己也提醒,在下跌趋势中 RSI 可以长时间处于低位。</p>
+<h5>八、&quot;跌了 31% 所以便宜&quot;的逻辑谬误</h5>
+<p>多头的核心论点是价格下跌 31% 让估值压力缓解。但:</p>
+<ol>
+<li>649 美元本身可能就是泡沫价格,从泡沫价位回落 31% 不等于回到合理价。</li>
+<li>200 日均线在 416,价格仍在其上方不远,说明一年尺度上股价依然有显著涨幅,下行空间并没有耗尽。</li>
+<li>在没有估值倍数的前提下,没有人能说 449 美元&quot;便宜&quot;。多头要求空头&quot;证明恶化&quot;,但<strong>买入决策的举证责任在买方</strong>:要买入,就应当给出安全边际。多头没有给出。</li>
+</ol>
+<h5>九、结论</h5>
+<p>我不否认 AMD 的业绩是真实且强劲的。但投资不是看过去一个季度,而是看<strong>在当前价格下,风险与回报是否对称</strong>。目前的情况是:</p>
+<ul>
+<li><strong>向上空间受限</strong>:最好的财报只换来 1% 涨幅,头顶是 488 到 547 的密集阻力区。</li>
+<li><strong>向下风险未出清</strong>:监管细节未知、对冲基金去杠杆可能延续、200 日均线只是勉强守住或已被收盘跌破。</li>
+<li><strong>盈利质量出现裂缝</strong>:OCF 连续两个季度下滑,FQ3 仅为净利润的约一半,负债端扩张,融资转为净流入。</li>
+<li><strong>增长的成本在上升</strong>:为锁定客户赠送约 10% 的股权,说明议价权并不像&quot;供不应求&quot;所暗示的那么强。</li>
+<li><strong>关键信息缺失</strong>:估值、内部人交易、债务明细、宏观数据全部缺失,在这种条件下重仓买入等于盲飞。</li>
+</ul>
+<p>多头的建议是&quot;分批建仓&quot;。我的建议是:<strong>等待证据,而不是预支信心</strong>。至少要看到下季度 OCF 回升并能解释本季的下滑、债务构成披露、监管方向明朗、价格有效站上 488 到 493 区域,再考虑介入。在那之前,目前的价格并没有为这些风险提供足够的补偿。</p>
+<p>我也想问多头三个问题:</p>
+<ol>
+<li>FQ3 现金流腰斩的具体原因是什么?如果是库存,如何与&quot;供不应求&quot;相容?</li>
+<li>本季约 103 亿美元资产扩张背后的负债是什么,利息成本是多少?</li>
+<li>在没有任何估值倍数的情况下,凭什么认为 449 美元提供了安全边际?</li>
+</ol>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: <strong>Recommendation: Hold</strong>(以下为中文说明)</p>
+<p>多头的基本面论据扎实:FQ3 营收 133.77 亿美元(同比约 +44.7%),营业利润率从 13.7% 升至 21.2%,EPS 同比约 +95%,下季度指引约 170 亿美元,资产负债表没有生存性风险。空头也承认业绩真实且强劲,没有能证明订单或毛利恶化。这一点多头占优。</p>
+<p>但空头指出的几个问题同样有分量,多头没有给出令人满意的回应:</p>
+<ol>
+<li><strong>现金流质量</strong>:OCF 从 FQ1 约 29.55 亿降到 FQ2 约 23.66 亿,再降到 FQ3 约 12.02 亿,而同期营收上升。FQ3 OCF 只有净利润的约 49%。多头只说&quot;可能是应收账款或库存&quot;,并没有证据。若是库存堆积,与&quot;供不应求&quot;矛盾。这是真实的警示信号,但仅两个季度的数据,尚不能定性为恶化。</li>
+<li><strong>估值缺失</strong>:本次没有估值倍数。多头说&quot;估值压力已缓解&quot;缺乏依据,空头说&quot;没有安全边际&quot;同样无法证实。两边在这一点上都证据不足,因此买入和卖出的举证都不充分。</li>
+<li><strong>权证与摊薄</strong>:向 OpenAI、Meta 发行的认股权证带来约 10% 的潜在摊薄和客户集中,这是真实成本,削弱了&quot;定价权强&quot;的叙事,但也换来了大额长期订单。</li>
+<li><strong>技术面</strong>:11 月 5 日收盘 404.40 低于 200 SMA(415.98),MACD 为负且柱状图仍在扩大,价格位于 10 EMA、50 SMA 之下,488–493 附近有密集阻力。11 月 6 日收盘 449.04,仅收复前一日跌幅的约一半。短期趋势偏空,不宜激进抄底。</li>
+<li><strong>宏观与监管</strong>:监管细节未知,对冲基金去杠杆可能延续,波动(ATR 36.6)很高。</li>
+</ol>
+<p>综合权衡:基本面偏多,但现金流裂缝、估值信息缺失、技术趋势偏空和监管悬空风险使风险回报在当前不对称程度不足以支持 Buy/Overweight,也没有恶化证据支持 Underweight/Sell。证据平衡,故维持 Hold,等待催化剂(下季度 OCF、债务披露、监管明朗化、价格重新站上 488–493)来打破平衡。</p>
+<p>缺失信息说明:估值倍数、内部人交易、债务与利息拆分、宏观数据均未提供;&quot;资本开支翻倍至 2,020 亿美元&quot;来源为 Reddit 帖子,未经核实;11 月 5–6 日的涨跌幅各来源存在冲突。</p>
+<p><strong>Strategic Actions</strong>: 1. <strong>仓位</strong>:维持现有仓位,不加仓也不减仓;若当前无仓位,不在此处追入,保持标准配置的 0%–25% 试探性水平即可。
+2. <strong>风控线</strong>:以 402–416(200 SMA 与前低)为关键防线。若收盘有效低于约 402 并持续,将评级下调至 Underweight,减持至标准配置的约一半。止损参考 1.5–2 倍 ATR(约 55–73 点)。
+3. <strong>上调条件(升至 Overweight)</strong>:需同时满足至少两项:(a) 下季度 OCF 明显回升并解释 FQ3 下滑;(b) 价格收盘有效站上 488–493 阻力带;(c) 披露债务构成与利息成本,且无异常;(d) 监管方向明朗、不利于 AI 数据中心的风险下降。升级时分 2–3 批加仓,每批约标准配置的 1/4。
+4. <strong>下调条件(降至 Underweight/Sell)</strong>:OCF 继续下滑且应收或库存上升,下季度指引或毛利不及预期,主要客户削减资本开支,或监管出台具体不利措施。
+5. <strong>跟踪清单</strong>:补充获取估值倍数(远期市盈率、与同业比较)、内部人交易、债务明细、认股权证行权条件;核实 11 月 5–6 日的价格数据口径。
+6. <strong>执行</strong>:避免在高波动日追价,使用限价单;反弹至 488–493 若放量被拒绝,可考虑小幅减仓对冲风险。</p>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: 基本面强劲:FQ3 营收同比约 +44.7%,下季度指引约 170 亿美元。但现金流质量下滑(FQ3 OCF 仅约为净利润的 49%),估值倍数缺失,权证摊薄和监管风险未解。技术面短中期偏空:价格 449.04 低于 10 EMA(487.93)和 50 SMA(546.81),MACD 为 -30.20 且柱状图仍在扩大,488–493 附近阻力密集。长期结构尚未破坏,价格仍高于 200 SMA(415.98)。多空证据平衡,维持 Hold,等待价格站上 488–493 或 OCF 改善再升级。</p>
+<p><strong>Entry Price</strong>: not provided</p>
+<p><strong>Stop Loss</strong>: 400.0</p>
+<p><strong>Position Sizing</strong>: 已有仓位维持不动,不加仓也不减仓。若空仓,不在此处追入,最多以标准配置 0%–25% 试探,并使用限价单。若收盘有效跌破约 402(200 SMA 与 11 月 5 日低点区域),减持至标准配置约一半。止损参考 1.5–2 倍 ATR(约 55–73 点)。止损 400 位于 11 月 5 日最低 402.10 下方,约在现价下方 49 点。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位,保守派和中立派都还没发言,那我先把话说在前面:Hold 是对的,但它不该是一个&quot;缩着脖子等待&quot;的 Hold,而应该是一个带着进攻意图的 Hold。我要论证的是,AMD 现在正处在一个高赔率的位置,真正的风险不是持有,而是被噪音吓出去。</p>
+<p>先看基本面,这是最硬的证据。FQ3 营收 133.77 亿美元,同比约 +44.7%,环比 +16%,增速还在加速。营业利润同比约 +123%,营业利润率从 13.7% 升到 21.2%,EPS 同比约 +95%。管理层指引下季度约 170 亿美元,同比约 +66%,并展望 2027 年增速超过 80%,数据中心接近翻倍,供应已逼近极限。这不是一家增长故事在破裂的公司,而是需求大于供给的公司。BofA、Wedbush 上调盈利预测,HSBC 把目标价从 500 提到 540。一个月内股价从 649 跌到 449,基本面却在向上修正,这就是典型的价格与价值背离。</p>
+<p>再看这次下跌的性质。11 月 5 日纳指单日跌超 5%,18 个月来最差,起因是选举结果引发的监管恐慌,外加一家 170 亿美元对冲基金去杠杆、持仓拥挤。这些是情绪与仓位驱动的冲击,不是 AMD 订单被取消。11 月 5 日成交量 7120 万股,RSI 触及 29.75,这是教科书式的恐慌释放。次日收复到 449.04,盘中从低开拉回,成交量仍有 4568 万,说明有资金在承接。价格守在 200 日均线 415.98 之上,长期结构完好。</p>
+<p>现在预判保守派会怎么说。第一,他们会拿 OCF 只有净利润 49% 说事。我的回应是:这是单季数据,9 个月经营现金流 65.2 亿,同比增长约 28%,自由现金流约 46.8 亿,同比仍在增长。一个营收环比增长 16%、供应吃紧的公司,为备货、应收和预付款占用营运资金是扩张期的正常现象,而且融资现金流转正、现金环比增加 23 亿,流动比率 2.7,权益占比 72%。把一个季度的营运资金波动当成盈利质量崩坏,是用放大镜找瑕疵。</p>
+<p>第二,他们会强调权证摊薄和 OpenAI、Meta 约 10 亿美元费用、客户可能持有约 10% 股权。但换个角度看,这是用股权绑定了全球最大的两个 AI 买家,锁定的是多年期的需求订单。为了换取几百亿级别的长期收入,付出一部分摊薄,这是进攻性的交易,不是缺陷。</p>
+<p>第三,他们会指着技术面:价格在 10 EMA 和 50 SMA 下方,MACD -30.20 且柱状图扩大。我承认这些都是事实。但技术指标是滞后的。50 SMA 偏离 18%,价格靠近布林下轨 425.70,ATR 比一个月前高 56%。在这种极端偏离下,均值回归的空间远大于继续线性下跌的空间。从 449 回到 488–493 阻力区就有约 9% 的空间,回到 527 中轨有约 17%,而止损设在 400,下行约 11%。这是一个赔率大于 1.5 比 1 的结构,更别说基本面支持的目标是 540 以上。</p>
+<p>第四,监管风险。是的,没有具体政策细节。但恰恰因此,现在的下跌是在为一个尚未发生的、也许永远不会以最坏形式发生的事件定价。市场通常在不确定性最大时给出最好的价格。</p>
+<p>中立派大概会说,多空证据平衡,没必要动。我不同意&quot;平衡&quot;这个说法。基本面是单向强,风险项大多是未确认的或单季的。我也不主张现在重仓追入,因为 MACD 还没有转向,488–493 抛压密集,VWMA 492.59 说明套牢盘在上面。但我主张的是:已有仓位坚决持有,不要在 11 月 5 日的恐慌底部附近割肉;空仓者可以用限价单在 0%–25% 的试探额度内分批建仓,不必等到价格站上 493 之后再追,因为那时赔率已经被消耗掉了。站上 488–493 且 MACD 柱状图收窄,就是加仓的信号,要敢于加。</p>
+<p>最后说止损。400 位于 11 月 5 日最低 402.10 下方,距离现价约 49 点,略低于 1.5 倍 ATR 的下限,这给了正常波动足够的呼吸空间。如果收盘有效跌破约 402 就减半,这个纪律本身就控制了尾部风险。所以风险是可控的、有边界的,而上行是由 80% 增长指引撑着的。</p>
+<p>结论:在别人因为&quot;证据平衡&quot;而无所作为时,有纪律地持有并准备在确认信号出现时加码,才是拉开差距的路径。我支持 Hold,同时主张把它当作一个随时可升级为买入的进攻型 Hold。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 各位,激进派说这是&quot;带进攻意图的 Hold&quot;,我同意 Hold 这个动作,但不同意进攻的部分。对 AMD 来说,真正的风险不是被噪音吓出去,而是把一个还没确认见底的下跌当成&quot;教科书式恐慌释放&quot;。我逐条回应。</p>
+<p>先说&quot;赔率大于 1.5 比 1&quot;。这个算术站不住。从 449 到 488–493 的上行约 9%,而止损 400 的下行约 11%,上行其实小于下行,赔率不到 1:1,不是大于 1.5:1。要拿到 17% 的空间,得先穿过 10 EMA、11 月 4 日收盘、VWMA 492.59 这堆密集的套牢盘。再看止损本身:ATR 是 36.61,而 11 月 5 日单日跌幅 17.3%,开盘还跳空低开。止损单在跳空里不保证成交价,实际亏损可能远超 11%。把一个会被缺口穿过的止损当作&quot;有边界的风险&quot;,是对尾部风险的低估。</p>
+<p>第二,&quot;恐慌释放&quot;。RSI 触及 29.75 只是一天,次日回到 38.41。MACD 是 -30.20,柱状图 -12.76 仍在扩大,近 30 天最低。报告自己说,放量既可能是恐慌尾声,也可能是机构持续出货,现有数据无法区分。激进派把无法区分的事,说成了确定的底部。次日的反弹还有一个问题:新闻说涨 8%–11%,Reddit 和数据口径互相冲突,报告明确提醒日期和涨跌幅不一致。基于这样的数据去喊&quot;有资金承接&quot;,证据太薄。</p>
+<p>第三,200 日均线。11 月 5 日收盘 404.40,已经低于 415.98,是收盘跌破,不是&quot;守住&quot;。次日收复只是一天。价格距 200 SMA 只有约 33 点,不到一个 ATR,所谓&quot;长期结构完好&quot;,一个正常波动日就可能改写。</p>
+<p>第四,现金流。激进派拿 9 个月 OCF 同比 +28% 来淡化单季问题,但趋势才是重点:单季 OCF 从 2,955 到 2,366 再到 1,202,连续两个季度下降,而营收在增长。净利润 2,428 对 OCF 1,202,这是背离在扩大。同时资本开支 9 个月是去年的 2.5 倍,总资产一季增加约 103 亿,权益只增 12 亿,说明负债或应付款在大幅扩张,而负债构成我们根本没有数据。&quot;扩张期正常&quot;是一个假设,不是已验证的事实。再加上商誉占比高,以及估值倍数缺失,我们连贵不贵都无法判断。在无法估值的情况下加仓,是在盲飞。</p>
+<p>第五,权证。激进派说这是锁定需求的进攻性交易。但换个角度:最大客户可能持有约 10% 股权,意味着收入有一部分是用股权&quot;买&quot;来的,客户集中度和循环融资风险同时上升。还有约 10 亿美元费用已经发生。再叠加 Burry 对 AI 资本开支回报的质疑、CoreWeave 一个月跌 55%、170 亿美元对冲基金因拥挤持仓去杠杆,这些都指向 AI 链条的杠杆和拥挤,不是单纯的情绪。去杠杆往往不会一天结束。</p>
+<p>第六,监管。激进派说&quot;市场在为尚未发生的事件定价,不确定性最大时价格最好&quot;。这句话反过来同样成立:没有政策细节,就无法排除最坏形式,而我们没有宏观数据(利率、VIX、就业)也没有预测市场赔率来评估环境。财报当天仅涨 1%,好消息几乎没被奖励,这是个危险信号:利好被消化,利空却被放大。</p>
+<p>所以我对交易员方案的调整建议是这样的,方向仍是 Hold,但更保守:</p>
+<p>一、已有仓位不要加,而且不要等跌到 402 才行动。把&quot;收盘有效跌破 402 减半&quot;的纪律保留,同时对超出自身风险预算的部分,可以在反弹到 488–493 附近时分批减,把仓位降到即使跳空 15%–20% 也能承受的水平。</p>
+<p>二、空仓者不要按激进派说的在 0%–25% 范围内抢先试探。我建议等待确认:收盘站上 10 EMA 约 488,并且 MACD 柱状图连续收窄,或者 OCF 在下一季恢复,再进入,且首次只用很小的仓位。</p>
+<p>三、止损要按收盘而非盘中触发的思路设计,并假定会有缺口,所以仓位要按&quot;可能亏 15%–20%&quot;来定,而不是按 11% 来定。避免用期权或杠杆放大暴露。</p>
+<p>四、缺失的数据是风险本身:估值倍数、债务明细、内部人交易、宏观数据都拿不到。在补齐前,不应把敞口当作&quot;带进攻意图&quot;。</p>
+<p>长期上,保住本金比抓住底部更重要。如果基本面真的像激进派说的那么强,等确认信号后再上车,损失的只是前面一小段;而如果下跌还没结束,我们避免的是一次可能超过 20% 的回撤。这笔账,对一个以稳健增长为目标的组合来说,是划算的。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 先说我的整体看法:两位都说对了一半,但各自把对的那一半推得太远了。</p>
+<p>先说激进派。你说&quot;价格守在200日均线上方,长期结构完好&quot;,但11月5日收盘是404.40,已经收在415.98下面了。今天收复的是一天,不是守住。你说&quot;赔率大于1.5比1&quot;,这个算法也有问题。449到488-493只有约9%到10%,止损400下行约11%,到第一个阻力位其实是不到1比1。要拿到17%,得一路穿过10 EMA、11月4日收盘和VWMA 492.59这堆套牢盘。你还说&quot;基本面单向强&quot;,可单季OCF从2,955降到2,366再到1,202,这是连续两个季度的趋势,不是一次波动。总资产一季增加约103亿而权益只增12亿,负债构成我们没有数据。你把&quot;扩张期正常&quot;当结论,它其实只是假设。说&quot;现在抢先试探,等站上493赔率就被消耗了&quot;,也过于急。MACD柱状图还在扩大,抛压是否出尽没人知道,急着用限价单去接,等于替一个未确认的底部下注。</p>
+<p>再说保守派。你指出赔率算术和缺口风险,这很有价值,我同意。但有几处你也推过头了。第一,你说8%到11%的反弹和Reddit口径冲突,我对了一下价格数据,404.40到449.04正好是约+11%,新闻、OHLCV和Reddit的收盘价其实是对得上的,冲突主要在日期和涨跌幅的标注上。所以反弹本身是真的,只是一天不能当成趋势。第二,你说&quot;财报当天只涨1%是危险信号&quot;,但股价从10月6日的649已经跌到财报前的488,先下跌25%再发财报,反应平淡有一部分是预期已被消化,不全是利好不被奖励。第三,缺口风险是双向的,11月6日这种10%的上跳也是缺口。第四,你建议&quot;反弹到488-493分批减仓&quot;和&quot;等下季度OCF恢复再进场&quot;,都有顺周期的味道。在已经跌了约30%之后,把减仓放在阻力位,等于把一次急跌的痛苦兑现成永久亏损,而等OCF恢复要到明年二月,那时价格很可能早已走远。缺数据确实是风险,但它应该决定仓位大小,不该直接把敞口变成零。</p>
+<p>所以我的折中是这样。已有仓位,维持不动,不加。减仓的触发条件不应该是价格涨到某个阻力位,而是两件事:一是这个仓位按&quot;单日跳空15%到20%&quot;来算,是否超出你自己的风险预算,超出的那部分现在就削到预算以内,不必等反弹;二是收盘有效跌破约402,就按交易员的纪律减半。400的止损位基本和这个重合,我更看重收盘价而不是盘中触发,同时承认缺口时成交价可能更差。</p>
+<p>空仓的人,我不建议完全不动,也不建议抢跑。可以把标准配置拆成三份,第一份只用很小的一部分,比如标准配置的10%到15%,用限价单挂在425到440附近,也就是靠近布林下轨和200日均线的位置,不追现价。第二份等收盘站上10 EMA约488,并且MACD柱状图连续几天收窄。第三份等下一份财报里OCF恢复、或者负债和融资明细被补齐。如果先跌破402,第一份就按纪律处理,不去摊平。</p>
+<p>还有两个事件要盯:11月6日的就业数据我们没有结果,以及监管有没有出现具体政策细节。这两件事一旦明朗,仓位可以快速上调或下调。</p>
+<p>总结一下,激进派说的基本面强度是真的,保守派说的底部未确认和数据缺失也是真的。最合理的做法是用仓位大小而不是方向来化解分歧:不追高,不割肉,小仓位分批,让确认信号来决定加多少。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: 维持 Hold:已有仓位不加不减,但先按&quot;单日跳空15%–20%&quot;检验仓位是否超出自身风险预算,超出部分现在就削到预算以内。空仓者不追现价,只以标准配置10%–15%的小仓位用限价单挂在425–440附近;收盘有效跌破约402则已有仓位减半,空仓试探仓不摊平。站上约488并且MACD柱状图连续收窄后,再分批加仓。</p>
+<p><strong>Investment Thesis</strong>: 基本面偏多且真实。FQ3营收133.77亿美元(同比约+44.7%),营业利润率从13.7%升至21.2%,下季度指引约170亿美元。没有证据显示订单或毛利在恶化。这一点上激进派占优。</p>
+<p>但三方交锋后,激进派的&quot;进攻型Hold&quot;论据有硬伤。第一,赔率算术不成立:449到488–493上行约9%,到400的止损下行约11%,到第一个阻力位的赔率不足1:1,保守派和中立派都指出了这一点。第二,&quot;守住200日均线&quot;不准确,11月5日收盘404.40已低于415.98,次日收复只是一天。第三,&quot;扩张期营运资金占用正常&quot;只是假设。OCF从2,955降到2,366再到1,202,连续两个季度下滑而营收在增长,FQ3 OCF仅约为净利润的49%。总资产一季增约103亿而权益只增12亿,负债构成没有数据。</p>
+<p>保守派的论据也有推过头之处。中立派指出:在已经下跌约30%之后,在阻力位减仓或等到明年二月OCF恢复再进场,都有顺周期的问题。反弹本身是真的(404.40到449.04约+11%),财报日仅涨1%也有一部分是因为股价已先跌25%,预期已被消化。缺口风险也是双向的。</p>
+<p>估值倍数、债务明细、内部人交易、宏观数据和监管细节都缺失,这些应当决定仓位大小,而不是直接决定方向。技术面仍偏空:MACD为-30.20且柱状图仍在扩大,价格低于10 EMA和50 SMA,488–493附近阻力密集。多空证据在权衡后仍大体平衡,不足以支持Buy/Overweight,也没有恶化证据支持Underweight/Sell,因此维持Hold,并采用中立派的仓位分层方案。</p>
+<p>升级条件:收盘站上488–493且MACD柱状图收窄;下季度OCF回升并解释FQ3下滑;债务构成和利息成本披露且无异常;监管风险下降。降级条件:收盘有效跌破402;OCF继续下滑且应收或库存上升;指引或毛利不及预期;主要客户削减资本开支;出台具体不利的监管措施。止损按收盘价判断,并假定会出现缺口,成交价可能比止损价更差。</p>
+<p><strong>Price Target</strong>: not provided</p>
+<p><strong>Time Horizon</strong>: 1-3个月,到下一份财报(OCF披露)时复核</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>
