@@ -1,0 +1,28 @@
+{
+ "start_date": "2026-11-06",
+ "capital": 1300.0,
+ "cash": 1300.0,
+ "position": null,
+ "pending": [
+  {
+   "action": "buy",
+   "symbol": "CRWD",
+   "reason": "三连跌深回调信号",
+   "ref_price": 216.9,
+   "est_shares": 5
+  }
+ ],
+ "trades": [],
+ "skipped": [],
+ "equity_curve": [
+  {
+   "date": "2026-11-06",
+   "equity": 1300.0,
+   "qqq": 656.1
+  }
+ ],
+ "quota_used_hkd": {},
+ "months_charged": [],
+ "fees_paid": 0.0,
+ "last_processed": "2026-11-06"
+}
