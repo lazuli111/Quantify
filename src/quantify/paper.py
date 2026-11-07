@@ -244,6 +244,35 @@ PULLBACK3 = Strategy(
 )
 
 
+# 3-day pullback, deep ones only ----------------------------------------------
+
+DEEP5_PARAMS = {**P3_PARAMS, "min_depth": 0.05}
+
+
+def _deep5_watch(m: Market, sig: Signals, d: date) -> pd.DataFrame:
+    df = _p3_watch(m, sig, d)
+    return df[df["chg2_pct"] <= -3].reset_index(drop=True)
+
+
+DEEP5 = Strategy(
+    key="deep5", name="三连跌深回调", tagline="三连跌回调，只做 3 日跌幅 ≥5% 的信号",
+    signals=lambda p: Pullback3.signals(p, DEEP5_PARAMS), exit_reason="收盘高于前一天最高价",
+    rules=["股价在 200 日均线之上，连续 3 天收跌，且 3 日累计跌幅 ≥5%：下一个交易日开盘买入。",
+           "同一天有多只时，买 3 日跌幅最深、而且买得起的那只。",
+           "收盘高于前一天最高价：下一个交易日开盘卖出。",
+           "最多持有 10 天；只在免佣额度够用时买入。"],
+    # Same method as the 3-day pullback above. Out of sample +0.86%/trade, in sample +0.23%.
+    backtest={"trades": 361, "avg_ret_pct": 0.509, "median_ret_pct": 1.118, "win_rate": 0.643,
+              "avg_win_pct": 3.14, "avg_loss_pct": -4.21, "hold_days_median": 3,
+              "trades_per_month": 2.8, "worst_pct": -40.3, "best_pct": 21.2},
+    candidate_cols=PULLBACK3.candidate_cols,
+    watch_title="观察名单", watch_sub="已连续 2 天收跌，2 日跌幅 ≥3%。下一个交易日继续收跌、且 3 日累计跌幅 ≥5%，就会出现信号。",
+    watch_cols=PULLBACK3.watch_cols,
+    describe=_p3_describe, watchlist=_deep5_watch, position_rule=_p3_rule,
+    note="这个规则没有通过事先定好的检验：2023 年以来明显好于三连跌回调，但 2016–2022 明显更差。这里只做模拟记录，用往后的数据检验它。",
+)
+
+
 # Martin Luk-style pullback ---------------------------------------------------
 
 LUK_PARAMS = {"support": "ema9", "trail": "ema21", "max_stop": 0.04, "trim_r": None}
@@ -308,7 +337,7 @@ LUK = Strategy(
     note="胜率约 24%，大多数交易是小亏，靠少数大赚的交易拉高平均。连续亏损 10 笔以上在回测里很常见。",
 )
 
-STRATEGIES = [PULLBACK3, LUK]
+STRATEGIES = [PULLBACK3, LUK, DEEP5]
 
 
 # ---------------------------------------------------------------- state

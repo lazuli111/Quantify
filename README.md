@@ -6,11 +6,12 @@
 
 网页：**[lazuli111.github.io/Quantify](https://lazuli111.github.io/Quantify/)**
 
-直接打开某个策略：[三连跌回调](https://lazuli111.github.io/Quantify/#pullback3) · [Martin Luk 风格回调](https://lazuli111.github.io/Quantify/#luk)
+直接打开某个策略：[三连跌回调](https://lazuli111.github.io/Quantify/#pullback3) · [Martin Luk 风格回调](https://lazuli111.github.io/Quantify/#luk) · [三连跌深回调](https://lazuli111.github.io/Quantify/#deep5)
 
-同时观察两个策略，各有一个独立的 1,300 美元模拟账户：
+同时观察三个策略，各有一个独立的 1,300 美元模拟账户：
 - **三连跌回调**（`swing_strategies.Pullback3`）：消除幸存者偏差后唯一通过检验的策略；
 - **Martin Luk 风格回调**（`swing_strategies.LukPullback`，回调到 9 日 EMA 买、跌破 21 日 EMA 卖、止损不超过 4%）：回测证据很弱，用来观察。
+- **三连跌深回调**（`Pullback3` 加 `min_depth=0.05`，只做 3 日跌幅 ≥5% 的信号，2026-11 加入）：没有通过事先定好的检验，2023 年以来明显更好但 2016–2022 明显更差，只做模拟记录。
 
 东京服务器每个交易日美股收盘后自动运行（美东 23:10；Yahoo 的当天数据有时要到美东晚上 10 点半才齐，没齐就由美东 01:30 的备用运行补上；部署方法见 [deploy/install.sh](deploy/install.sh)；服务器上的网页在 `/quantify/`，nginx 配置见 [deploy/nginx/](deploy/nginx/)） `uv run quantify paper`：
 1. 用 Yahoo 日线按回测里同样的信号代码找信号；
@@ -64,6 +65,9 @@ uv run quantify paper                    # 每日模拟更新（--reset 重新�
 | 参考 | QQQ 均线择时 | `qqq_trend` | 交易次数太少 |
 | 波段 | 强势股回调买入（Martin Luk 风格近似） | `luk` | 技术上通过（样本外 +0.29%/笔，113 笔），但 t≈0.4，去掉最好 3 笔即转负，复利账户样本外 -2% |
 | 波段 | 强势股回调买入（全市场，含已退市股票） | `wide-sweep` | 未通过：样本外每笔 -1.91%（t=-2.55），盈利集中在 2020–2021 年 |
+| 波段 | 三连跌提高周转（102 种买卖规则，持有 1–10 天） | — | 未通过：选出的高周转版本样本外每月 -2.24%（现行 +1.93%）。额度用得越多收益越低：每个来回约 0.12% 的滑点和杂费，用满额度约每月 1.5% |
+| 波段 | 三连跌分仓（2–4 只） | — | 未通过：单笔最大亏损减小，但收益下降更多 |
+| 波段 | 三连跌深度过滤（≥3/5/7/10% 或按波动调整，空闲拿现金或 ETF） | `deep5` | 未通过：选出的版本样本外低于现行规则。≥5% 单独记录观察 |
 
 ## 参考资料
 

@@ -48,9 +48,9 @@ class Pullback3:
         c = p.close
         down = (c < c.shift()).astype(int)
         streak = down.rolling(prm["down_days"]).sum() == prm["down_days"]
-        entry = (c > sma(c, 200)) & streak
-        exit_ = c > p.high.shift()
         deeper = -(c / c.shift(prm["down_days"]) - 1)  # deeper pullback preferred
+        entry = (c > sma(c, 200)) & streak & (deeper >= prm.get("min_depth", 0))
+        exit_ = c > p.high.shift()
         return Signals(entry, deeper, exit_, None, prm["max_hold"])
 
 
