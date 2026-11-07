@@ -39,7 +39,14 @@ if grep -q '^skip=true' "$skip_file"; then
 fi
 rm -f "$skip_file"
 
-git add paper docs
+# AI 交易台：按币安正式站的公开价格，给 AI 前一晚的决策记账（不下单）。它推送的 agent/state.json 会触发
+# GitHub 上的 AI 决策（.github/workflows/agent.yml）。失败不影响回调观察台。
+if ! .venv/bin/python -m quantify.agent_book; then
+  echo "AI 交易台记账失败"
+  [ "$run" = first ] || .venv/bin/quantify notify --note "AI 交易台记账失败（不影响回调观察台），下次运行会重试。日志：journalctl -u quantify-daily@${run}" || true
+fi
+
+git add paper docs agent
 if git diff --cached --quiet; then
   echo "没有变化"
 else

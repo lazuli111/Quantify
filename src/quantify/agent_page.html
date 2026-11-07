@@ -1,0 +1,217 @@
+<title>AI 交易台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* Same tokens as the 回调观察台 page. Layout: tonight's decision leads; positions and account below;
+   the record (curve, trades, skipped orders, rules) runs full width underneath. */
+:root {
+  --bg: #F2F4F6; --surface: #FFFFFF; --sunk: #E8ECF0; --ink: #16202E; --ink-2: #4A5668; --muted: #7A8597;
+  --line: #D9DFE6; --accent: #2F5BB7; --series-a: #2F5BB7; --series-b: #C2802A; --red: #C93A3A; --green: #138A5E;
+  --up: var(--red); --down: var(--green);
+  --f-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --f-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F151D; --surface: #151E2A; --sunk: #1C2735; --ink: #E5EAF0; --ink-2: #B4BECB; --muted: #8592A3;
+    --line: #263345; --accent: #7EA2EC; --series-a: #6A8FDB; --series-b: #B98032; --red: #EE6B6B; --green: #3DBE8B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F151D; --surface: #151E2A; --sunk: #1C2735; --ink: #E5EAF0; --ink-2: #B4BECB; --muted: #8592A3;
+  --line: #263345; --accent: #7EA2EC; --series-a: #6A8FDB; --series-b: #B98032; --red: #EE6B6B; --green: #3DBE8B;
+  color-scheme: dark;
+}
+:root[data-updown="green-up"] { --up: var(--green); --down: var(--red); }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.6;
+  margin: 0; padding-inline: 16px; padding-block: 20px 48px; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1080px; margin-inline: auto; display: grid; gap: 20px; }
+.num { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.up { color: var(--up); } .down { color: var(--down); } .flat { color: var(--ink-2); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+.eyebrow { font-size: 12px; letter-spacing: .12em; color: var(--muted); margin: 0; }
+h1 { font-family: var(--f-display); font-size: 30px; line-height: 1.2; margin: 2px 0 0; }
+.stamp { font-size: 13px; color: var(--ink-2); display: grid; gap: 2px; text-align: right; }
+.stamp b { color: var(--ink); font-weight: 500; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; min-width: 0; }
+.panel h2 { font-size: 16px; margin: 0; }
+.sub { font-size: 13px; color: var(--muted); margin: 2px 0 12px; }
+.desk { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 880px) { .desk { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; } }
+/* decision ticket */
+.ticket { display: grid; grid-template-columns: 148px minmax(0, 1fr); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.stub { background: var(--sunk); padding: 18px; display: grid; align-content: start; gap: 2px; }
+.stub .day { font-family: var(--f-data); font-size: 28px; font-weight: 600; line-height: 1.1; }
+.stub small { color: var(--muted); font-size: 12px; }
+.tbody { padding: 18px 20px; display: grid; gap: 14px; min-width: 0; }
+@media (max-width: 620px) { .ticket { grid-template-columns: minmax(0, 1fr); } .stub { grid-auto-flow: column; justify-content: start; gap: 12px; align-items: baseline; } }
+.regime { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); margin-right: 8px; color: var(--ink-2); }
+.brief { margin: 0; color: var(--ink-2); }
+.orders { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.order { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: baseline; }
+.chip { font-size: 13px; font-weight: 700; color: #fff; padding: 1px 8px; border-radius: 6px; white-space: nowrap; }
+.chip.long { background: var(--up); } .chip.short { background: var(--down); } .chip.close { background: var(--ink-2); }
+.order .what { font-family: var(--f-data); font-weight: 600; font-size: 17px; }
+.order .meta { grid-column: 2; font-size: 13px; color: var(--ink-2); }
+.order .why { grid-column: 2; font-size: 13px; color: var(--muted); }
+.muted { color: var(--muted); font-size: 13px; }
+.deep { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+.notice { border-left: 3px solid var(--series-b); padding: 2px 0 2px 10px; color: var(--ink-2); font-size: 14px; }
+/* tables and facts */
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 7px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td.r, th.r { text-align: right; }
+td.wrap-text { white-space: normal; min-width: 180px; color: var(--ink-2); font-size: 13px; }
+.big { font-family: var(--f-data); font-size: 30px; font-weight: 600; line-height: 1.2; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 16px; margin: 14px 0 0; }
+.facts div { display: grid; } .facts span { font-size: 12px; color: var(--muted); } .facts b { font-family: var(--f-data); font-weight: 500; }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+svg text { fill: var(--muted); font-family: var(--f-data); font-size: 11px; }
+ol.rules { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 14px; display: grid; gap: 6px; }
+footer { font-size: 12px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">AI 自主选股 · 记账模拟，不下单 · <a href="./">← 回调观察台</a></p>
+      <h1>AI 交易台</h1>
+    </div>
+    <div class="stamp" id="stamp"><span>正在读取数据…</span></div>
+  </header>
+  <section class="ticket" id="ticket" aria-label="下一个交易日的决策"></section>
+  <div class="desk">
+    <section class="panel" id="positions"></section>
+    <section class="panel" id="account"></section>
+  </div>
+  <section class="panel" id="curve"></section>
+  <section class="panel" id="trades"></section>
+  <section class="panel" id="events"></section>
+  <section class="panel" id="rules"></section>
+  <footer>模拟记录：AI（TradingAgents + Claude Sonnet）每天收盘后做决定，按币安正式站美股永续合约的公开价格记账，起始 5,000 USDT。不是投资建议。</footer>
+</div>
+
+<script>
+(() => {
+  try { const u = localStorage.getItem("updown"); if (u) document.documentElement.dataset.updown = u; } catch (e) {}
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const num = (v, d = 2) => Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const pct = (v) => (v > 0 ? "+" : "") + num(v) + "%";
+  const sgn = (v) => (v > 0 ? "up" : v < 0 ? "down" : "flat");
+  const md = (iso) => { const [, m, d] = iso.split("-"); return `${+m}/${+d}`; };
+  const WEEK = "日一二三四五六";
+  const REGIME = { risk_on: "偏进攻", neutral: "中性", risk_off: "偏防守" };
+  const SIDE = { long: "多", short: "空" };
+
+  fetch("agent.json", { cache: "no-store" }).then((r) => r.json()).then(render).catch(() => {
+    $("stamp").innerHTML = "<span>还没有数据：AI 交易台在第一个交易日收盘后才开始记录。</span>";
+  });
+
+  function render(v) {
+    const local = new Date(v.generated_at).toLocaleString(undefined, { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    $("stamp").innerHTML = `<span>数据截至 <b>美东 ${md(v.as_of)} 收盘</b></span><span>更新于 ${esc(local)}（你的时间）</span>`;
+    renderDecision(v);
+    renderPositions(v);
+    renderAccount(v);
+    renderCurve(v);
+    renderTrades(v);
+    renderEvents(v);
+    $("rules").innerHTML = `<h2>规则</h2><p class="sub">AI 决定买什么；下面这些由程序强制执行，AI 改不了。</p><ol class="rules">${v.rules.map((r) => `<li>${esc(r)}</li>`).join("")}</ol>`;
+  }
+
+  function renderDecision(v) {
+    const d = v.decision;
+    const day = new Date(v.next_session + "T12:00:00");
+    const stub = `<div class="stub"><span class="day">${md(v.next_session)}</span><small>周${WEEK[day.getDay()]} · 美东 09:35 记账</small></div>`;
+    let body;
+    if (!d) {
+      body = `<p class="notice">AI 还没有给出 ${md(v.next_session)} 的决策（收盘后约 20 分钟内完成）。</p>`;
+    } else if (d.status !== "ok") {
+      body = `<p class="notice">这次 AI 没有完成决策，今天不开新仓；已有持仓照常按止损和到期规则处理。原因：${esc(d.error || "")}</p>`;
+    } else {
+      const b = d.brief || {};
+      const orders = d.orders.length ? `<ul class="orders">${d.orders.map((o) => o.action === "close"
+        ? `<li class="order"><span class="chip close">平仓</span><span class="what">${esc(o.ticker)}</span><span class="why">${esc(o.reason)}</span></li>`
+        : `<li class="order"><span class="chip ${o.side}">做${SIDE[o.side]}</span><span class="what">${esc(o.ticker)}</span>` +
+          `<span class="meta">仓位 ${Math.round(o.weight * 100)}% · 止损 ${num(o.stop_pct * 100, 1)}% · 最多持有 ${o.hold_days} 天 · TradingAgents：${esc(ratingZh(d, o.ticker))}</span>` +
+          `<span class="why">${esc(o.reason)}</span></li>`).join("")}</ul>`
+        : `<p class="brief"><b>不操作。</b></p>`;
+      const rej = d.rejected.length ? `<p class="muted">被规则拒绝：${d.rejected.map((r) => `${esc(r.ticker)}（${esc(r.why)}）`).join("；")}</p>` : "";
+      const deep = d.deep.length ? `<div class="deep"><span class="muted">深入分析：</span>${d.deep.map((x) =>
+        x.report ? `<a href="${esc(x.report)}">${esc(x.ticker)} · ${esc(x.rating_zh)}</a>` : `<span>${esc(x.ticker)} · ${esc(x.rating_zh)}</span>`).join("")}</div>` : "";
+      body = `<p class="brief"><span class="regime">${esc(REGIME[b.regime] || "")}</span>${esc(b.summary || "")}</p>${orders}` +
+        (d.plan && d.plan.note ? `<p class="muted">思路：${esc(d.plan.note)}</p>` : "") + rej + deep;
+    }
+    $("ticket").innerHTML = stub + `<div class="tbody">${body}</div>`;
+  }
+
+  function ratingZh(d, t) { const x = (d.deep || []).find((y) => y.ticker === t); return x ? x.rating_zh : "—"; }
+
+  function renderPositions(v) {
+    const ps = v.positions;
+    const rows = ps.map((p) => `<tr><td><b>${esc(p.ticker)}</b></td><td>${SIDE[p.side]}</td><td class="r num">${num(p.qty, 2)}</td>` +
+      `<td class="r num">${num(p.entry_price)}</td><td class="r num">${num(p.last)}</td>` +
+      `<td class="r num ${sgn(p.unrealized_pct)}">${pct(p.unrealized_pct)}</td><td class="r num">${num(p.stop)}</td>` +
+      `<td class="r num">${p.held}/${p.hold_days}</td></tr>` +
+      (p.close_next ? `<tr><td colspan="8" class="muted">下一个开盘平仓：${esc(p.close_next)}</td></tr>` : "")).join("");
+    $("positions").innerHTML = `<h2>当前持仓</h2><p class="sub">价格为币安美股永续合约；盈亏已扣手续费和资金费。</p>` +
+      (ps.length ? `<div class="scroll"><table><thead><tr><th>代码</th><th>方向</th><th class="r">数量</th><th class="r">开仓价</th><th class="r">现价</th><th class="r">涨跌</th><th class="r">止损</th><th class="r">持有/上限</th></tr></thead><tbody>${rows}</tbody></table></div>`
+        : `<p class="muted">空仓。</p>`);
+  }
+
+  function renderAccount(v) {
+    const a = v.account;
+    const halt = a.halted ? `<p class="notice">已停机：${esc(a.halted.why)}。不开新仓，需要人工恢复。</p>` : a.no_new_for ? `<p class="notice">上一个交易日亏损超过 3%，${md(a.no_new_for)} 不开新仓。</p>` : "";
+    $("account").innerHTML = `<h2>模拟账户</h2><p class="sub">${v.start ? md(v.start) + " 起" : "从下一个交易日开始"}，本金 ${num(a.capital, 0)} USDT</p>` +
+      `<div class="big">${num(a.equity)}</div>` + halt +
+      `<div class="facts"><div><span>本账户</span><b class="${sgn(a.return_pct)}">${pct(a.return_pct)}</b></div>` +
+      `<div><span>同期持有 QQQ</span><b class="${sgn(a.bench_return_pct)}">${pct(a.bench_return_pct)}</b></div>` +
+      `<div><span>离峰值</span><b>${pct(a.drawdown_pct)}</b></div><div><span>仓位</span><b>${num(a.gross_pct, 1)}%</b></div>` +
+      `<div><span>手续费</span><b>${num(a.fees)}</b></div><div><span>资金费</span><b class="${sgn(a.funding)}">${num(a.funding)}</b></div>` +
+      `<div><span>已平仓</span><b>${v.stats.trades} 笔</b></div><div><span>胜率</span><b>${v.stats.win_rate == null ? "—" : Math.round(v.stats.win_rate * 100) + "%"}</b></div></div>`;
+  }
+
+  function renderCurve(v) {
+    const c = v.curve;
+    if (c.length < 2) { $("curve").innerHTML = `<h2>账户走势</h2><p class="muted">记录满两个交易日后显示。</p>`; return; }
+    const W = 1000, H = 260, P = { l: 52, r: 12, t: 12, b: 28 };
+    const ys = c.flatMap((x) => [x.equity, x.bench]);
+    const lo = Math.min(...ys) * 0.995, hi = Math.max(...ys) * 1.005;
+    const X = (i) => P.l + (i / (c.length - 1)) * (W - P.l - P.r);
+    const Y = (y) => P.t + (1 - (y - lo) / (hi - lo)) * (H - P.t - P.b);
+    const path = (k) => c.map((x, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(x[k]).toFixed(1)}`).join("");
+    const ticks = [lo, (lo + hi) / 2, hi].map((y) => `<text x="${P.l - 6}" y="${Y(y) + 4}" text-anchor="end">${Math.round(y)}</text>` +
+      `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="var(--line)"/>`).join("");
+    $("curve").innerHTML = `<h2>账户走势</h2><div class="legend"><span><i style="background:var(--series-a)"></i>本账户</span><span><i style="background:var(--series-b)"></i>持有 QQQ 永续</span></div>` +
+      `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="账户权益和持有 QQQ 的对比">${ticks}` +
+      `<path d="${path("bench")}" fill="none" stroke="var(--series-b)" stroke-width="2"/><path d="${path("equity")}" fill="none" stroke="var(--series-a)" stroke-width="2.5"/>` +
+      `<text x="${P.l}" y="${H - 8}">${md(c[0].date)}</text><text x="${W - P.r}" y="${H - 8}" text-anchor="end">${md(c[c.length - 1].date)}</text></svg>`;
+  }
+
+  function renderTrades(v) {
+    const t = v.trades;
+    $("trades").innerHTML = `<h2>已平仓</h2>` + (t.length ? `<div class="scroll"><table><thead><tr><th>代码</th><th>方向</th><th>开仓</th><th>平仓</th><th class="r">开仓价</th><th class="r">平仓价</th><th class="r">收益</th><th>原因</th><th>AI 理由</th></tr></thead><tbody>` +
+      t.map((x) => `<tr><td><b>${esc(x.ticker)}</b></td><td>${SIDE[x.side]}</td><td class="num">${md(x.entry_date)}</td><td class="num">${md(x.exit_date)}</td>` +
+        `<td class="r num">${num(x.entry_price)}</td><td class="r num">${num(x.exit_price)}</td><td class="r num ${sgn(x.ret_pct)}">${pct(x.ret_pct)}</td>` +
+        `<td>${esc(x.reason)}</td><td class="wrap-text">${esc(x.why)}</td></tr>`).join("") + `</tbody></table></div>` : `<p class="muted">还没有平仓的交易。</p>`);
+  }
+
+  function renderEvents(v) {
+    const e = v.events;
+    $("events").innerHTML = `<h2>没有执行的指令</h2><p class="sub">开盘记账时被规则拦下或缺数据的指令。</p>` + (e.length
+      ? `<ul class="orders">${e.map((x) => `<li class="muted">${md(x.date)} ${esc(x.ticker)} ${esc(x.what)}：${esc(x.why)}</li>`).join("")}</ul>` : `<p class="muted">没有。</p>`);
+  }
+})();
+</script>

@@ -1,0 +1,112 @@
+name: AI 交易台
+
+# 东京服务器每天收盘后用币安正式站价格记账（quantify.agent_book），推送更新后的 agent/state.json；
+# 这里接着让 AI 决定下一个交易日开盘的操作（quantify.agent_decide）。只记账，不下单。
+# 东京服务器内存跑不了 TradingAgents，GitHub 又访问不了币安，所以两边分工。
+on:
+  push:
+    branches: [main]
+    paths: ["agent/state.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: agent
+  cancel-in-progress: false
+
+jobs:
+  decide:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    outputs:
+      changed: ${{ steps.save.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: 这个交易日已经决策过了吗
+        id: need
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib
+          s = json.load(open("agent/state.json"))
+          done = pathlib.Path(f"agent/decisions/{s['last_session']}.json").exists()
+          print("已经有决策" if done else f"{s['last_session']} 收盘后还没有决策")
+          open(os.environ["GITHUB_OUTPUT"], "a").write(f"need={'false' if done else 'true'}\n")
+          PY
+
+      - uses: astral-sh/setup-uv@v5
+        if: steps.need.outputs.need == 'true'
+
+      - name: 安装依赖
+        if: steps.need.outputs.need == 'true'
+        run: uv sync --frozen --extra ai
+
+      - name: 安装 Claude Code
+        if: steps.need.outputs.need == 'true'
+        run: npm install -g @anthropic-ai/claude-code@2.1.301
+
+      # 只用 Claude 订阅；Claude 失败时当天跳过（不混入别的模型），已有持仓照常按止损和到期规则处理
+      - name: AI 决策（只记账，不下单）
+        if: steps.need.outputs.need == 'true'
+        timeout-minutes: 70
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: uv run python -m quantify.agent_decide
+
+      - name: 保存决策到仓库
+        id: save
+        if: steps.need.outputs.need == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add agent docs
+          if git diff --cached --quiet; then
+            echo "没有变化"
+            exit 0
+          fi
+          git commit -m "AI 交易台决策 $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 10; done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: 发送决策到 Telegram
+        if: steps.save.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run quantify notify --agent
+
+      - name: 失败时推送提醒
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run quantify notify --note "AI 交易台这次运行出错，没有给出决策（只是模拟记账）。运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  # 用 GITHUB_TOKEN 推送不会触发 pages.yml，所以这里自己发布网页
+  pages:
+    needs: decide
+    if: needs.decide.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deploy
+        uses: actions/deploy-pages@v4

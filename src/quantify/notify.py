@@ -11,10 +11,14 @@ from html import escape
 import requests
 
 from .ai_opinion import load_opinions
+from .config import ROOT
 from .data import _load_env
 from .paper import DATA_PATH
 
 DASHBOARD_URL = "https://lazuli111.github.io/Quantify/"
+AGENT_PATH = ROOT / "docs" / "agent.json"
+REGIME_ZH = {"risk_on": "偏进攻", "neutral": "中性", "risk_off": "偏防守"}
+SIDE_ZH = {"long": "多", "short": "空"}
 API = "https://api.telegram.org/bot{token}/{method}"
 WEEKDAYS = "一二三四五六日"
 
@@ -76,8 +80,66 @@ def build_message(v: dict) -> str:
         if p:
             lines.append(f"持有 {p['symbol']} {p['shares']:g} 股，{_pct(p['unrealized_pct'])}，第 {p['held_days']} 天")
         lines.append(f"账户 {_usd(a['equity'])}（{_pct(a['return_pct'])}，同期 QQQ {_pct(a['qqq_return_pct'])}）")
+    lines += agent_lines(as_of)
     lines += ["", f'<a href="{DASHBOARD_URL}">打开观察台</a>']
     return "\n".join(lines)
+
+
+def _agent_view() -> dict | None:
+    return json.loads(AGENT_PATH.read_text(encoding="utf-8")) if AGENT_PATH.exists() else None
+
+
+def agent_lines(as_of: str) -> list[str]:
+    """The AI 交易台 part of the daily push: what it filled that session, its positions and account."""
+    a = _agent_view()
+    if not a or a["as_of"] != as_of or not a.get("start"):
+        return []
+    acc = a["account"]
+    fills = [f"开{SIDE_ZH[p['side']]}仓 {p['ticker']} {p['qty']:g} @ {p['entry_price']:,.2f}"
+             for p in a["positions"] if p["entry_date"] == as_of]
+    fills += [f"平仓 {t['ticker']}，这笔 {_pct(t['ret_pct'])}（{escape(t['reason'])}）"
+              for t in a["trades"] if t["exit_date"] == as_of]
+    lines = ["", "<b>【AI 交易台】</b>"]
+    if fills:
+        lines.append(f"{_md(as_of)} 成交：" + "；".join(fills))
+    held = "，".join(f"{p['ticker']}（{SIDE_ZH[p['side']]}）{_pct(p['unrealized_pct'])}" for p in a["positions"])
+    lines.append(f"持仓：{held}" if held else "空仓")
+    lines.append(f"账户 {acc['equity']:,.2f} USDT（{_pct(acc['return_pct'])}，同期 QQQ {_pct(acc['bench_return_pct'])}）。下次开盘的决策稍后单独推送")
+    return lines
+
+
+def send_agent_decision() -> bool:
+    """AI 交易台's decision for the next open, sent from GitHub when the AI has finished."""
+    from datetime import date
+
+    a = _agent_view()
+    d = a and a.get("decision")
+    if not d:
+        print("还没有 AI 交易台的决策，不推送")
+        return False
+    nxt = date.fromisoformat(d["for_session"])
+    lines = [f"<b>AI 交易台 · {_md(d['for_session'])}（周{WEEKDAYS[nxt.weekday()]}）开盘</b>"]
+    if d["status"] != "ok":
+        lines.append(f"这次 AI 没有完成决策，不开新仓；已有持仓照常按止损和到期规则处理。原因：{escape(d.get('error', ''))}")
+    else:
+        b = d.get("brief", {})
+        lines.append(f"大盘：{REGIME_ZH.get(b.get('regime'), '')}。{escape(b.get('summary', ''))}")
+        rating = {x["ticker"]: x["rating_zh"] for x in d.get("deep", [])}
+        for o in d["orders"]:
+            if o["action"] == "close":
+                lines.append(f"▶ <b>平仓 {o['ticker']}</b>：{escape(o['reason'])}")
+            else:
+                lines.append(f"▶ <b>做{SIDE_ZH[o['side']]} {o['ticker']}</b>，仓位 {o['weight']:.0%}，止损 {o['stop_pct']:.1%}，"
+                             f"最多持有 {o['hold_days']} 天（TradingAgents：{rating.get(o['ticker'], '—')}）")
+                lines.append(f"   {escape(o['reason'])}")
+        if not d["orders"]:
+            lines.append("不操作")
+        if d["rejected"]:
+            lines.append("被规则拒绝：" + "；".join(f"{r['ticker']}（{escape(r['why'])}）" for r in d["rejected"]))
+    acc = a["account"]
+    lines.append(f"账户 {acc['equity']:,.2f} USDT（{_pct(acc['return_pct'])}，同期 QQQ {_pct(acc['bench_return_pct'])}）")
+    lines += ["", f'<a href="{DASHBOARD_URL}agent.html">打开 AI 交易台</a>（模拟记账，不下单）']
+    return send("\n".join(lines))
 
 
 def _credentials() -> tuple[str | None, str | None]:

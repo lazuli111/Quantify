@@ -28,6 +28,17 @@
 
 这是模拟记录，用来观察策略在真实行情中的表现，不是投资建议。
 
+## AI 交易台（每日模拟记账）
+
+网页：**[lazuli111.github.io/Quantify/agent.html](https://lazuli111.github.io/Quantify/agent.html)**（东京服务器上是 `/quantify/agent.html`）
+
+让 AI 自己选股、决定买卖，只记账，不下单，起始 5,000 USDT：
+1. 美股收盘后，东京服务器用币安正式站美股永续合约的公开价格，给前一晚的决策记账（[agent_book.py](src/quantify/agent_book.py)）：开盘后 5 分钟成交，盘中和周末的止损、资金费都按实际行情算。
+2. 它推送的 `agent/state.json` 触发 GitHub 上的 AI 决策（[agent_decide.py](src/quantify/agent_decide.py)，[agent.yml](.github/workflows/agent.yml)）：大盘和政策新闻简报 → 从约 190 只合约里粗筛 → [TradingAgents](https://github.com/lazuli111/TradingAgents/tree/claude-subscription) 深入分析最多 3 只 → 组合决策。全部用 Claude Sonnet（订阅），约 70 次调用；Claude 失败当天就跳过，不混入别的模型。
+3. 程序强制执行硬规则（不加杠杆、最多 3 只、止损、持有上限、停机线等，见网页），然后 Telegram 推送。
+
+东京服务器跑不了 TradingAgents，GitHub 又访问不了币安，所以两边分工。AI 学过历史行情，所以只能往前记录：至少 6 个月、100 笔以上，并和持有 QQQ 比较，才谈得上结论。建 `agent/HALT` 文件可以手动停止开新仓。
+
 ## 常用命令（在项目文件夹里运行）
 
 ```bash

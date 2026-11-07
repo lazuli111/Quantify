@@ -343,6 +343,8 @@ def cmd_notify(cfg: dict, args) -> None:
         notify.send_note(args.note)
     elif args.ai:
         notify.send_ai_opinions()
+    elif args.agent:
+        notify.send_agent_decision()
     elif notify.send_daily(force=args.force):
         print("推送已发送")
 
@@ -374,6 +376,7 @@ def main() -> None:
     nt.add_argument("--failed", metavar="说明", help="发送「自动更新失败」的提醒")
     nt.add_argument("--note", metavar="文字", help="发送一条提醒")
     nt.add_argument("--ai", action="store_true", help="发送这个交易日的 AI 第二意见")
+    nt.add_argument("--agent", action="store_true", help="发送 AI 交易台下次开盘的决策")
     args = p.parse_args()
     cfg = load_config()
     {"download": cmd_download, "backtest": cmd_backtest, "sweep": cmd_sweep,
