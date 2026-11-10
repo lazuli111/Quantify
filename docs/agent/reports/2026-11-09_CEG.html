@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>CEG 2026-11-09 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">CEG</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-09</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-10 04:18</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>CEG(Constellation Energy Corporation)技术分析报告,分析日期 2026-11-09</h4>
+<h5>一、数据说明与口径</h5>
+<ul>
+<li>所有精确价格和指标数值都来自 get_verified_market_snapshot,它是本报告的唯一数据来源。get_stock_data 的价格序列(2026-05-01 至 2026-11-09,共 133 条)与快照一致,未发现冲突。</li>
+<li>今天是 2026-11-10,但最新可用交易日是 2026-11-09。以下结论反映 11 月 9 日收盘后的状态。</li>
+<li>我没有单独调用 get_indicators,指标值直接取自快照。快照不含 VWMA,所以报告里没有该指标的数值,成交量只用原始成交量观察。</li>
+<li>本报告不声称任何历史支撑或阻力位被验证过,也不给出未经工具数据支持的百分比。</li>
+</ul>
+<h5>二、选定的 8 个指标及理由</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>作用</th>
+<th>为何适用于当前情形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close_10_ema</td>
+<td>短期动量</td>
+<td>价格刚从低点急速反弹,需要观察它与短期均线的偏离</td>
+</tr>
+<tr>
+<td>close_50_sma</td>
+<td>中期趋势</td>
+<td>价格正在这一中期均线附近争夺</td>
+</tr>
+<tr>
+<td>close_200_sma</td>
+<td>长期趋势</td>
+<td>价格逼近长期趋势线,是战略性分界</td>
+</tr>
+<tr>
+<td>macd / macds / macdh</td>
+<td>趋势与动量转折</td>
+<td>三者合用可判断动量是否在零轴下方修复</td>
+</tr>
+<tr>
+<td>rsi</td>
+<td>超买超卖</td>
+<td>判断本次反弹是否已经过热</td>
+</tr>
+<tr>
+<td>boll / boll_ub / boll_lb</td>
+<td>价格区间与波动</td>
+<td>观察价格相对于布林带的位置</td>
+</tr>
+<tr>
+<td>atr</td>
+<td>波动率与风险</td>
+<td>近期单日振幅很大,用于止损和仓位设定</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些指标覆盖趋势、动量、波动和风险四个维度,彼此重复较少。</p>
+<h5>三、最新验证数据(2026-11-09)</h5>
+<ul>
+<li>OHLCV:开 260.40,高 277.66,低 247.00,收 276.09,成交量 7,331,500。</li>
+<li>均线:10 EMA 258.45,50 SMA 270.01,200 SMA 278.09。</li>
+<li>动量:RSI 55.70,MACD -4.23,MACD 信号线 -4.48,柱状图 +0.25。</li>
+<li>布林带:中轨 262.58,上轨 288.38,下轨 236.79。</li>
+<li>ATR:14.20。</li>
+</ul>
+<h5>四、趋势解读</h5>
+<h6>1. 近期价格行为</h6>
+<ul>
+<li>11 月 3 日收盘 263.40。11 月 4 日收 245.72,11 月 5 日收 239.65,两天成交量分别为 6.80M 和 7.44M,明显放量下跌。</li>
+<li>11 月 6 日收 249.95,11 月 9 日收 276.09,比前一日高 26.14 点。当日开盘 260.40 高开,盘中最低 247.00,最高 277.66,收盘接近日内高点。</li>
+<li>当日成交量 7.33M,是放量反弹,说明买盘主动。但单日放量不能证明趋势已经反转。</li>
+<li>10 月 6 日也有类似的放量跳升:收盘 300.40,前一日 267.62,成交量 13.48M。之后价格逐步回落,到 11 月 5 日的 239.65。那次反弹没能持续,所以当前反弹需要后续成交量和收盘价来确认。</li>
+</ul>
+<h6>2. 趋势结构(均线)</h6>
+<ul>
+<li>收盘 276.09,高于 50 SMA(270.01)和 10 EMA(258.45),但仍低于 200 SMA(278.09),相差约 2 点。</li>
+<li>价格正处在 200 SMA 下方的临界位置。能否放量收盘站上它,是中长期趋势能否转好的关键。</li>
+<li>价格与 10 EMA 的偏离较大(约 17.6 点),短线有均值回归的压力。</li>
+</ul>
+<h6>3. 动量(MACD、RSI)</h6>
+<ul>
+<li>MACD(-4.23)仍在零轴下方,但已略高于信号线(-4.48),柱状图为 +0.25。这是初步的多头交叉,力度很弱。</li>
+<li>零轴下方的交叉可靠性较低,需要之后几天柱状图持续扩大才算确认。</li>
+<li>RSI 为 55.70,处于中性偏强区,未超买,给反弹留出了空间,但动量并不算强劲。</li>
+</ul>
+<h6>4. 波动与区间(布林带、ATR)</h6>
+<ul>
+<li>价格在中轨(262.58)之上,距上轨(288.38)约 12.3 点,距下轨(236.79)约 39.3 点。</li>
+<li>带宽较宽,反映近期波动偏大。</li>
+<li>ATR 为 14.20,约占收盘价的 5%,单日波动很大。止损距离应相应放宽,仓位应缩小。</li>
+</ul>
+<h5>五、情景分析</h5>
+<ul>
+<li>偏多情景:收盘价站稳 200 SMA(278.09)之上,MACD 柱状图扩大,价格向布林上轨(288.38)靠拢。</li>
+<li>偏空情景:反弹动能耗尽,收盘回落到 50 SMA(270.01)和布林中轨(262.58)之下。这会让这次大涨更像一次超跌反弹。11 月 5 日收盘 239.65 和布林下轨 236.79 是下方参考位。</li>
+<li>主要不确定性:本报告没有包含引发 11 月 4 日下跌和 11 月 9 日大涨的基本面或新闻信息,技术信号需要与事件信息一并考虑。</li>
+</ul>
+<h5>六、可操作建议</h5>
+<ol>
+<li>暂不追高。单日涨幅大、价格距 10 EMA 较远,回踩的概率不低。</li>
+<li>若要做多,等待收盘有效站上 200 SMA(278.09),并且成交量保持放大。</li>
+<li>激进者可以在回踩 50 SMA 附近观察是否企稳,并用 ATR 设定止损。</li>
+<li>已有多头仓位的,可参考 ATR 设置保护性止损并控制仓位大小。</li>
+<li>如果 MACD 柱状图转负且价格跌破 50 SMA,则应转为防守。</li>
+</ol>
+<h5>七、总结表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值/状态</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价</td>
+<td>276.09</td>
+<td>当日放量大涨,高于 50 SMA</td>
+</tr>
+<tr>
+<td>成交量</td>
+<td>7,331,500</td>
+<td>放量,买盘活跃</td>
+</tr>
+<tr>
+<td>10 EMA</td>
+<td>258.45</td>
+<td>价格大幅高于短期均线,有回踩风险</td>
+</tr>
+<tr>
+<td>50 SMA</td>
+<td>270.01</td>
+<td>价格略高于,为近端参考位</td>
+</tr>
+<tr>
+<td>200 SMA</td>
+<td>278.09</td>
+<td>价格略低于,关键长期分界</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>55.70</td>
+<td>中性偏强,未超买</td>
+</tr>
+<tr>
+<td>MACD / 信号线</td>
+<td>-4.23 / -4.48</td>
+<td>零轴下方,刚出现微弱的多头交叉</td>
+</tr>
+<tr>
+<td>MACD 柱状图</td>
+<td>+0.25</td>
+<td>动量略有修复,力度弱</td>
+</tr>
+<tr>
+<td>布林带</td>
+<td>236.79 / 262.58 / 288.38</td>
+<td>价格在中轨之上,带宽较宽</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>14.20</td>
+<td>波动大(约占价格 5%),需缩小仓位</td>
+</tr>
+<tr>
+<td>总体判断</td>
+<td>超跌反弹,趋势未确认</td>
+<td>等待站上 200 SMA 的确认</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bullish</strong> (Score: 6.2/10)
+<strong>Confidence:</strong> Medium</p>
+<p><strong>一、数据来源逐项分析(2026-11-02 至 2026-11-09)</strong></p>
+<p><strong>1. 新闻(Yahoo Finance,约19条):走势呈“先抑后扬”。</strong></p>
+<ul>
+<li>负面阶段:民主党在中期选举中大胜,引发市场对数据中心建设可能被叫停或放缓的担忧。TIKR 报道 CEG 盘中下跌8%,Vistra 下跌14%。随后两个交易日累计下跌9%。Barron's 称“蓝色浪潮”重创能源股,并提到包括德州在内的新当选州长承诺暂停数据中心开发。Simply Wall St. 称 CEG 年初至今下跌32.91%,12个月总股东回报为-31.98%。</li>
+<li>转折事件:11月9日公布2026年第三季度业绩,表现超预期。
+<ul>
+<li>Zacks 称盈利增长66.4%,主要由 Calpine 和商业业务带动。</li>
+<li>Proactive 报道归母净利润为18.4亿美元,较上年同期翻倍以上。</li>
+<li>全年调整后每股收益指引上调至12.50–12.80美元。TIKR 称股价上涨约10%。</li>
+<li>Barron's 认为数据中心暂停令尚未体现在指引中。</li>
+</ul>
+</li>
+<li>其他内容:Salem 核电站增容200 MW,并探讨与数据中心开发商直接合作。TIKR 提到 Google、Amazon 的已签约协议仍然有效,风险主要在未来合同。Mistral CEO 称能源在2029–2030年前不会成为 AI 算力的瓶颈,这对电力需求叙事略偏中性。</li>
+<li>整体:新闻事件层面由“政策恐慌”转向“业绩验证”,偏正面。</li>
+</ul>
+<p><strong>2. StockTwits(24条,均为11月9日):</strong></p>
+<ul>
+<li>标注情绪为看多9条(38%)、看空1条(4%),未标注14条。有标注的消息中约90%看多。但有标注样本仅10条,不能过度解读。</li>
+<li>看多内容:财报后反弹,例如“能源反弹”“AI 电力股强势”,以及称年底前将“远超300美元”。有人称突破50日均线,目标为200日均线(约280美元)。有交易者提到盘前高点264美元,开盘回落至247美元,随后在 VWAP 附近反转。有一条称三月看涨期权获利+100%。</li>
+<li>看空/谨慎内容:1条看空,指日线趋势自10/20(258.84美元)起仍为红色,周线自1月起偏弱,日线翻转位约257.85美元。</li>
+<li>未标注的基本面讨论:调整后每股收益5.06美元,上年同期为3.04美元。指引阶梯式上调(11.00–12.00 → 11.50–12.50 → 12.50–12.80)。股份数增至3.54亿股,上年同期为3.13亿股。持有待售资产56.61亿美元,涉及 Calpine 剥离。PJM 备用拍卖仍未举行,管理层态度有变化。核电发电量基本持平。这些是需要关注的质疑点。</li>
+</ul>
+<p><strong>3. Reddit:</strong> WSB 和 r/investing 没有提及 CEG 的帖子。r/stocks 仅1篇(11月7日)讨论 AI 硬件、云和电力股的市场定价,摘录不含明确的 CEG 观点。Reddit 信号基本缺失,不能作为依据。</p>
+<p><strong>二、跨来源一致与分歧</strong></p>
+<ul>
+<li>一致:新闻和散户都认为财报是转折点,盈利强劲,指引上调。</li>
+<li>分歧:新闻框架本周内由悲观转乐观。散户情绪集中在财报日,偏兴奋,部分属于追涨,可能滞后于已发生的涨幅。技术派指出股价仍处于下行趋势中。</li>
+<li>财报日出现“盘前高点264美元、开盘回落至247美元”的走势,说明多空博弈仍然激烈。</li>
+</ul>
+<p><strong>三、主要叙事主题</strong></p>
+<ol>
+<li>民主党中期选举胜利带来的数据中心政策风险。</li>
+<li>业绩上调和 Calpine 并购贡献,用来对冲政策担忧。</li>
+<li>AI 电力需求、核电长期合同(Google、Amazon、Salem 增容)。</li>
+<li>AI 交易整体波动,以及 Nvidia 调查等科技板块压力。</li>
+</ol>
+<p><strong>四、催化剂与风险</strong></p>
+<ul>
+<li>催化剂:指引上调;Calpine 整合和资产出售于年底前完成;与数据中心开发商的新合同;PJM 备用拍卖。</li>
+<li>风险:各州数据中心暂停令和监管政策;AI 交易继续回调;股价年初至今仍明显下跌;股本稀释和杠杆较高;Calpine 资产出售存在执行风险;核电发电量持平,增长依赖价格和并购;技术面下行趋势尚未被明确扭转。</li>
+</ul>
+<p><strong>五、数据局限</strong>
+StockTwits 仅24条且集中在一天,有标注的仅10条;Reddit 基本无内容;因此置信度为中等。情绪信号仅供参考,不构成价格预测。</p>
+<p><strong>六、汇总表</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中期选举引发数据中心政策恐慌</td>
+<td>看空</td>
+<td>新闻</td>
+<td>两个交易日跌9%;Vistra 跌14%;Barron's 报道州长承诺暂停数据中心开发</td>
+</tr>
+<tr>
+<td>Q3 业绩超预期并上调指引</td>
+<td>看多</td>
+<td>新闻/StockTwits</td>
+<td>每股收益5.06美元对3.04美元;指引12.50–12.80美元;股价涨约10%</td>
+</tr>
+<tr>
+<td>已签约的 Google、Amazon 协议、Salem 增容</td>
+<td>看多</td>
+<td>新闻</td>
+<td>风险主要在未来合同</td>
+</tr>
+<tr>
+<td>散户情绪</td>
+<td>偏多(样本小)</td>
+<td>StockTwits</td>
+<td>9看多/1看空/14未标注</td>
+</tr>
+<tr>
+<td>技术面下行趋势</td>
+<td>谨慎</td>
+<td>StockTwits</td>
+<td>日线自10/20偏弱;翻转位约257.85美元</td>
+</tr>
+<tr>
+<td>股本稀释、资产出售、PJM 拍卖未决</td>
+<td>谨慎</td>
+<td>StockTwits</td>
+<td>股份数3.54亿对3.13亿;待售资产56.61亿美元</td>
+</tr>
+<tr>
+<td>Reddit 讨论</td>
+<td>缺失</td>
+<td>Reddit</td>
+<td>仅1篇 r/stocks 泛泛讨论</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-3">News Analyst</h3>
+<h4>CEG(Constellation Energy Corporation)一周新闻与宏观研究报告(2026-11-02 至 2026-11-09)</h4>
+<h5>一、核心结论</h5>
+<ul>
+<li>本周 CEG 先因民主党在中期选举中大获全胜而大幅下挫,随后在 11 月 9 日发布三季报后大幅反弹。</li>
+<li>选举后两个交易日,CEG 累计下跌约 9%,盘中一度跌 8%。同期 Vistra(VST)跌约 14%,GE Vernova 和 CoreWeave 也受压。市场担心新当选的州长(如德州)会推动暂停数据中心建设,冲击 AI 电力需求的逻辑。</li>
+<li>11 月 9 日,CEG 公布 2026 年第三季度业绩,股价上涨约 10%(TIKR)。业绩超预期,并上调全年指引。</li>
+<li>目前缺少宏观数据(FRED)和预测市场数据,以下宏观判断只基于新闻,不含具体利率、通胀数值。</li>
+</ul>
+<h5>二、公司层面:三季报要点</h5>
+<ul>
+<li>归属普通股股东净利润为 18.4 亿美元,同比增长一倍以上(Proactive)。Zacks 称盈利同比增长 66.4%。</li>
+<li>增长主要来自收购 Calpine 带来的贡献,以及商业业务表现强劲。</li>
+<li>全年调整后每股收益指引上调,TIKR 报道区间为 12.50 美元起(原文截断,上限需核实)。</li>
+<li>Barron's 指出,数据中心暂停令的风险目前没有体现在指引中。</li>
+<li>已签约的合同(如与 Google、Amazon 的合同)仍然有效。风险在于未来新合同的获取,而不是现有合同。</li>
+<li>其他项目:与 PSEG 计划对 Salem 核电站做 200 MW 增容,并在探讨与数据中心开发商直接合作,以锁定长期购电。</li>
+</ul>
+<h5>三、行业与同业</h5>
+<ul>
+<li>Vistra 在 10 月 30 日完成收购 Cogentrix,新增约 5,500 MW 气电装机,并在 11 月 6 日发布财报。</li>
+<li>NRG 因资产出售,再追加 10 亿美元回购。</li>
+<li>Mistral CEO 认为能源在 2029–2030 年前不会成为 AI 算力的瓶颈,电力约占算力成本的 10%。Vistra CEO 认为德州电价将在类似时间点回到正轨。这对&quot;电力短缺溢价&quot;的论点形成一定的反向压力。</li>
+<li>AI 板块整体波动较大。上周科技股遭遇 AI 相关抛售,英伟达因对其 CEO 的调查下跌,市场目前正在寻找反弹机会。本周关注 CoreWeave 财报和通胀数据。</li>
+</ul>
+<h5>四、宏观背景</h5>
+<ul>
+<li>政治:民主党赢得国会和多个州的选举,监管和政策风险上升,尤其是数据中心的审批、电价和用电合同。</li>
+<li>大宗商品:金价上涨,油价回落(WSJ 标题)。</li>
+<li>数据缺口:10 年期美债收益率、联邦基金利率和降息概率均无法获取,不作推断。</li>
+</ul>
+<h5>五、交易观察</h5>
+<ol>
+<li><strong>估值与走势</strong>:CEG 年初至今约下跌 33%(Simply Wall St,截至财报前)。财报后的反弹只收复了部分选举后的跌幅,仍处于高波动阶段。</li>
+<li><strong>利好</strong>:业绩和指引双双超预期,Calpine 整合顺利,已签约合同提供收入保障,增容项目带来增量。</li>
+<li><strong>风险</strong>:
+<ul>
+<li>州级数据中心暂停令和民主党政策,可能压低新增长合同的预期。</li>
+<li>AI 资本开支周期和相关板块的情绪波动。</li>
+<li>杠杆较高(Motley Fool 提到)。</li>
+<li>单日 10% 的涨幅可能出现获利回吐。</li>
+</ul>
+</li>
+<li><strong>建议关注的催化剂</strong>:CoreWeave 等 AI 相关财报、本周通胀数据、各州数据中心政策的具体动向、CEG 新的数据中心购电协议公告,以及电话会议上对新合同的评论。</li>
+</ol>
+<h5>六、要点汇总</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>要点</th>
+<th>影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选举冲击</td>
+<td>民主党大胜,CEG 两日跌约 9%,VST 跌约 14%</td>
+<td>短期利空</td>
+</tr>
+<tr>
+<td>三季报</td>
+<td>净利润 18.4 亿美元,同比增长一倍以上,超预期</td>
+<td>利好</td>
+</tr>
+<tr>
+<td>指引</td>
+<td>上调全年 EPS 指引(区间从 12.50 美元起,上限待核实)</td>
+<td>利好</td>
+</tr>
+<tr>
+<td>股价反应</td>
+<td>11 月 9 日上涨约 10%</td>
+<td>部分收复跌幅</td>
+</tr>
+<tr>
+<td>合同</td>
+<td>Google、Amazon 合同仍有效,风险在新合同</td>
+<td>中性偏多</td>
+</tr>
+<tr>
+<td>增长项目</td>
+<td>Salem 增容 200 MW,探讨与数据中心开发商合作</td>
+<td>中长期利好</td>
+</tr>
+<tr>
+<td>行业</td>
+<td>VST 收购 Cogentrix,NRG 追加 10 亿美元回购;Mistral CEO 称能源 2029–2030 年前不是瓶颈</td>
+<td>竞争与论点压力</td>
+</tr>
+<tr>
+<td>宏观</td>
+<td>FRED 数据和预测市场均无法获取</td>
+<td>数据缺口</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>州级政策、AI 板块波动、杠杆、涨后回吐</td>
+<td>需控制仓位</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>CEG(Constellation Energy Corporation)基本面分析报告(截至 2026-11-09)</h4>
+<h5>一、数据可得性说明</h5>
+<ul>
+<li><strong>get_fundamentals</strong>:供应商不提供历史时点的市值、估值倍数、52周区间和TTM数据,因此本报告<strong>没有</strong>市值、市盈率、市净率、股息率等估值数据。</li>
+<li><strong>get_insider_transactions</strong>:该日期的内部人交易数据被屏蔽,所以<strong>无法</strong>评估内部人买卖情况。</li>
+<li>下列财务数据均来自 SEC EDGAR 已提交的报表,单位为百万美元。最新一期是 2026年6月30日(Q2)。Q3(2026-09-30)的数据尚未出现在数据中。</li>
+<li>利润表中的成本和毛利未被披露(该公司未标记这些项目)。</li>
+</ul>
+<h5>二、利润表趋势</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>季度</th>
+<th>收入</th>
+<th>营业利润</th>
+<th>净利润</th>
+<th>稀释EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025Q1</td>
+<td>6,106</td>
+<td>451</td>
+<td>118</td>
+<td>0.38</td>
+</tr>
+<tr>
+<td>2025Q2</td>
+<td>5,161</td>
+<td>951</td>
+<td>839</td>
+<td>2.67</td>
+</tr>
+<tr>
+<td>2025Q3</td>
+<td>5,703</td>
+<td>1,086</td>
+<td>930</td>
+<td>2.97</td>
+</tr>
+<tr>
+<td>2026Q1</td>
+<td>7,541</td>
+<td>2,332</td>
+<td>1,590</td>
+<td>4.49</td>
+</tr>
+<tr>
+<td>2026Q2</td>
+<td>5,843</td>
+<td>580</td>
+<td>513</td>
+<td>1.42</td>
+</tr>
+</tbody>
+</table></div>
+<p>注意:数据缺少 2025Q4(年度报告期)和部分季度的单独数据,仅能对比已有的季度。</p>
+<p>要点:</p>
+<ul>
+<li>2026Q2 收入 58.43 亿美元,同比增长约 13%(2025Q2 为 51.61 亿美元)。</li>
+<li>2026Q2 净利润 5.13 亿美元,同比下降约 39%。EPS 为 1.42,而去年同期为 2.67。</li>
+<li>2026Q2 营业利润 5.8 亿美元,同比下降约 39%,营业利润率约 9.9%,而去年同期约 18.4%。</li>
+<li>2026Q1 业绩非常强(收入 75.41 亿美元,EPS 4.49)。这可能反映了冬季电价、核电衍生品或投资公允价值的影响,但数据中没有说明原因。</li>
+<li>公司的盈利波动较大。这可能与衍生品按市值计价和核电基金的收益有关,但这一点是推测,数据中没有明确说明。</li>
+</ul>
+<h5>三、资产负债表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>总资产</th>
+<th>总负债</th>
+<th>股东权益</th>
+<th>现金</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-09-30</td>
+<td>56,161</td>
+<td>41,469</td>
+<td>14,350</td>
+<td>3,959</td>
+</tr>
+<tr>
+<td>2025-12-31</td>
+<td>57,249</td>
+<td>42,396</td>
+<td>14,517</td>
+<td>3,641</td>
+</tr>
+<tr>
+<td>2026-03-31</td>
+<td>96,911</td>
+<td>63,091</td>
+<td>33,483</td>
+<td>800</td>
+</tr>
+<tr>
+<td>2026-06-30</td>
+<td>98,253</td>
+<td>65,931</td>
+<td>31,977</td>
+<td>697</td>
+</tr>
+</tbody>
+</table></div>
+<p>要点:</p>
+<ul>
+<li>2026Q1 总资产从 572 亿美元跃升至 969 亿美元(增加约 397 亿美元),总负债增加约 207 亿美元,股东权益增加约 190 亿美元。这与一次大型收购(很可能涉及发行股票)的特征相符。<strong>这是我的推断</strong>,数据本身没有披露交易细节,需要其他来源核实。</li>
+<li>现金从 36.4 亿美元降至 8 亿美元,2026Q2 为 6.97 亿美元,流动性较之前明显收紧。</li>
+<li>2026Q2 股东权益比 Q1 减少约 15 亿美元,而同期净利润为正。这说明有分红、回购或其他综合收益的下降,具体原因数据未披露。</li>
+<li>负债/权益比约 2.06(65,931/31,977),高于收购前的约 2.9 吗?不是:收购前约为 2.92(42,396/14,517),所以杠杆率实际上下降了。不过绝对负债规模明显更大。</li>
+<li>流动资产 189.65 亿美元,流动负债 130.32 亿美元,流动比率约 1.46。</li>
+</ul>
+<h5>四、现金流(年内累计)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>期间</th>
+<th>经营现金流</th>
+<th>投资现金流</th>
+<th>融资现金流</th>
+<th>资本支出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025 前9个月</td>
+<td>3,432</td>
+<td>-2,221</td>
+<td>-249</td>
+<td>1,963</td>
+</tr>
+<tr>
+<td>2026Q1</td>
+<td>425</td>
+<td>-3,732</td>
+<td>730</td>
+<td>1,275</td>
+</tr>
+<tr>
+<td>2026 上半年</td>
+<td>1,553</td>
+<td>-5,101</td>
+<td>877</td>
+<td>2,521</td>
+</tr>
+</tbody>
+</table></div>
+<p>要点:</p>
+<ul>
+<li>2026年上半年经营现金流 15.53 亿美元,资本支出 25.21 亿美元,自由现金流约为 <strong>-9.68 亿美元</strong>。</li>
+<li>投资现金流 -51 亿美元,远大于资本支出,说明还有收购或投资性支出。</li>
+<li>这些缺口由融资现金流(+8.77 亿美元)和现金余额的下降来填补。</li>
+<li>2025 年前9个月与 2026 年上半年的期间不同,不能直接比较。2025 上半年经营现金流为 15.84 亿美元,与 2026 上半年的 15.53 亿美元基本持平。资本支出则从 15.73 亿美元增至 25.21 亿美元,增长约 60%。</li>
+</ul>
+<h5>五、结论与对交易者的启示</h5>
+<ol>
+<li><strong>增长与投入</strong>:收入增长良好,公司正在大规模投资(资本支出加速、资产规模扩大近一倍)。</li>
+<li><strong>盈利质量</strong>:2026Q2 利润同比明显下降,利润率压缩。需要关注 Q3 财报(应在近期发布),以确认这是一次性因素还是趋势。</li>
+<li><strong>现金流</strong>:自由现金流为负,现金余额很低,公司依赖融资。利率和融资环境是风险点。</li>
+<li><strong>数据缺失</strong>:没有估值、内部人交易、分析师预期和 2026Q3 的数据,所以无法判断当前价格是否合理。建议由其他分析师补充估值、新闻和技术面信息。</li>
+</ol>
+<h5>六、汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>关键数据</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026Q2 收入</td>
+<td>58.43 亿美元(同比约 +13%)</td>
+<td>增长稳健</td>
+</tr>
+<tr>
+<td>2026Q2 净利润</td>
+<td>5.13 亿美元(同比约 -39%)</td>
+<td>盈利走弱</td>
+</tr>
+<tr>
+<td>2026Q2 EPS</td>
+<td>1.42(去年同期 2.67)</td>
+<td>明显下滑</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>约 9.9%(去年同期约 18.4%)</td>
+<td>利润率压缩</td>
+</tr>
+<tr>
+<td>总资产</td>
+<td>982.5 亿美元(2025年底 572.5 亿美元)</td>
+<td>可能的大型收购,需核实</td>
+</tr>
+<tr>
+<td>总负债</td>
+<td>659.3 亿美元</td>
+<td>绝对负债大幅上升</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>319.8 亿美元</td>
+<td>较Q1减少约 15 亿美元</td>
+</tr>
+<tr>
+<td>现金</td>
+<td>6.97 亿美元</td>
+<td>流动性偏紧</td>
+</tr>
+<tr>
+<td>流动比率</td>
+<td>约 1.46</td>
+<td>短期偿债尚可</td>
+</tr>
+<tr>
+<td>2026H1 自由现金流</td>
+<td>约 -9.7 亿美元</td>
+<td>资本支出超过经营现金流</td>
+</tr>
+<tr>
+<td>估值数据</td>
+<td>不可得</td>
+<td>无法评估估值</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td>不可得</td>
+<td>无法评估</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong>
+(依据:现有数据显示盈利走弱和自由现金流为负,但缺少估值、Q3 业绩和内部人数据,不足以支持买入或卖出。最终决定由其他代理人做出。)</p>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # CEG 看多论证:一次被政策恐慌错杀、又被业绩验证的机会</p>
+<p>空头还没发言,我先把多头的核心逻辑摆出来,再预判并回应空头最可能提出的几点质疑。</p>
+<h5>一、核心论点:市场用一周时间演完了&quot;恐慌—验证&quot;</h5>
+<p>本周的走势很清楚:</p>
+<ul>
+<li><strong>恐慌阶段</strong>:民主党在中期选举中大胜,市场担心州长们暂停数据中心建设。CEG 两日累计下跌约 9%,Vistra 跌约 14%。这是对<strong>尚未发生的政策</strong>的预先定价。</li>
+<li><strong>验证阶段</strong>:11 月 9 日 Q3 业绩公布,股价当日从 249.95 涨至 276.09,涨幅约 10%。调整后每股收益 5.06 美元,上年同期 3.04 美元;归母净利润 18.4 亿美元,同比翻倍以上。全年调整后每股收益指引上调至 12.50–12.80 美元。</li>
+</ul>
+<p>关键在于:Barron's 指出,数据中心暂停令的风险<strong>还没有体现在指引里</strong>。也就是说,公司在把这个风险当作潜在风险提示的同时,仍然上调了指引。管理层对基本面的信心比市场恐慌要强。</p>
+<h5>二、增长潜力</h5>
+<ol>
+<li><strong>指引连续阶梯式上调</strong>:从 11.00–12.00,到 11.50–12.50,再到 12.50–12.80。三次上调说明业务的可见度和执行力,而不是一次性利好。</li>
+<li><strong>Calpine 并购贡献</strong>:资产规模从 2025 年底的 572 亿美元升至 2026 年 6 月的 983 亿美元。公司已经成为规模更大的发电平台,Q3 盈利增长中 Calpine 与商业业务是主要驱动,整合正在兑现。</li>
+<li><strong>增量项目</strong>:与 PSEG 合作的 Salem 核电站增容 200 MW,并在探讨与数据中心开发商直接签订购电协议。这是不需要新建核电站就能增加的容量。</li>
+<li><strong>收入基础</strong>:2026 年 Q2 收入 58.43 亿美元,同比约增长 13%。规模增长是实打实的。</li>
+</ol>
+<h5>三、竞争优势</h5>
+<ul>
+<li><strong>核电资产的稀缺性</strong>:核电是无碳、全天候的基荷电源,新建几乎不可能在短期内完成。这是数据中心客户最难替代的电力来源。</li>
+<li><strong>已签约合同的护城河</strong>:与 Google、Amazon 的合同仍然有效(TIKR)。风险只在&quot;未来新合同&quot;,而不是现有现金流。</li>
+<li><strong>行业地位</strong>:Vistra 靠收购 Cogentrix 补气电,NRG 靠资产出售回购。CEG 的核电加 Calpine 气电组合,在清洁基荷和灵活调峰两端都有布局。</li>
+</ul>
+<h5>四、积极的技术与情绪信号</h5>
+<ul>
+<li>收盘 276.09,已<strong>站上 50 SMA(270.01)和 10 EMA(258.45)</strong>,仅比 200 SMA(278.09)低约 2 点。</li>
+<li>MACD 柱状图转正(+0.25),出现初步多头交叉。</li>
+<li>RSI 55.70,<strong>未超买</strong>,上涨空间没有被透支。</li>
+<li>成交量 7.33M,放量上涨,收盘接近日内高点 277.66,说明买盘一路推到收盘。</li>
+<li>盘中低点 247.00,开盘后回落,但在 VWAP 附近反转,多头接住了回落。</li>
+<li>有标注的社交情绪中,约 90% 看多(样本小,仅作参考)。</li>
+</ul>
+<h5>五、预判空头的质疑与回应</h5>
+<p><strong>质疑 1:&quot;Q2 利润同比下降 39%,盈利质量差。&quot;</strong>
+回应:这是已经过去的数据,而 Q3 正是对此的回答:EPS 从 3.04 升至 5.06,净利润翻倍。Q1 EPS 4.49,Q2 1.42,Q3 5.06,盈利受衍生品按市值计价与季节性影响大,单季度波动不应该被当作趋势。看调整后每股收益的指引路径,方向是向上的。</p>
+<p><strong>质疑 2:&quot;自由现金流为负,现金只有 6.97 亿美元。&quot;</strong>
+回应:2026 上半年经营现金流 15.53 亿美元,与去年同期的 15.84 亿美元基本持平,没有恶化。负自由现金流来自资本支出增长(25.21 亿美元),这是对 Salem 增容和 Calpine 整合的投入,属于增长性开支。另外有 56.61 亿美元持有待售资产,Calpine 剥离在年底前完成会带来现金回流,可用于降杠杆或回购。流动比率约 1.46,短期偿债没有压力。</p>
+<p><strong>质疑 3:&quot;杠杆高、股本稀释。&quot;</strong>
+回应:数据显示负债/权益比从收购前约 2.92 降至约 2.06,<strong>杠杆率实际下降</strong>,因为收购以股权融资为主。股份数从 3.13 亿增至 3.54 亿,稀释是真实存在的,但我们用的是以结果为导向的衡量:调整后每股收益在稀释之后仍然增长了 66%。稀释已经被消化。</p>
+<p><strong>质疑 4:&quot;数据中心暂停令是系统性风险。&quot;</strong>
+回应:</p>
+<ul>
+<li>目前是<strong>竞选承诺</strong>,还不是法律。</li>
+<li>暂停令主要针对<strong>新增</strong>数据中心建设,而 CEG 已签约合同不受影响。</li>
+<li>美国联邦层面的电力需求、电气化和已经在建的项目,不会因为几个州的政策而归零。</li>
+<li>股价年初至今下跌约 33%,12 个月总回报约 -32%,这个风险已经在相当程度上被定价。</li>
+</ul>
+<p><strong>质疑 5:&quot;Mistral CEO 说能源到 2029–2030 年不是瓶颈。&quot;</strong>
+回应:这是一个观点,而且是 AI 模型公司的观点,不是电力运营商的。即便如此,它指向的是 2029–2030 年,而 CEG 的盈利驱动是现有合同、Calpine 和价格,眼下并不依赖&quot;短缺溢价&quot;这一单一叙事。</p>
+<p><strong>质疑 6:&quot;技术面仍低于 200 SMA,日线趋势偏弱,10/20 以来是红色。&quot;</strong>
+回应:我同意站上 200 SMA 才算确认,这点我不回避。但价格已经站上 50 SMA,距离 200 SMA 只差约 2 点,并且是在业绩催化加放量下完成的。上一次 10 月 6 日的放量跳升没有持续,是因为当时没有基本面验证。这次有业绩和指引上调支撑。</p>
+<h5>六、我承认的局限</h5>
+<ul>
+<li>缺少估值数据、内部人交易数据,也没有 Q3 的完整报表,我不能断言估值便宜。</li>
+<li>单日 10% 涨幅后可能有获利回吐,ATR 为 14.20(约占价格 5%),波动大,仓位应该控制。</li>
+<li>PJM 备用拍卖、Calpine 资产出售执行,还有各州政策的具体动向,都需要持续跟踪。</li>
+</ul>
+<h5>七、结论</h5>
+<p>多头的逻辑是:<strong>政策恐慌造成的下跌,被强劲业绩和上调指引证伪了一部分,而剩余的风险是未来新合同的不确定性,不是现有盈利的不确定性。</strong> 在这种情况下,正面信息(盈利翻倍、指引三连升、Calpine 整合、Salem 增容、杠杆比下降)的权重高于已被部分定价的政策风险。</p>
+<p><strong>策略建议</strong>:以较小初始仓位参与,放量收盘站上 200 SMA(278.09)后加仓,回踩 50 SMA(270.01)附近可作为低风险加仓点,止损参考 ATR 放宽设置。</p>
+<p>空头方请先指出:你认为 Q3 的 EPS 翻倍是不可持续的,依据是什么?</p>
+<p><strong>Rating</strong>: Buy</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # CEG 看空论证:一次超跌反弹,不是趋势反转</p>
+<p>多头问我:Q3 的 EPS 翻倍凭什么不可持续?我先回答这个问题,再逐条拆解多头的&quot;证伪&quot;叙事。</p>
+<h5>一、先回答:为什么 EPS 翻倍不能当作趋势</h5>
+<p><strong>1. 同比基数被 Calpine 并购改写了。</strong>
+总资产从 572 亿美元升到 983 亿美元,股份数从 3.13 亿增到 3.54 亿(约 +13%)。Q3 的&quot;增长 66%&quot;很大程度上是并表带来的规模效应,而不是原有业务的内生增长。Zacks 自己也说,增长主要来自 Calpine 和商业业务。一次性并表只能抬高一次基数,明年同期就没有这个红利。</p>
+<p><strong>2. 核电发电量基本持平。</strong>
+社交媒体报告里提到的这一点很关键:CEG 的&quot;核心稀缺资产&quot;本身没有增长。盈利增长靠的是价格、并购和商业业务,而不是产量。价格是周期性的,并购红利是一次性的。</p>
+<p><strong>3. 盈利波动极大,单季度不可外推。</strong>
+多头自己承认:EPS 依次为 4.49、1.42、5.06。这个序列说明利润对衍生品按市值计价、季节和市场价格非常敏感。多头一边说&quot;Q2 下降 39% 是噪音&quot;,一边说&quot;Q3 翻倍是验证&quot;,这是双重标准。如果 Q2 是噪音,Q3 同样可能是噪音。Q2 营业利润率约 9.9%,上年同期约 18.4%,这是实打实的利润率压缩,而 Q3 的完整报表我们还没有看到。</p>
+<p><strong>4. 指引上调不等于质量提升。</strong>
+指引区间 12.50–12.80 是&quot;调整后&quot;每股收益,不是 GAAP。调整后口径可以剔除很多成本。而且前三次上调包含 Calpine 并表的逐步反映,更像是把新收购资产的贡献逐步纳入,而不是业务动能加速。</p>
+<h5>二、反驳多头的核心论点</h5>
+<h6>1. &quot;恐慌—验证&quot;过于简化</h6>
+<p>多头说业绩&quot;证伪&quot;了政策恐慌。但 Barron's 的原话是:暂停令的风险<strong>尚未体现在指引中</strong>。这恰恰说明风险没有被证伪,只是没有被计入。Q3 是回顾性数据,而数据中心暂停令影响的是<strong>未来新合同</strong>,而新合同正是 CEG 估值叙事的核心。用过去的盈利去驳斥未来的政策风险,逻辑上不成立。</p>
+<p>另外,民主党赢得国会和多个州的选举,风险不止是暂停令,还包括电价、购电合同审批、对&quot;电表后&quot;直供协议(例如 Salem 与数据中心开发商的直接合作)的监管。这恰好打到 CEG 增长项目的要害。</p>
+<h6>2. &quot;杠杆下降&quot;是数字游戏</h6>
+<p>多头把负债/权益比从 2.92 降到 2.06 当作利好。但请看看实质:</p>
+<ul>
+<li><strong>绝对负债</strong>从 424 亿美元增至 659 亿美元,增加了 235 亿美元。</li>
+<li>比率下降是因为发行了大量股票,也就是<strong>稀释了股东</strong>,而不是公司赚钱还债。</li>
+<li>现金从 36 亿美元降到 6.97 亿美元,下降了约 81%。</li>
+<li>上半年自由现金流约 -9.7 亿美元,资本支出同比增长约 60%,而经营现金流持平。</li>
+</ul>
+<p>多头说&quot;稀释已被消化&quot;,理由是调整后 EPS 仍然增长。但这是循环论证:EPS 增长来自并表,并表的代价就是稀释。股东拿到的是被摊薄后的更大蛋糕,不一定是更好的蛋糕。</p>
+<h6>3. &quot;持有待售资产会带来现金回流&quot;是未兑现的承诺</h6>
+<p>56.61 亿美元的待售资产涉及 Calpine 剥离。社交媒体报告已经把&quot;执行风险&quot;列为风险项。资产出售要获得监管批准、找到买家、按预期价格成交。在此之前这只是账面数字。拿还没到账的现金去回应今天的负自由现金流,说服力不足。</p>
+<h6>4. &quot;股价已跌 33%,风险已被定价&quot;</h6>
+<p>这是最危险的论断,因为我们<strong>没有任何估值数据</strong>:没有市盈率、没有市净率、没有市值。多头自己也承认&quot;不能断言估值便宜&quot;。跌了 33% 不等于便宜,它可能只是从过高的位置回落。没有估值锚,&quot;已被定价&quot;只是一种感觉。</p>
+<h6>5. 竞争护城河在变薄</h6>
+<ul>
+<li>Mistral CEO 称能源在 2029–2030 年前不会成为 AI 算力瓶颈,电力只占算力成本约 10%。这直接削弱&quot;电力短缺溢价&quot;这一核心叙事。多头说那是 AI 公司的观点,但购电方恰恰是这些 AI 公司,它们对电价的接受度决定 CEG 的议价能力。</li>
+<li>Vistra CEO 认为德州电价将在类似时间点回归正常。</li>
+<li>Vistra 通过 Cogentrix 新增约 5,500 MW,NRG 大举回购。同行都在扩张供给或回馈股东,竞争只会加剧。</li>
+<li>已签约合同有效,但这是<strong>存量</strong>。多头的估值叙事需要<strong>增量</strong>合同,而增量正是政策风险的靶心。</li>
+</ul>
+<h5>三、技术面:多头在选择性解读</h5>
+<p>多头强调&quot;站上 50 SMA、MACD 转正、RSI 未超买&quot;。逐项看:</p>
+<ul>
+<li><strong>仍低于 200 SMA(278.09)。</strong> 收盘 276.09,没有突破。多头也承认需要确认,但在没有确认前就建议买入,是把条件当结果。</li>
+<li><strong>MACD 为 -4.23,仍在零轴下方</strong>,柱状图仅 +0.25。技术报告明确指出零轴下方的交叉可靠性较低。</li>
+<li><strong>10 月 6 日有同样的故事。</strong> 当时放量跳升到 300.40(成交量 13.48M,远大于本次的 7.33M),之后一路回落到 239.65。多头说那次&quot;没有基本面验证&quot;。但那次涨幅的起点更高、成交量更大,仍然失败。这次成交量更小,却被视为更可靠。</li>
+<li><strong>价格距 10 EMA 约 17.6 点</strong>,均值回归压力明显。</li>
+<li><strong>盘中结构</strong>:盘前高点 264 美元,开盘回落至 247 美元,说明开盘时卖盘很重。日线趋势自 10/20 起仍为红色,周线自 1 月起偏弱,日线翻转位约 257.85 美元。</li>
+<li><strong>ATR 14.20(约占价格 5%)</strong>,这不是一只可以轻松&quot;小仓位参与&quot;的股票,而是一只每天随时可能反向波动 14 美元的股票。</li>
+</ul>
+<h5>四、情绪:追涨,而非共识</h5>
+<p>多头引用&quot;约 90% 看多&quot;。但有标注的样本只有 10 条,24 条帖子全部集中在 11 月 9 日一天,Reddit 几乎没有讨论。这是&quot;财报日兴奋&quot;,不是持续的资金共识。在大涨当天出现的看多帖子,通常是追涨的滞后指标,而不是先行信号。</p>
+<h5>五、风险清单(多头回避或轻描淡写的部分)</h5>
+<ol>
+<li><strong>政策风险是方向性的。</strong> 民主党掌控国会和多个州,监管、电价、直供协议审批全面承压。</li>
+<li><strong>PJM 备用拍卖仍未举行</strong>,管理层态度有变化,这是容量价格的关键不确定项。</li>
+<li><strong>自由现金流为负、现金仅 6.97 亿美元</strong>,依赖融资环境,而我们没有利率数据。</li>
+<li><strong>盈利质量低、波动大</strong>,衍生品和基金公允价值波动让单季结果难以外推。</li>
+<li><strong>执行风险</strong>:Calpine 整合与资产出售必须在年底前完成,任何延误都会冲击现金与杠杆叙事。</li>
+<li><strong>AI 板块整体回调</strong>:英伟达调查、科技股抛售,CEG 已被市场当作 AI 概念股交易,贝塔很高。当选举后 Vistra 一天跌 14%,说明这一板块的下行速度很快。</li>
+<li><strong>数据缺口</strong>:没有估值、没有内部人交易、没有完整 Q3 报表。在这种情况下给出&quot;买入&quot;评级,等于在盲区里加仓。</li>
+</ol>
+<h5>六、结论</h5>
+<p>多头的论点是:恐慌被业绩证伪,剩余风险只是未来合同。我的回应是:</p>
+<ul>
+<li><strong>业绩验证的是过去,风险在未来。</strong> Q3 的强劲有相当一部分来自并购并表,不是内生增长,核电产量持平。</li>
+<li><strong>资产负债表更重、更薄。</strong> 负债增加 235 亿美元,现金下降八成,自由现金流为负,杠杆比率的改善是靠发股实现的。</li>
+<li><strong>没有估值保护。</strong> 在不知道市盈率的情况下,&quot;跌了 33% 所以便宜&quot;没有依据。</li>
+<li><strong>技术面未确认。</strong> 价格仍在 200 SMA 下方,MACD 在零轴下,10 月 6 日的放量反弹已经失败过一次。</li>
+<li><strong>催化剂不对称。</strong> 向上需要新合同和政策友好,向下只需要一个州落实暂停令、Calpine 出售延迟或 AI 板块再度回调。</li>
+</ul>
+<p>更合理的做法是:<strong>不追这根 10% 的大阳线。</strong> 至少等到价格放量收盘站稳 200 SMA、Q3 完整报表确认盈利质量与现金流、PJM 拍卖与州级政策方向清晰之后再评估。在此之前,风险回报比不支持买入,已有仓位应利用反弹降低敞口。</p>
+<p>回到多头的问题:我不需要证明 EPS 翻倍&quot;不会&quot;持续,只需要指出它<strong>不能被外推</strong>。因为它依赖并表、价格和衍生品波动,而不是产量增长。多头请回答:如果核电产量持平、Calpine 红利明年消失、新合同受政策阻碍,你的增长从哪里来?</p>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: 多空双方都有扎实的论点,权衡后证据大致平衡,因此给出 Hold。</p>
+<p>多头的有力之处:</p>
+<ul>
+<li>Q3 调整后每股收益为 5.06 美元(上年同期 3.04 美元),全年指引三次上调,最近一次上调至 12.50–12.80 美元。这是基本面的真实改善。</li>
+<li>股价年初至今约 -33%,政策恐慌已部分反映在价格里。</li>
+<li>已签约的 Google 和 Amazon 合同不受未来暂停令影响。</li>
+</ul>
+<p>空头的有力之处:</p>
+<ul>
+<li>Q3 的增长有相当一部分来自 Calpine 并表。核电发电量持平,这是一次性的规模红利,不能外推。</li>
+<li>多头对 Q2 和 Q3 的解读是双重标准:Q2 下滑被说成噪音,Q3 翻倍却被当作验证。</li>
+<li>Barron's 指出暂停令风险尚未计入指引。这个风险针对未来新合同,Q3 这种回顾性数据不能证伪它。</li>
+<li>现金从 36 亿美元降到 6.97 亿美元,上半年自由现金流约 -9.7 亿美元。杠杆比率下降靠发股实现,绝对负债增加约 235 亿美元。</li>
+<li>56.61 亿美元的待售资产还没有变现,执行风险仍在。</li>
+<li>价格仍低于 200 SMA(278.09),MACD 仍在零轴下方。10 月 6 日的放量反弹已经失败过一次。</li>
+<li>手头没有估值数据,也没有内部人交易数据和完整的 Q3 报表。&quot;已被定价&quot;的说法缺少估值锚。</li>
+</ul>
+<p>权衡:</p>
+<ul>
+<li>多头的&quot;证伪&quot;叙事被削弱了,因为业绩验证的是过去,风险在未来。</li>
+<li>空头的 Sell 同样缺乏依据。盈利和指引的趋势向上,股价已大幅回撤,又缺估值数据,不足以支持清仓。</li>
+<li>单日涨 10% 之后追高的风险回报不佳,但全面看空也缺乏催化剂。</li>
+<li>因此结论是中性持有,等待确认信号。</li>
+</ul>
+<p><strong>Strategic Actions</strong>: 1. 仓位:维持现有仓位,不新增,也不清仓。不追这根 10% 的大阳线。如果当前仓位高于标准配置,可利用反弹把超出部分减到标准配置的水平。
+2. 加仓触发条件(需满足其一):</p>
+<ul>
+<li>放量收盘站稳 200 SMA(278.09)之上。</li>
+<li>回踩 50 SMA(约 270)后企稳,且完整 Q3 报表显示现金流和盈利质量没有问题。
+加仓时先加标准仓位的约 1/4 到 1/3,分批进行。</li>
+</ul>
+<ol start="3">
+<li>减仓触发条件(需满足其一):
+<ul>
+<li>收盘跌破 257.85(日线翻转位)。</li>
+<li>有州正式落实数据中心暂停令。</li>
+<li>Calpine 资产出售延迟。</li>
+<li>PJM 备用拍卖结果不利。
+触发后减持约 1/3。</li>
+</ul>
+</li>
+<li>风控:ATR 约 14.2(约占价格 5%),止损要放宽,单笔风险按这个波动幅度设定,不要用过紧的止损。</li>
+<li>待补数据:估值(市盈率和市净率)、完整 Q3 报表(现金流、衍生品按市值计价的影响)、内部人交易、利率环境。这些数据到位后重新评估评级。</li>
+<li>跟踪事项:PJM 备用拍卖的时间与结果、各州的具体政策动向、Calpine 剥离进度、Salem 增容及直供协议的监管审批。</li>
+</ol>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: 研究计划给出 Hold,我同意。基本面在改善:Q3 调整后每股收益 5.06 美元,全年指引上调至 12.50–12.80 美元。但增长有一部分来自 Calpine 并表,现金流为负,暂停令风险还没有计入指引。技术面上,收盘 276.09 仍略低于 200 SMA(278.09),MACD 在零轴下方,只有很弱的多头交叉。10 月 6 日的放量反弹已经失败过一次。单日涨 10% 后追高的风险回报不佳,现在也没有足够依据清仓。因此维持现有仓位,等待放量站上 200 SMA 或回踩 50 SMA 后企稳。本报告没有估值数据和完整的 Q3 报表,也没有内部人交易数据。</p>
+<p><strong>Entry Price</strong>: 270.0</p>
+<p><strong>Stop Loss</strong>: 252.0</p>
+<p><strong>Position Sizing</strong>: 维持现有仓位,不新增也不清仓。只有在回踩 50 SMA(约 270)后企稳,或放量收盘站上 278.09 时,才加标准仓位的 1/4 到 1/3,并分批进行。ATR 约 14.2(约占价格 5%),单笔风险应该小一些。收盘跌破 257.85,或收盘跌破 252 时,减持约 1/3。如果现有仓位高于标准配置,可以利用这次反弹把超出的部分减掉。止损 252 约为入场价下方 1.3 倍 ATR,低于 257.85 的日线翻转位。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位,保守派和中性派还没发言,我先把激进的立场摆出来。我的结论很直接:Hold 是对的,但它不该是一个被动的 Hold,而应该是一个&quot;带着进攻意图的 Hold&quot;。CEG 现在的风险回报,比交易员报告里表现出来的要有吸引力得多。</p>
+<p>先说基本面的方向。Q3 调整后每股收益 5.06 美元,上年同期是 3.04 美元,增幅约 66%。全年指引三次上调,从 11.00–12.00 到 11.50–12.50,再到 12.50–12.80。管理层连续抬高指引,这不是一家在挣扎的公司会做的事。按指引中值约 12.65 美元算,276 美元的股价大约是 22 倍远期盈利。对一家握有 Google、Amazon 长期合同、还有 Calpine 并表加持的核电龙头来说,这个倍数并不贵。当然,报告里确实没有估值数据,所以这只是我用指引和收盘价做的粗算,但方向足够说明问题:市场在选举恐慌里给出的折价,比盈利下修的幅度大得多。</p>
+<p>再看年初至今下跌约 33%。这是机会的来源。市场是在为一个尚未发生的情景定价,也就是州级数据中心暂停令。而 Barron's 自己也说,这个风险还没体现在指引里,反过来说,已签约的 Google、Amazon 合同仍然有效。现有合同不受暂停令影响,受影响的只是未来新增合同。Salem 增容 200 MW,还在谈与数据开发商的直接合作,这些都是实打实的增量。</p>
+<p>技术面也不是看空。收盘 276.09,站上 50 SMA 的 270.01,离 200 SMA 的 278.09 只差两美元。RSI 55.7,没有超买,MACD 柱状图转正。放量 7.33M,收盘贴近日内高点,盘中从 247 反弹到 277.66,说明低位有人在大量接货。一旦放量站上 278,下一站就是布林上轨 288,再往上 10 月 6 日的 300 区域。从 276 到 300 是约 9% 的空间,而止损 252 只有约 8.7% 的下行,这还没算分批加仓后更优的均价。</p>
+<p>现在预判一下保守派会说什么。第一,&quot;10 月 6 日放量反弹失败过一次&quot;。是的,但那次是从 267 跳到 300,当时没有业绩和指引上调的支撑,这次有财报背书,性质不同。第二,&quot;自由现金流为负、现金只有 6.97 亿美元&quot;。这是 Q2 的数据,发生在 Calpine 收购和资本开支高峰期;而且杠杆率其实从 2.92 降到了 2.06,基本面报告自己也算出来了。资本开支增长 60% 是为了未来产能,不是经营恶化。第三,&quot;净利润 Q2 同比下降 39%&quot;。但 Q3 净利润 18.4 亿美元,同比翻倍以上,Q2 的疲软已经被 Q3 覆盖。</p>
+<p>至于中性派可能会说&quot;等确认再动&quot;,我的反驳是:确认信号来的时候,价格已经在 278 以上,甚至 288。等到放量收盘站上 200 SMA 才加仓,你买的就是最贵的那一截。交易员计划里&quot;回踩 50 SMA 约 270 企稳就加 1/4 到 1/3&quot;这条,我认为是整个方案里最有价值的部分,我甚至主张在这条上更积极一些:在 270 附近分两批,而不是一次小额试探。ATR 14.2 说明波动大,但波动大恰恰意味着机会多,关键是用止损控制损失,而不是因为波动就不参与。</p>
+<p>当然我也承认几处真实的弱点。股本从 3.13 亿股增到 3.54 亿股,稀释是事实;持有待售资产 56.61 亿美元,Calpine 剥离有执行风险;PJM 备用拍卖悬而未决;核电发电量持平,增长靠价格和并购。还有,盘前 264 开盘回落到 247,说明多空争夺激烈。但这些都是可以通过止损和分批来管理的风险,不是放弃上行的理由。</p>
+<p>所以我的立场是:保持现有仓位,不清仓;如果现有仓位低于标准配置,应当积极利用 270 附近的回踩加仓,站上 278 且放量时再追加,不要被&quot;已经涨了 10%&quot;吓住。真正的风险不是买贵了一点,而是错过一个在政策恐慌里被错杀、又有盈利上修支撑的标的。在 252 的止损之下,最坏情况是可量化的;在 300 以上,上行空间是敞开的。风险是有限的,收益则不是。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 我先承认一点:Hold 我同意,但激进派那种&quot;带着进攻意图的 Hold&quot;我不能接受。Hold 的前提是不增加风险,而他的方案实际上是在一次单日暴涨之后,把加仓条件放得更宽。</p>
+<p>先看他最得意的风险回报。他说从 276 到 300 有约 9% 的空间,止损 252 的下行约 8.7%,然后得出&quot;风险有限,收益敞开&quot;。这两个数字几乎是 1:1,没有任何不对称。而且 300 正是 10 月 6 日放量冲高后一路回落的位置,是已经被市场拒绝过一次的价格,不是敞开的天空。再看止损距离:252 距离 276 是 24 点,只有 1.7 个 ATR。11 月 3 日收 263.40,11 月 5 日收 239.65,两天就跌了 23.75 点,已经穿过 252。11 月 9 日单日振幅 30 点,也就是说 252 这个止损在正常波动里就会被碰到。更麻烦的是,这次下跌的原因是选举结果带来的跳空式冲击。遇到这种事件,止损单不保证成交在 252。所以&quot;最坏情况可量化&quot;这句话,我不认同。</p>
+<p>再看估值。22 倍远期盈利是用调整后每股收益指引算的,而基本面报告里 GAAP 数字波动很大:Q2 EPS 是 1.42,去年同期 2.67,营业利润率从 18.4% 掉到 9.9%。调整后数字剔除了什么,我们不知道。他自己也承认没有估值数据,这个倍数是粗算。股本从 3.13 亿股增到 3.54 亿股,每股盈利增速已经被稀释一块。还有一点:这个倍数能不能撑住,取决于新数据中心合同能不能拿到,而他自己引用的 Barron's 恰恰说暂停令风险没有体现在指引里。这说明指引是在没计入最大不确定性的前提下上调的,不是安全垫。</p>
+<p>关于&quot;现有合同不受影响&quot;。没错,但市场给核电龙头溢价,买的是增量合同和电力短缺叙事。Mistral CEO 说能源在 2029 到 2030 年前不是瓶颈,Vistra CEO 说德州电价会回到正轨,这些都在削弱稀缺溢价。Vistra 刚收购了 5,500 MW 气电,竞争也在加强。Salem 增容 200 MW 还只是计划,与开发商的直接合作还在探讨,不是已落地的收入。</p>
+<p>关于 10 月 6 日那次反弹&quot;性质不同&quot;。我的看法是,这次的财报利好当天已经反映了,涨 10% 就是定价。问题是第二天、第三天谁来接。上次也是放量、也是大阳线,后面一路跌到 239.65。一次失败是警示,不能因为这次多了一条财报新闻就说不会重演。而且盘前 264、开盘回落到 247,随后才拉回,这种走势说明早盘有人在大量卖,不是单向接货。</p>
+<p>关于现金流和杠杆。他说杠杆率从 2.92 降到 2.06,但这是因为发了股票做收购,股东权益从 145 亿涨到 320 亿,分母变大了,总负债其实从 424 亿涨到 659 亿。现金只剩 6.97 亿,上半年自由现金流约负 9.7 亿,资本支出同比增长约 60%,还有 56.6 亿持有待售资产要靠剥离变现。他说 Q3 净利润翻倍覆盖了 Q2 疲软,但我们没有 Q3 完整报表,也没有 Q3 现金流。拿一个没看到细节的净利润数字去抵消已经确认的现金流缺口,这不是稳健的做法。Calpine 并表也意味着同比增长里有一部分是买来的,核电发电量基本持平。</p>
+<p>至于&quot;等确认就买在最贵的地方&quot;,代价是有,但这是为了避免买在失败反弹顶部付的保险费。放量站上 278 以后少赚的那几个点,和跌回 240 的损失不在一个量级。我们是在保护资产,不是追求每一段行情。</p>
+<p>所以我对交易员计划的调整是这样的。第一,Hold 不变,不新增,也不要在 270 回踩时加仓。270 离现价只有 6 点,在一个 ATR 之内,&quot;企稳&quot;很难定义,等于给自己一个随时加仓的借口。加仓条件我只接受放量收盘站上 278,并且连续两天站稳、MACD 柱状图持续扩大,而且加仓规模不超过原计划的 1/4。第二,如果现有仓位超过目标配置,应该趁这次反弹把超出部分减掉,不要等 288 或 300,因为那里是已经失败过的区域。第三,把风控触发改成收盘价口径并提前:收盘跌破 270 的 50 SMA 且 MACD 柱状图转负,就先减约 1/3,而不是等到 257.85 或 252。因为 252 实际上离 11 月 5 日的 239.65 很近,到那时再减,价格可能已经更低了。第四,如果可以用期权,考虑用保护性认沽或领口来覆盖事件风险,尤其是各州数据中心暂停令的新闻和 PJM 备用拍卖结果出来之前。</p>
+<p>最后,我想说,年初至今下跌 33% 不是买入理由,只说明市场对这只股票的分歧很大。在趋势没有确认、现金流为负、关键政策风险未定价的时候,最好的做法是少动、控制规模、让市场先证明自己。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 我先说结论:Hold 我同意,但两位对 Hold 的补充,各有一半我接受,一半不接受。</p>
+<p>先跟激进派聊几句。他的风险回报算得不对。从 276 到 300 大约 9%,到 252 大约 8.7%,这接近 1:1,算不上&quot;风险有限、收益敞开&quot;。300 又是 10 月 6 日冲高后被打回来的位置,不是真空地带。更实际的上方目标是 278 到 288,也就是 200 SMA 和布林上轨之间,空间只有 3% 到 4%。再看 22 倍远期盈利,这是用调整后 EPS 指引中值粗算的。基本面报告里 GAAP 利润波动很大,Q2 EPS 从 2.67 掉到 1.42,调整项我们看不到。股本从 3.13 亿股涨到 3.54 亿股,同比增速里还混着 Calpine 并表。所以&quot;错杀&quot;是个判断,不是已经证明的事实。另外他说 Q3 净利润翻倍覆盖了 Q2,但我们没有 Q3 完整报表,更没有 Q3 现金流。他还要在 270 分两批加仓,而 270 距现价只有 6 点,不到半个 ATR。在这种位置上,&quot;企稳&quot;很难定义,最容易变成给自己加仓找借口。</p>
+<p>不过他也有对的地方。基本面方向确实在改善,指引三次上调不是小事。已签约的 Google、Amazon 合同不受暂停令影响。&quot;全部等确认再动&quot;也有代价,因为等到放量站上 278,价格已经不便宜了。</p>
+<p>再说保守派。他对止损缺口的提醒很有价值。选举这类事件风险会跳空,252 的止损不保证成交在 252。现金 6.97 亿、上半年自由现金流约负 9.7 亿、持有待售资产 56.6 亿要靠出售变现,这些也是实打实的约束。但他的修正方案有三处过度。</p>
+<p>第一,收盘跌破 270 就减三分之一。270.01 是 50 SMA,现价 276.09 只高出 6 点,而 ATR 是 14.2。一天正常波动就能穿过这个位置。再配上&quot;MACD 柱状图转负&quot;的条件,而柱状图现在只有 +0.25,几乎贴着零轴,这个触发器会被反复误触发。反复小额卖出再买回,每次都付出滑点和错过反弹的代价,这并不比追高更稳健。</p>
+<p>第二,加仓条件叠了三层:放量站上 278、连续两天站稳、柱状图持续扩大,规模还只有 1/4。条件这么严,实际上等于永远不加仓。这已经不是 Hold,而是披着 Hold 外衣的减仓倾向。</p>
+<p>第三,他说&quot;财报利好当天已经定价&quot;,可是 11 月 5 日收盘到 239.65,今天 276.09,反弹只收复了选举后的跌幅,股价年初至今仍明显为负。这不是一个已经透支利好的位置。但他说 10 月 6 日有过一次失败的放量反弹,这个提醒我认同。所以问题不在&quot;涨了&quot;,而在价格能否守住,他的观察方向是对的。</p>
+<p>他的保护性认沽或领口,我只部分接受。刚经历大事件和单日 10% 的波动,隐含波动率大概率偏高,保护成本不会低。如果持仓很重,可以考虑用领口,拿上行的一部分换保护。如果仓位不重,直接控制仓位更划算。</p>
+<p>我的折中方案是这样。</p>
+<p>一、Hold 不变,不追高。今天的 276 不是加仓点,也不是减仓点。</p>
+<p>二、加仓分两步,且总量封顶。第一步:回踩 270 一带,要求收盘守住,最好伴随缩量,才加一个小份额,大约相当于标准仓位的 1/8。盘中碰一下不算。第二步:放量收盘站上 278,次日不跌回去,再加大约 1/8。合计不超过标准仓位的 1/4,而不是交易员的 1/3。这样既不会买在最贵的一截,也不会因为条件过严而永远不动。</p>
+<p>三、减仓分级,用收盘价,避开噪音。收盘跌破 270 本身只是观察,不动作。收盘跌破布林中轨 262.6 或日线翻转位 257.85,先减约 1/3,同时取消还没成交的加仓。收盘跌破 252,再减一部分并重新评估。把第一级触发放到 262 到 258,比保守派的 270 更能避开噪音,也比等到 252 更早,能缓冲缺口风险。</p>
+<p>四、如果现有仓位已经高于目标配置,我同意保守派的做法,趁反弹把超出部分卖掉。不过不必一口气卖光,可以在 278 到 288 之间分批卖出超额的一半,留一半看后续。</p>
+<p>五、这几天有几个事件需要盯:通胀数据、CoreWeave 财报、各州数据中心暂停令的具体动向、PJM 备用拍卖、新的数据中心购电协议。出现负面新闻时,别急着加仓;出现新合同时,再认真考虑上调第二步的份额。</p>
+<p>另外,我们不知道你的实际持仓和现金,所以以上比例都是相对于你自己的标准仓位而言。仓位本来就偏重的人,应该更偏向保守派的减超额;仓位偏轻的人,可以用我说的小份额、分批的办法逐步靠近目标。</p>
+<p>总的来说,激进派低估了单日暴涨后的脆弱性,保守派又把噪音当成了信号。中间路线就是小份额、分批、用收盘价确认,既留了参与上行的机会,也守住了下行的底线。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: 维持 CEG 现有仓位,不追高,也不清仓。今天的 276 既不是加仓点,也不是减仓点。加仓要分批,总量封顶在标准仓位的 1/4:回踩 270 一带且收盘守住,加约 1/8;放量收盘站上 278 且次日不回落,再加约 1/8。减仓一律以收盘价为准:收盘跌破 262.6 或 257.85,减约 1/3;收盘跌破 252,再减一部分并重新评估。如果现有仓位高于标准配置,趁反弹把超出部分减掉,可在 278 到 288 之间分批卖出。持有期约 1 到 3 个月,等估值、完整 Q3 报表、PJM 拍卖结果和各州暂停令的进展出来后重评。</p>
+<p><strong>Investment Thesis</strong>: 三位分析师都落在 Hold,分歧只在加减仓的触发细节上,我逐条权衡后站在中性派这一边。</p>
+<p>多头证据是真实的。Q3 调整后每股收益 5.06 美元,上年同期 3.04 美元。全年指引三次上调,最近一次上调至 12.50–12.80 美元。Google 和 Amazon 的已签约合同不受未来暂停令影响。股价年初至今约 -33%,政策恐慌已部分反映在价格里。</p>
+<p>空头证据同样扎实。第一,增长有一部分来自 Calpine 并表,核电发电量持平。第二,现金从 36 亿美元降到 6.97 亿美元,上半年自由现金流约 -9.7 亿美元。杠杆比率下降靠发股实现,总负债从 424 亿美元升到 659 亿美元。第三,有 56.6 亿美元待售资产尚未变现。第四,Barron's 指出暂停令风险还没计入指引,所以 Q3 的回顾性数据证伪不了它。第五,价格仍低于 200 SMA(278.09),10 月 6 日放量反弹已经失败过一次。第六,没有估值数据、完整 Q3 报表和内部人交易数据,&quot;错杀&quot;和&quot;已被定价&quot;两种说法都缺少锚。</p>
+<p>三方论点的取舍如下。</p>
+<ul>
+<li>激进派的&quot;风险有限、收益敞开&quot;不成立。276 到 300 约 +9%,到 252 约 -8.7%,接近 1:1。300 又是刚被打回来的位置。他在 270 分两批重仓加,而 270 距现价不到半个 ATR,&quot;企稳&quot;很难定义。</li>
+<li>保守派提醒的跳空和止损缺口风险是对的。但他把 270 加 MACD 柱状图转负当作减仓触发,会被噪音反复触发,因为柱状图只有 +0.25,ATR 是 14.2。他的三层加仓条件又太严,等于永远不加仓。</li>
+<li>中性派的方案最贴合证据:加仓小份额、分批、用收盘价确认,总量封顶 1/4。减仓的第一级放在 262.6 到 257.85,既避开噪音,又早于 252,能缓冲缺口风险。</li>
+</ul>
+<p>结论是证据大致平衡。盈利和指引趋势向上,但现金流、并表贡献和政策风险未解,技术面也未确认。单日涨 10% 后追高的风险回报差,但全面看空缺少催化剂,也缺估值数据。</p>
+<p>会改变判断的信号如下。</p>
+<ul>
+<li>上调:放量站稳 278 以上,完整 Q3 报表显示现金流和盈利质量良好,Calpine 资产按计划出售,出现新的数据中心购电合同。</li>
+<li>下调:有州正式落实数据中心暂停令,PJM 备用拍卖结果不利,Calpine 剥离延迟,收盘跌破 257.85 或 252。</li>
+</ul>
+<p>持仓和现金未知,以上比例均相对于你自己的标准仓位。仓位偏重者应更偏向减超额,必要时用领口对冲事件风险。但隐含波动率很可能偏高,保护成本不低。仓位偏轻者可用小份额、分批的办法逐步靠近目标。</p>
+<p><strong>Price Target</strong>: 290.0</p>
+<p><strong>Time Horizon</strong>: 1-3 个月</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>
