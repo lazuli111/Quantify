@@ -42,7 +42,12 @@
      "reason": "三连跌回调信号",
      "ref_price": 45.64,
      "est_shares": 28,
-     "ai": null
+     "ai": {
+      "rating": "Hold",
+      "rating_zh": "持有",
+      "agrees": false,
+      "report": "ai/2026-11-09_MNST.html"
+     }
     }
    ],
    "position": {
@@ -847,7 +852,7 @@
  ],
  "ai": {
   "model": "Claude sonnet/opus（订阅）",
-  "runs": 13,
+  "runs": 14,
   "total_cost": 2.23,
   "currency": "CNY"
  }
