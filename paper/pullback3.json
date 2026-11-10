@@ -7,11 +7,25 @@
   "entry_date": "2026-11-05",
   "entry_price": 166.7984,
   "shares": 7,
-  "held_days": 2,
+  "held_days": 3,
   "entry_fees": 0.11675884768524171,
   "stop": null
  },
- "pending": [],
+ "pending": [
+  {
+   "action": "sell",
+   "symbol": "PLTR",
+   "reason": "收盘高于前一天最高价",
+   "ref_price": 169.2
+  },
+  {
+   "action": "buy",
+   "symbol": "MNST",
+   "reason": "三连跌回调信号",
+   "ref_price": 45.64,
+   "est_shares": 28
+  }
+ ],
  "trades": [
   {
    "symbol": "AMAT",
@@ -162,6 +176,11 @@
    "date": "2026-11-06",
    "equity": 1258.01,
    "qqq": 656.1
+  },
+  {
+   "date": "2026-11-09",
+   "equity": 1319.75,
+   "qqq": 679.35
   }
  ],
  "quota_used_hkd": {
@@ -173,5 +192,5 @@
   "2026-11"
  ],
  "fees_paid": 7.4189525151434195,
- "last_processed": "2026-11-06"
+ "last_processed": "2026-11-09"
 }
