@@ -1,0 +1,82 @@
+{
+ "as_of": "2026-11-10",
+ "for_session": "2026-11-11",
+ "model": "Claude Sonnet（订阅）",
+ "status": "ok",
+ "orders": [],
+ "rejected": [],
+ "deep": [
+  {
+   "ticker": "NVDA",
+   "direction": "short",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-10_NVDA.html"
+  },
+  {
+   "ticker": "LLY",
+   "direction": "long",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-10_LLY.html"
+  },
+  {
+   "ticker": "BRK-B",
+   "direction": "long",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-10_BRK-B.html"
+  }
+ ],
+ "universe": 191,
+ "brief": {
+  "regime": "risk_off",
+  "summary": "11月10日美股全线收跌,SPY -0.37%、QQQ -0.68%。CPI偏热推升加息预期,10年期美债收益率升至4.98%(日涨2.45%),美元走强。Waller称12月FOMC应讨论加息50bp。英伟达因CEO丑闻重挫5.5%,拖累科技板块。VIX 19.46虽日内回落,但20日仍升27%。明日开盘偏防守,关注利率和科技股情绪。",
+  "drivers": [
+   "CPI数据偏热,市场加息预期升温,Waller提出12月可讨论加息50bp",
+   "10年期美债收益率逼近5%(4.98%),美元指数走强,压制成长股估值",
+   "英伟达单日下挫5.5%,CEO丑闻叠加财报前不确定性,拖累纳指和AI链",
+   "科技/AI板块分化:AMD拟向Anthropic投资25亿美元,CoreWeave财报前承压",
+   "原油5日-10%缓解部分通胀压力,但黄金单日-2%,显示实际利率上行压力"
+  ],
+  "favored": [
+   "能源与高股息防御板块",
+   "小盘股(IWM近5日仍上涨)",
+   "业绩指引上调的个股(如Constellation Energy、FedEx)",
+   "广告科技中业绩超预期者(Trade Desk)"
+  ],
+  "avoid": [
+   "高估值大型科技/AI算力股(英伟达、CoreWeave)",
+   "利率敏感的地产相关(Opendoor)",
+   "业绩指引下调的消费与工业股(Hims & Hers、TransDigm、DraftKings)",
+   "加密货币及高beta成长股"
+  ]
+ },
+ "screen": {
+  "picks": [
+   {
+    "ticker": "NVDA",
+    "direction": "short",
+    "why": "CEO丑闻重挫5.5%、放量2.4倍，低于50/200日线，财报前不确定性，风险偏好下行，顺势做空。"
+   },
+   {
+    "ticker": "LLY",
+    "direction": "long",
+    "why": "创一年新高，20日+22.8%，防御性医药，利率压力下相对强势，趋势延续。"
+   },
+   {
+    "ticker": "BRK-B",
+    "direction": "long",
+    "why": "创新高、波动低，防御型价值股，risk_off环境下资金偏好，适合稳健做多。"
+   }
+  ],
+  "held": []
+ },
+ "plan": {
+  "orders": [],
+  "note": "三只候选的深入分析评级均为持有，不满足做多需买入/增持、做空需减持/卖出的硬规则。NVDA 财报前事件风险大，BRK-B 超买，LLY 缺数据。今日空仓观望。"
+ },
+ "claude_calls_outside_tradingagents": 3,
+ "minutes": 11.1,
+ "generated_at": "2026-11-11T04:21+00:00"
+}

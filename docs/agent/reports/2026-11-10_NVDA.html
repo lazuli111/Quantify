@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>NVDA 2026-11-10 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">NVDA</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-10</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-11 04:14</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>NVDA 技术分析报告(分析日期:2026-11-10)</h4>
+<h5>一、核心结论</h5>
+<p>NVDA 正处于急剧的放量下跌中。价格已跌破所有主要均线和布林带下轨,RSI 进入深度超卖区。趋势明显偏空,但短期有技术性反弹的条件。已有数据不足以确认下跌是否见底,所以不建议追空,也不建议无条件抄底。</p>
+<h5>二、数据说明</h5>
+<ul>
+<li>所有精确数值均来自 get_verified_market_snapshot。</li>
+<li>价格序列来自 get_stock_data,与快照的最新一行(2026-11-10)一致,没有发现冲突。</li>
+<li>我没有单独调用 get_indicators。表中的指标值全部取自快照。</li>
+<li>快照未包含 VWMA,因此下文不给出 VWMA 的具体数值。</li>
+</ul>
+<h5>三、选定指标及理由</h5>
+<ol>
+<li><strong>close_200_sma(长期趋势)</strong>:判断长期多空分界。</li>
+<li><strong>close_50_sma(中期趋势)</strong>:作为动态阻力,并与 200 SMA 配合判断中期结构。</li>
+<li><strong>close_10_ema(短期动能)</strong>:反弹时的第一道阻力,用来判断短线是否修复。</li>
+<li><strong>macd、macds、macdh(MACD 三线)</strong>:衡量趋势动能的方向、交叉和加速或衰减。</li>
+<li><strong>rsi</strong>:识别超卖和背离。</li>
+<li><strong>boll、boll_ub、boll_lb(布林带)</strong>:衡量价格偏离程度,同时作为波动区间的参考。</li>
+<li><strong>atr</strong>:用于设置止损和仓位。</li>
+<li><strong>vwma</strong>:作为备选的量价确认指标,本次没有取得数值,不纳入结论。</li>
+</ol>
+<h5>四、详细观察</h5>
+<h6>1. 价格行为与成交量</h6>
+<ul>
+<li>收盘价 168.89,日内区间 165.89–174.69,开盘 173.97。</li>
+<li>从 2026-10-06 的收盘高点 239.24 到 168.89,累计回撤约 29.4%(由两个收盘价计算)。</li>
+<li>近期收盘价依次为:
+<ul>
+<li>11/04:200.13</li>
+<li>11/05:181.60(单日约 -9.3%)</li>
+<li>11/06:186.64</li>
+<li>11/09:178.67</li>
+<li>11/10:168.89</li>
+</ul>
+</li>
+<li>11/09 开盘 173.07,相对前收 186.64 大幅跳空低开。</li>
+<li>成交量明显放大:
+<ul>
+<li>11/05 为 3.06 亿股</li>
+<li>11/06 为 1.80 亿股</li>
+<li>11/09 为 4.63 亿股</li>
+<li>11/10 为 4.27 亿股</li>
+</ul>
+</li>
+<li>这些数字远高于此前数月多数交易日的 7000 万至 1.5 亿股。</li>
+<li>放量下跌说明抛压集中且主动。可能由事件或基本面消息驱动,但工具数据没有提供原因,需要其他来源核实。</li>
+</ul>
+<h6>2. 趋势类指标</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align:right">数值</th>
+<th>与现价关系</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close_10_ema</td>
+<td style="text-align:right">191.86</td>
+<td>现价低约 23</td>
+</tr>
+<tr>
+<td>close_200_sma</td>
+<td style="text-align:right">204.26</td>
+<td>现价低约 35</td>
+</tr>
+<tr>
+<td>close_50_sma</td>
+<td style="text-align:right">217.97</td>
+<td>现价低约 49</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>价格位于三条均线之下,且间距很大,说明价格明显偏离均线。</li>
+<li>50 SMA(217.97)仍高于 200 SMA(204.26),长期结构尚未出现死叉。但 50 SMA 滞后,价格下跌后它很可能向下靠拢 200 SMA,死叉风险上升。</li>
+<li>200 SMA(约 204)已由支撑转为潜在的强阻力。</li>
+</ul>
+<h6>3. 动能类指标</h6>
+<ul>
+<li>MACD -11.29,低于信号线 -7.01,柱状图 -4.28。</li>
+<li>三者都在零轴下方,且柱状图为负,空头动能仍在扩张。</li>
+<li>柱状图尚未收窄,所以暂无 MACD 层面的见底信号。</li>
+</ul>
+<h6>4. RSI</h6>
+<ul>
+<li>RSI 为 23.95,低于 30 的超卖阈值。</li>
+<li>强趋势下 RSI 可以长时间停留在超卖区,所以超卖本身不是买入信号。</li>
+<li>需要观察是否出现价格新低而 RSI 不再新低的底背离,但目前数据中没有这个确认。</li>
+</ul>
+<h6>5. 布林带与波动率</h6>
+<ul>
+<li>中轨 206.18,上轨 237.00,下轨 175.36。</li>
+<li>收盘价 168.89 低于下轨约 6.5,最低价 165.89 也在带外。</li>
+<li>价格在强趋势中可以沿下轨下行,所以突破下轨不等于立刻反转。</li>
+<li>ATR 为 8.70,约为现价的 5.2%。日内波动很大,风险管理必须加宽。</li>
+</ul>
+<h5>五、情景与操作参考(仅供参考)</h5>
+<p><strong>偏空延续情景</strong></p>
+<ul>
+<li>价格继续下破 165.89(本日低点),且成交量保持高位。</li>
+<li>可以考虑顺势思路,以 ATR 设置止损。</li>
+</ul>
+<p><strong>技术性反弹情景</strong></p>
+<ul>
+<li>超卖加上大幅偏离均线,使反弹概率上升。</li>
+<li>反弹的第一阻力在 10 EMA(约 191.86)附近。</li>
+<li>其次是布林下轨(175.36)能否被收复并站稳。</li>
+<li>再上方是 200 SMA(约 204)和布林中轨(约 206)。</li>
+<li>这些位置是依据指标数值推导的,我没有用历史数据验证它们过去是否有效。</li>
+</ul>
+<p><strong>风险管理</strong></p>
+<ul>
+<li>建议止损不要小于 1–1.5 倍 ATR(约 8.7–13),并相应缩小仓位。</li>
+<li>避免在放量下跌的当天重仓抄底。更稳妥的做法是等待:
+<ul>
+<li>成交量回落;</li>
+<li>MACD 柱状图收窄;</li>
+<li>RSI 出现背离;</li>
+<li>价格收复布林下轨。</li>
+</ul>
+</li>
+</ul>
+<h5>六、局限</h5>
+<ul>
+<li>下跌原因未知,工具未提供新闻或基本面数据。</li>
+<li>没有取得 VWMA 数据。</li>
+<li>不能声称任何价位有历史支撑或阻力的验证,上文价位仅为指标推导值。</li>
+</ul>
+<h5>七、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数据/观察</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价(11/10)</td>
+<td>168.89</td>
+<td>日内区间 165.89–174.69</td>
+</tr>
+<tr>
+<td>自 10/06 收盘高点回撤</td>
+<td>约 -29.4%</td>
+<td>趋势性下跌</td>
+</tr>
+<tr>
+<td>近期成交量</td>
+<td>11/09 4.63 亿、11/10 4.27 亿</td>
+<td>放量下跌,抛压集中</td>
+</tr>
+<tr>
+<td>10 EMA</td>
+<td>191.86</td>
+<td>短期反弹第一阻力</td>
+</tr>
+<tr>
+<td>50 SMA</td>
+<td>217.97</td>
+<td>中期阻力,仍高于 200 SMA</td>
+</tr>
+<tr>
+<td>200 SMA</td>
+<td>204.26</td>
+<td>长期关口,已转为强阻力</td>
+</tr>
+<tr>
+<td>MACD / 信号线 / 柱状图</td>
+<td>-11.29 / -7.01 / -4.28</td>
+<td>空头动能仍在扩张</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>23.95</td>
+<td>深度超卖,需背离确认</td>
+</tr>
+<tr>
+<td>布林带(下/中/上)</td>
+<td>175.36 / 206.18 / 237.00</td>
+<td>价格在下轨之下</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>8.70(约 5.2%)</td>
+<td>波动大,止损与仓位要加宽</td>
+</tr>
+<tr>
+<td>主要风险</td>
+<td>原因未知、可能继续下探</td>
+<td>需要基本面和新闻验证</td>
+</tr>
+<tr>
+<td>主要机会</td>
+<td>超卖反弹</td>
+<td>目标看 10 EMA、下轨回收和 200 SMA</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Bearish</strong> (Score: 2.8/10)
+<strong>Confidence:</strong> Low</p>
+<p><strong>数据范围与局限(请先阅读)</strong>:本报告只依据提示中提供的新闻标题。StockTwits 在 2026-11-03 至 2026-11-10 期间不可用,Reddit(r/wallstreetbets、r/stocks、r/investing)抓取失败。这两项都不代表没有讨论。因此散户情绪比例和社区帖子内容都没有数据,无法判断。新闻部分也只是部分覆盖:Yahoo 只列出截至 2026-11-10 16:20 UTC 的最新报道,11-03 至该时间点之前的新闻未取回。以下结论以 2026-11-10 当天的新闻为主,置信度为低。</p>
+<p><strong>1. 新闻来源拆解(机构/媒体框架)</strong></p>
+<ul>
+<li><strong>CEO 丑闻与中国芯片事件(最主要的负面事件)</strong>:多篇报道围绕黄仁勋承认婚外情展开。TIKR 称,有报道指与 Alice Huang 相关的网络至少向中国企业转移了 75 亿美元的芯片,NVDA 因此下跌约 6%。Fox Business 称,做空机构 Culper Research 数月前就提示过其&quot;过于亲密&quot;的关系。Benzinga 称,微软(MSFT)短暂超过 NVDA,自 2025 年 6 月以来首次成为全球市值第二大公司,NVDA 此前的 1.84 万亿美元领先优势被抹平。MT Newswires 的午间要闻也提到&quot;英伟达在中国芯片报道后下跌&quot;。这些属于事件和治理/合规风险,不是观点。</li>
+<li><strong>分析师动作</strong>:Barchart 称,花旗和富国银行在 11 月 17 日的 FQ3 财报前下调了 NVDA 目标价。这是偏负面的机构信号,但报道摘要没有给出具体数字。</li>
+<li><strong>宏观</strong>:10 月 CPI 环比上涨 0.4%,预期为 0.3%,核心 CPI 也高于预期(IBTimes、WSJ)。Motley Fool 称,市场需要更认真地看待 12 月加息 50 个基点的可能性,并称 AI 交易&quot;本就摇摇欲坠&quot;。Waller 对高通胀的担忧也被引用。三大股指盘中下跌。这对高估值成长股是逆风。</li>
+<li><strong>AI 行业链条</strong>:Nscale 可能推迟 IPO(Barron's)被称为&quot;又一个 AI 小插曲&quot;。Anthropic IPO 以及 Broadcom 等七家供应商参与 260 亿美元配售,说明 AI 资本开支仍在继续,但其中受益的是 Broadcom 等定制芯片供应商,不是 NVDA。多篇文章提到&quot;AI 回调/AI 股票下滑&quot;。</li>
+<li><strong>偏正面的信息</strong>:WSJ 称按某一指标,NVDA 估值处于 2011 年以来最低,这是价值面的支撑。TIKR 称微软终止与 Oracle 的租约,但旧款 NVIDIA GPU 续约溢价 20%,IREN 重新签约的 H100 价格翻倍,说明旧芯片需求和残值依然强劲。AAON 因 AI 散热需求上涨,说明 AI 基础设施需求仍有韧性。</li>
+</ul>
+<p><strong>2. 跨来源分歧与一致性</strong>
+由于社交来源缺失,无法做新闻与散户的对比。仅就新闻内部看,事件和宏观面偏空(治理丑闻、对华出口合规风险、通胀、加息、分析师下调),基本面和估值面偏多(估值低、旧 GPU 需求强)。短期价格反应由负面主导。</p>
+<p><strong>3. 主导叙事</strong>
+(1) CEO 丑闻加中国芯片转运,带来合规、地缘和治理风险。(2) 通胀超预期和加息担忧压制 AI 估值。(3) AI 交易回调,资金和注意力流向 Broadcom 等其他受益者。(4) 估值已很低,基本面需求仍有支撑。</p>
+<p><strong>4. 催化剂与风险</strong></p>
+<ul>
+<li>催化剂:11 月 17 日 FQ3 财报。对华芯片转运报道可能引发的监管或调查。后续是否有董事会或管理层变动。12 月议息会议和后续通胀数据。Anthropic IPO 及 AI 融资环境。</li>
+<li>风险:出口管制或监管处罚。管理层信誉和人员稳定性。市值排名被微软超越带来的情绪冲击。加息导致估值压缩。分析师继续下调目标价。</li>
+<li>潜在对冲因素:估值低位吸引逢低买盘,财报若强劲可能扭转叙事。以上只是情绪信号,不是价格预测。</li>
+</ul>
+<p><strong>5. 情绪信号汇总</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEO 丑闻及对华 75 亿美元芯片报道</td>
+<td>偏空</td>
+<td>TIKR、Fox Business、Benzinga</td>
+<td>NVDA 下跌约 6%,微软短暂超越</td>
+</tr>
+<tr>
+<td>分析师下调目标价</td>
+<td>偏空</td>
+<td>Barchart</td>
+<td>花旗、富国银行在财报前下调</td>
+</tr>
+<tr>
+<td>CPI 超预期、加息预期</td>
+<td>偏空</td>
+<td>WSJ、IBTimes、Motley Fool</td>
+<td>CPI 环比 0.4% 对比预期 0.3%,12 月加息 50 个基点被更认真看待</td>
+</tr>
+<tr>
+<td>AI 回调、Nscale IPO 可能推迟</td>
+<td>偏空</td>
+<td>Barron's、Motley Fool</td>
+<td>&quot;又一个 AI 小插曲&quot;</td>
+</tr>
+<tr>
+<td>估值处于 2011 年以来低位</td>
+<td>偏多</td>
+<td>WSJ</td>
+<td>按某一指标最便宜</td>
+</tr>
+<tr>
+<td>旧 GPU 续约溢价、需求韧性</td>
+<td>偏多</td>
+<td>TIKR</td>
+<td>续约溢价 20%,H100 价格翻倍</td>
+</tr>
+<tr>
+<td>散户情绪(StockTwits/Reddit)</td>
+<td>无数据</td>
+<td>—</td>
+<td>来源不可用</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-3">News Analyst</h3>
+<h4>NVDA 一周新闻与宏观研究报告(截至 2026-11-10)</h4>
+<h5>一、数据说明与局限</h5>
+<ul>
+<li><strong>FRED 宏观数据</strong>(CPI、联邦基金利率、10 年期美债、VIX)全部返回 DATA_UNAVAILABLE,原因是缺少 API Key。下文宏观部分只依据新闻标题和摘要,没有补充任何数值。</li>
+<li><strong>预测市场</strong>(Fed 加息、Nvidia 相关事件)因日期限制未提供赔率,因此没有市场隐含概率可引用。</li>
+<li><strong>个股新闻</strong>为部分覆盖,只能检索到较新的报道。多数条目只有标题和摘要,没有全文,细节需要后续核实。</li>
+<li>全球新闻工具返回的内容多为 Take-Two、CoreWeave 等个股财报,宏观价值有限。</li>
+</ul>
+<h5>二、NVDA 核心事件</h5>
+<h6>1. CEO 黄仁勋丑闻与对华芯片风险(本周最大的负面催化剂)</h6>
+<ul>
+<li>黄仁勋承认有婚外情。有报道称,与 Alice Huang 相关的网络把至少 <strong>75 亿美元</strong>的英伟达芯片转运给中国企业。NVDA 因此下跌约 <strong>6%</strong>(TIKR)。</li>
+<li>做空机构 Culper Research 数月前就提示过他与这名&quot;涉嫌中国间谍&quot;人物&quot;过分亲近&quot;(Fox Business)。这说明风险此前已被公开提示,并不是突发消息。</li>
+<li>Benzinga 报道,微软市值一度超过英伟达,成为全球第二大公司,是自 2025 年 6 月以来首次。英伟达此前的领先优势曾高达 1.84 万亿美元,现已被抹平。</li>
+<li><strong>交易含义:</strong>
+<ul>
+<li>风险分为三类:治理与声誉风险,出口管制和合规调查风险,以及对华收入的不确定性。</li>
+<li>可能的后续包括监管问询、国会审查、董事会调查和出口许可收紧。这些仍是推测,需要跟踪确认。</li>
+</ul>
+</li>
+</ul>
+<h6>2. 财报前的分析师动作</h6>
+<ul>
+<li>英伟达将于 <strong>11 月 17 日</strong>公布 FY2026 Q3 财报(Barchart 称为&quot;fiscal Q3&quot;)。距今仅约一周。</li>
+<li>花旗和富国银行在财报前下调了目标价。</li>
+<li>WSJ 称,按某一指标衡量,英伟达估值降至 <strong>2011 年以来最低</strong>。估值压缩后的反弹弹性与继续下杀的风险并存。</li>
+<li><strong>交易含义:</strong>
+<ul>
+<li>财报的隐含波动率很可能很高。</li>
+<li>管理层对中国业务、CEO 事件和 2027 财年指引的表态将是关键。</li>
+</ul>
+</li>
+</ul>
+<h6>3. AI 产业链信号(多空混杂)</h6>
+<ul>
+<li><strong>偏正面:</strong>
+<ul>
+<li>微软终止与 Oracle 的 2023 年算力租赁协议,原因是旧款英伟达芯片不符合其规格。但 Oracle 称,续约的老 GPU(多为四年以上)租金有 <strong>20% 溢价</strong>,IREN 的 H100 重新签约价格翻倍。这说明 GPU 的使用寿命和残值强于市场担忧。</li>
+<li>Anthropic 正在进行 260 亿美元的配售,Broadcom 等七家供应商参与认购。Broadcom 周一涨 8.78%,周二涨 2.69%。</li>
+</ul>
+</li>
+<li><strong>偏负面:</strong>
+<ul>
+<li>英国 neocloud 公司 Nscale 据报考虑推迟 IPO(Barron's),被称为&quot;又一次 AI 小波折&quot;。</li>
+<li>多篇文章称&quot;AI 回调&quot;、&quot;AI 交易摇摇欲坠&quot;。</li>
+<li>资金似乎在轮动到 Broadcom 等定制芯片供应商,英伟达的相对强度偏弱。</li>
+</ul>
+</li>
+</ul>
+<h5>三、宏观背景(仅据新闻)</h5>
+<ul>
+<li><strong>通胀超预期:</strong>
+<ul>
+<li>10 月 CPI 环比 <strong>+0.4%</strong>,预期为 +0.3%,核心 CPI 也高于预期。同比较上月有所回落,但仍高于预期。</li>
+<li>美股三大指数盘中走低。</li>
+</ul>
+</li>
+<li><strong>利率路径:</strong>
+<ul>
+<li>Motley Fool 称,市场需要更认真地对待 <strong>12 月加息 50 个基点</strong>的可能性。IBT 称新一轮加息&quot;几乎板上钉钉&quot;。</li>
+<li>Fed 理事 Waller 对居高不下的通胀表示担忧。</li>
+<li>这是新闻措辞,没有 FRED 或预测市场数据佐证,需谨慎对待。</li>
+</ul>
+</li>
+<li><strong>其他:</strong>
+<ul>
+<li>油价据 WSJ 链接标题&quot;跌破 90 美元/桶&quot;,仍处高位。</li>
+<li>美国中期选举后股市下跌。</li>
+</ul>
+</li>
+<li><strong>对 NVDA 的传导:</strong>
+<ul>
+<li>加息预期上升会压缩长久期成长股的估值倍数。</li>
+<li>在通胀和利率压力下,AI 板块的风险偏好脆弱。</li>
+<li>这与英伟达自身的负面消息叠加,形成双重压力。</li>
+</ul>
+</li>
+</ul>
+<h5>四、情景与关注点</h5>
+<ul>
+<li><strong>11 月 17 日财报前:</strong>
+<ul>
+<li>监管、司法和国会对&quot;75 亿美元转运&quot;的反应。</li>
+<li>英伟达官方声明和董事会处理方式。</li>
+<li>更多分析师下调目标价。</li>
+<li>12 月 FOMC 预期,以及下一轮 PPI、零售数据。</li>
+</ul>
+</li>
+<li><strong>看多情景:</strong>
+<ul>
+<li>财报和指引强劲。</li>
+<li>估值处于历史低位。</li>
+<li>GPU 残值和续约溢价得到验证。</li>
+<li>对丑闻的担忧被证明过度。</li>
+</ul>
+</li>
+<li><strong>看空情景:</strong>
+<ul>
+<li>出口管制或调查升级。</li>
+<li>管理层变动。</li>
+<li>加息 50 个基点引发成长股估值进一步压缩。</li>
+<li>资金继续流向定制芯片厂商。</li>
+</ul>
+</li>
+<li><strong>风险管理:</strong>
+<ul>
+<li>事件驱动的跳空风险很大,仓位应相应控制。</li>
+<li>宏观数据缺失,建议后续补充 FRED 数据后再校验。</li>
+</ul>
+</li>
+</ul>
+<h5>五、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>关键信息</th>
+<th>对 NVDA 的影响</th>
+<th>可信度/备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEO 丑闻</td>
+<td>黄仁勋承认婚外情;Culper 此前已示警</td>
+<td>治理与声誉风险,股价下跌约 6%</td>
+<td>新闻报道,细节待核实</td>
+</tr>
+<tr>
+<td>对华芯片</td>
+<td>报道称相关网络转运至少 75 亿美元芯片</td>
+<td>出口管制、合规和调查风险</td>
+<td>为&quot;据报道&quot;,需官方确认</td>
+</tr>
+<tr>
+<td>市值排名</td>
+<td>微软一度超越英伟达,领先优势抹平</td>
+<td>情绪与相对强弱走弱</td>
+<td>Benzinga</td>
+</tr>
+<tr>
+<td>财报</td>
+<td>11 月 17 日公布 Q3,花旗、富国下调目标价</td>
+<td>波动加剧,预期下修</td>
+<td>Barchart</td>
+</tr>
+<tr>
+<td>估值</td>
+<td>按某指标为 2011 年以来最低</td>
+<td>潜在反弹弹性,但存在价值陷阱风险</td>
+<td>WSJ,单一指标</td>
+</tr>
+<tr>
+<td>AI 产业链</td>
+<td>GPU 续约溢价 20%,H100 翻倍;Nscale IPO 或推迟;Anthropic 260 亿美元配售</td>
+<td>需求残值正面;融资环境和资金轮动偏负面</td>
+<td>混合信号</td>
+</tr>
+<tr>
+<td>通胀</td>
+<td>10 月 CPI 环比 +0.4%(预期 +0.3%),核心也超预期</td>
+<td>利率上行压制估值</td>
+<td>无 FRED 数值验证</td>
+</tr>
+<tr>
+<td>利率</td>
+<td>12 月加息 50 个基点的概率被更认真对待</td>
+<td>成长股估值承压</td>
+<td>新闻措辞,无预测市场数据</td>
+</tr>
+<tr>
+<td>数据缺口</td>
+<td>FRED 与 Polymarket 均不可用</td>
+<td>宏观判断精度受限</td>
+<td>需后续补充</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong>(仅为新闻面倾向:财报前事件风险高,多空信号并存,最终交易决策由后续环节确定)</p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>NVDA(NVIDIA Corporation)基本面研究报告(截至 2026-11-10)</h4>
+<h5>一、数据可得性说明</h5>
+<ul>
+<li><strong>公司概况/估值数据缺失</strong>:<code>get_fundamentals</code> 未返回市值、市盈率、52 周区间等数据(供应商仅提供当日实时值,会造成前视偏差),因此本报告<strong>不包含</strong>估值倍数判断。</li>
+<li><strong>内部人交易缺失</strong>:<code>get_insider_transactions</code> 因无申报日期而被屏蔽,无法判断近期内部人买卖,不做推断。</li>
+<li>以下财务数据来自 SEC EDGAR 已申报的季度报表(单位:百万美元)。部分季度列缺失(如 2025-10-26 之后的某些期间、年末第四季度未单独列示),解读时需谨慎。表中日期为财年季度截止日。</li>
+</ul>
+<h5>二、利润表要点</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>期间</th>
+<th>营收</th>
+<th>毛利</th>
+<th>营业利润</th>
+<th>净利润</th>
+<th>稀释 EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-04-27</td>
+<td>44,062</td>
+<td>26,668*</td>
+<td>21,638*</td>
+<td>18,775*</td>
+<td>0.76*</td>
+</tr>
+<tr>
+<td>2025-07-27</td>
+<td>46,743</td>
+<td>33,853</td>
+<td>28,440</td>
+<td>26,422</td>
+<td>1.08</td>
+</tr>
+<tr>
+<td>2025-10-26</td>
+<td>57,006</td>
+<td>41,849</td>
+<td>36,010</td>
+<td>31,910</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>2026-04-26</td>
+<td>81,615</td>
+<td>61,157</td>
+<td>53,536</td>
+<td>58,321</td>
+<td>2.39</td>
+</tr>
+<tr>
+<td>2026-07-26</td>
+<td>96,221</td>
+<td>72,142</td>
+<td>63,734</td>
+<td>59,688</td>
+<td>2.46</td>
+</tr>
+</tbody>
+</table></div>
+<p>*注:数据列对齐存在一定不确定性,上表按报表中的顺序对应,仅供趋势参考。</p>
+<p><strong>核心观察</strong></p>
+<ul>
+<li>最新季度(截至 2026-07-26)营收约 962 亿美元,较前一列(816 亿美元)环比约 +18%。</li>
+<li>毛利率约 75%(72,142/96,221);营业利润率约 66%;净利率约 62%。盈利能力极高。</li>
+<li>对比 2023-07 前后(营收约 135 亿美元),营收在约三年内增长约 7 倍,AI 数据中心需求是主要驱动力(此为行业背景推断,报表本身不拆分业务)。</li>
+<li>最新季度净利润(597 亿)略低于前一列(583 亿)以上的增速,而营业利润仍在增长,净利润增速弱于营业利润,可能与非经营性项目/税率有关,需核对原始申报。</li>
+</ul>
+<h5>三、资产负债表要点(2026-07-26)</h5>
+<ul>
+<li>总资产 3,203 亿美元(前期 2,595 亿、1,611 亿 ... 迅速扩张)。</li>
+<li>流动资产 1,974 亿;现金及等价物 224 亿(前期 132 亿)。(未含有价证券,实际流动性更强。)</li>
+<li>总负债 913 亿(前期 640 亿),增长较快;流动负债 430 亿。</li>
+<li>股东权益 2,290 亿(前期 1,955 亿)。</li>
+<li>负债/权益约 0.40,杠杆低;流动比率约 4.6,短期偿付能力强。</li>
+<li>负债较前期增加约 273 亿,值得关注(可能包括采购承诺、应付款、递延收入等,需看明细)。</li>
+</ul>
+<h5>四、现金流要点(累计口径,财年内年初至今)</h5>
+<ul>
+<li>经营现金流:2026-07-26(6 个月累计)744 亿美元;上一财年同期 6 个月累计约 275 亿(2025-07-27 前后数据),同比大幅增长。</li>
+<li>资本开支(6 个月累计)约 44 亿,相对经营现金流很小,自由现金流约 700 亿(6 个月),转化率极高。</li>
+<li>投资现金流 -351 亿,融资现金流 -275 亿(含回购/分红等,推断),说明公司大规模回报股东并配置投资。</li>
+<li>注意:现金流为累计口径,不能与单季度利润直接对比。</li>
+</ul>
+<h5>五、交易层面的启示</h5>
+<ol>
+<li><strong>基本面强劲</strong>:营收、利润率、现金流均处于历史最高水平,基本面趋势向上。</li>
+<li><strong>风险点</strong>:营收高度集中于 AI 数据中心资本开支周期;负债与资产规模快速增长;净利润增速低于营业利润;历史上 2022–2023 年曾出现营收大幅回落(2023-04 季度营收 59 亿,较此前高点 83 亿下滑),说明周期性风险存在。</li>
+<li><strong>局限</strong>:缺少估值与内部人数据,无法判断当前价格是否已反映预期。建议后续由其他分析师结合股价、估值、财报预期与新闻补充。</li>
+<li>观察要点:下一次财报的营收指引、毛利率是否维持在 70% 以上、库存与采购承诺、客户集中度、出口管制影响。</li>
+</ol>
+<h5>六、汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>关键数据</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最新季度营收(2026-07-26)</td>
+<td>962.2 亿美元</td>
+<td>环比约 +18%</td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>约 75%</td>
+<td>极高,定价权强</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>约 66%</td>
+<td>经营杠杆显著</td>
+</tr>
+<tr>
+<td>净利润</td>
+<td>596.9 亿美元</td>
+<td>净利率约 62%</td>
+</tr>
+<tr>
+<td>稀释 EPS</td>
+<td>2.46 美元</td>
+<td>较前期 2.39 上升</td>
+</tr>
+<tr>
+<td>总资产</td>
+<td>3,203 亿美元</td>
+<td>快速扩张</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>2,290 亿美元</td>
+<td>持续增长</td>
+</tr>
+<tr>
+<td>总负债</td>
+<td>913 亿美元</td>
+<td>增速较快,需关注</td>
+</tr>
+<tr>
+<td>现金及等价物</td>
+<td>224 亿美元</td>
+<td>较前期增加</td>
+</tr>
+<tr>
+<td>经营现金流(6 个月累计)</td>
+<td>744 亿美元</td>
+<td>同比大增</td>
+</tr>
+<tr>
+<td>资本开支(6 个月累计)</td>
+<td>约 44 亿美元</td>
+<td>资本密集度低</td>
+</tr>
+<tr>
+<td>估值/市值</td>
+<td>不可得</td>
+<td>数据被屏蔽</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td>不可得</td>
+<td>数据被屏蔽</td>
+</tr>
+</tbody>
+</table></div>
+<p>本报告基于可得的财务报表,仅提供基本面信息,不构成最终交易决定,交由后续角色综合判断。</p>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # NVDA 多头论点:恐慌抛售是机会,基本面没有坏</p>
+<p>由于空头尚未发言,我先陈述多头的核心观点,并预先回应空头最可能提出的反驳。</p>
+<h5>一、核心论点:价格在崩塌,业务没有</h5>
+<p>当前所有负面因素几乎都是事件、情绪和宏观层面的,而非业务层面。</p>
+<ul>
+<li><strong>最新季度(截至 2026-07-26)营收约 962 亿美元</strong>,环比约 +18%。</li>
+<li><strong>毛利率约 75%,营业利润率约 66%,净利率约 62%</strong>。这是极强定价权的体现。</li>
+<li><strong>6 个月经营现金流 744 亿美元,资本开支仅约 44 亿</strong>,自由现金流约 700 亿。</li>
+<li><strong>流动比率约 4.6,负债/权益约 0.40</strong>,资产负债表稳健。</li>
+</ul>
+<p>股价从 10/06 收盘高点 239.24 回撤到 168.89(约 -29.4%)。但在同一时期,没有任何已披露的财务数据显示营收、利润率或现金流恶化。价格与基本面出现了明显背离。</p>
+<h5>二、增长潜力与竞争优势</h5>
+<ol>
+<li><strong>需求仍有韧性。</strong> 微软终止与 Oracle 的租约,原因是旧款芯片不符合其规格。但续约的四年以上老 GPU 租金有 <strong>20% 溢价</strong>,IREN 的 H100 重新签约价格<strong>翻倍</strong>。这直接反驳了&quot;GPU 很快贬值、需求见顶&quot;的核心空头叙事。四年前的芯片还能溢价续约,说明算力依然稀缺。</li>
+<li><strong>AI 资本开支仍在继续。</strong> Anthropic 正在进行 260 亿美元配售。资金流向 Broadcom 等供应商确有相对分流,但蛋糕本身在变大,说明整个 AI 融资环境并未枯竭。</li>
+<li><strong>规模和现金流是护城河。</strong> 每半年约 700 亿的自由现金流,让公司能持续投入研发、生态和供应链,也能回购股票。这是竞争对手难以复制的优势。</li>
+<li><strong>估值。</strong> WSJ 称按某一指标,NVDA 估值为 2011 年以来最低。我承认这只是单一指标,且我们没有获得市盈率等数据,不应夸大。但在利润以数倍增长、股价回撤近三成的组合下,估值压缩是确定的。</li>
+</ol>
+<h5>三、逐项回应空头可能的反驳</h5>
+<p><strong>反驳 1:CEO 丑闻和 75 亿美元对华芯片转运。</strong>
+这是本周最大的负面,我不回避。但请注意:</p>
+<ul>
+<li>报道是&quot;据报道&quot;,细节待核实,尚无官方确认。</li>
+<li>Culper 数月前已公开示警,市场并非完全不知情。</li>
+<li>75 亿美元相对于单季度近 962 亿美元的营收,约为 8%,且是&quot;至少&quot;的累计转运规模,并非单季度收入损失。更大的风险在于合规和监管,而不是收入。</li>
+<li>公司需求主要来自超大规模云厂商和 AI 实验室,对华依赖已显著降低。这一点是行业背景判断,报表不拆分,我不将其当作硬数据。</li>
+</ul>
+<p>治理风险真实存在,但它是可通过董事会调查、披露和合规整改处理的事件风险,不是商业模式风险。</p>
+<p><strong>反驳 2:通胀超预期、12 月可能加息 50 个基点。</strong></p>
+<ul>
+<li>这是系统性逆风,影响所有成长股,并非 NVDA 特有。</li>
+<li>新闻措辞只是&quot;需要更认真对待&quot;,没有预测市场或 FRED 数据确认。</li>
+<li>NVDA 的现金流极强、负债很低,对利率的敏感度远低于依赖融资的 AI 公司,如 Nscale 这类推迟 IPO 的企业。利率压力下,强资产负债表的公司反而是相对赢家。</li>
+</ul>
+<p><strong>反驳 3:资金轮动到 Broadcom,分析师下调目标价。</strong></p>
+<ul>
+<li>花旗、富国在财报前下调目标价,但摘要没有给出幅度。财报前下调常常是在为&quot;低预期、易超预期&quot;铺路。</li>
+<li>Broadcom 上涨说明 AI 需求健康,不是 NVDA 需求流失的证据。</li>
+</ul>
+<p><strong>反驳 4:周期性风险(2023 年营收曾下滑)。</strong>
+这是最有力的空头论据,我承认。但当前没有任何迹象表明订单在下滑。11 月 17 日的财报就是检验点,而旧 GPU 的溢价续约是目前最直接的需求证据。</p>
+<p><strong>反驳 5:技术面破位、空头动能还在扩张。</strong>
+技术面确实偏空:价格低于 10 EMA(191.86)、200 SMA(204.26)、50 SMA(217.97),MACD 柱状图仍为负。但:</p>
+<ul>
+<li>RSI 为 23.95,深度超卖;价格在布林下轨(175.36)之下约 6.5。</li>
+<li>近两日成交量 4.63 亿、4.27 亿股,远高于此前常态,这是典型的恐慌性释放特征。但我同意,这本身不是见底的确认。</li>
+<li>反弹目标逻辑清晰:10 EMA(约 192)、布林下轨回收(约 175)、200 SMA(约 204)。第一目标到现价约有 +13.6% 的空间。</li>
+</ul>
+<h5>四、我承认的不确定性</h5>
+<ul>
+<li>缺少市值、市盈率等估值数据,无法确认&quot;便宜&quot;。</li>
+<li>缺少内部人交易数据。</li>
+<li>丑闻的实际监管后果尚不可知。</li>
+<li>利润增速低于营业利润增速的原因需要核对原始申报。</li>
+<li>价格尚未出现底背离或成交量衰竭,在财报前追入有跳空风险。</li>
+</ul>
+<h5>五、结论</h5>
+<p>多头观点是:一家毛利率约 75%、半年自由现金流约 700 亿、需求证据依然强劲的公司,在一周内因治理丑闻、宏观数据和板块情绪被抛售近三成。基本面未变而价格大幅折价,风险回报比对中期投资者有利。操作上应分批建仓,用不小于 1–1.5 倍 ATR(约 8.7–13 美元)的止损,并控制好财报前的仓位。</p>
+<p>空头方,请告诉我:你认为 75 亿美元的转运会在哪个层面真正损害 NVDA 的盈利能力?你有什么证据说明需求正在见顶?</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # NVDA 空头论点:基本面是后视镜,风险在前方</p>
+<p>多头朋友,你的开场很有条理,也坦诚列出了不确定性。但你的论证有一个根本问题:你用<strong>已经发生的季度</strong>(截至 7 月 26 日)去为<strong>尚未发生的事件风险</strong>辩护。财报数据是后视镜,而现在股价在看前方的路。</p>
+<h5>一、先反驳你的核心论点:&quot;价格崩塌,业务没有&quot;</h5>
+<p>你说&quot;没有任何已披露数据显示营收、利润率或现金流恶化&quot;。这恰恰是问题所在:<strong>最新一份财报截至 7 月 26 日,距今已三个多月</strong>。它无法反映 CEO 丑闻、出口合规调查、10 月以来的需求变化。用旧数据证明&quot;业务没变&quot;,是循环论证。</p>
+<p>另外,基本面报告里还有几个你没有认真对待的细节:</p>
+<ul>
+<li><strong>净利润增速弱于营业利润</strong>:营业利润从 535 亿增至 637 亿(约 +19%),净利润仅从 583 亿增至 597 亿(约 +2%)。报告自己也说原因未明。若净利润中含有一次性的非经营性收益(如投资收益),那么&quot;盈利质量&quot;需要打折。你自己也承认这一点需核对,却仍把 62% 净利率当作护城河证据。</li>
+<li><strong>负债增加约 273 亿美元</strong>(640 亿到 913 亿,约 +43%),速度快于权益增速。可能包含采购承诺、应付款。如果是为了锁定供应链而做的大额承诺,一旦需求放缓就会变成负担。</li>
+<li><strong>现金仅 224 亿</strong>:相对 913 亿负债并不算厚(当然有价证券未计入,我承认这点)。</li>
+</ul>
+<h5>二、75 亿美元不是&quot;占营收 8%&quot;那么简单</h5>
+<p>你的算法是 75 亿 ÷ 962 亿 ≈ 8%,然后说&quot;主要是合规风险而非收入&quot;。我同意重点在合规,但这恰恰是我的论点:</p>
+<ol>
+<li><strong>真正的风险是尾部风险,不是收入占比。</strong> 如果转运被证实,后果包括出口许可收紧、罚款、对整个中国相关订单的审查,甚至客户渠道审计。这些不会按 8% 线性计算,而是可能触及公司整个出口管制合规框架。</li>
+<li><strong>治理风险无法用&quot;整改&quot;轻描淡写。</strong> 你说董事会调查和合规整改能处理。但 CEO 本人就是当事人,并且 Culper 数月前已示警。若董事会此前未处理,那说明内控存在缺口。这是对管理层可信度的折价,不是一周内能修复的。</li>
+<li><strong>&quot;市场早已知情&quot;是双刃剑。</strong> 如果数月前就有公开警示而公司没有回应,事件落地后的惩罚往往更重,因为它证明了警告者是对的。</li>
+<li>微软一度超越 NVDA 成为全球第二大公司,抹平 1.84 万亿美元的领先。这不是单纯的情绪,它意味着指数基金与大型机构的相对配置逻辑可能变化。</li>
+</ol>
+<h5>三、你对&quot;需求韧性&quot;的证据太薄</h5>
+<p>你把&quot;旧 GPU 续约 20% 溢价、H100 重新签约价翻倍&quot;当作最强的需求证据。请冷静看:</p>
+<ul>
+<li><strong>来源是单一报道(TIKR 转述 Oracle 和 IREN)</strong>,是供给方的说法,有明显的自利动机。</li>
+<li><strong>微软终止租约本身是负面信号</strong>:原因是旧芯片不符合其规格。这说明大客户在挑剔、在换代,并非无条件追加。</li>
+<li><strong>旧卡租金上涨,恰恰说明新卡供给紧张或客户在找替代品</strong>,它不等于 NVDA 新订单健康。更重要的是,二手 GPU 市场繁荣会<strong>蚕食新品销售</strong>。</li>
+<li>你说&quot;Broadcom 上涨说明 AI 需求健康&quot;。但新闻明确指出,Anthropic 260 亿美元配售的受益方是 Broadcom 等<strong>定制芯片供应商,而非 NVDA</strong>。蛋糕在变大,但 NVDA 的份额在被分走。这正是竞争护城河被侵蚀的信号。同一周 Nscale 推迟 IPO、多篇文章称&quot;AI 交易摇摇欲坠&quot;,融资环境并不像你说的那么稳。</li>
+</ul>
+<h5>四、宏观:你说&quot;强资产负债表是相对赢家&quot;,但估值才是问题</h5>
+<p>你说 NVDA 对利率不敏感。但成长股的抛压来自<strong>估值倍数压缩</strong>,而不是融资成本。10 月 CPI 环比 +0.4%(预期 +0.3%),核心也超预期,市场开始认真讨论 12 月加息 50 个基点。高增速、高预期的龙头在这种环境里,恰恰是最先被降估值的。</p>
+<p>而且你自己承认:<strong>我们没有市盈率、市值数据</strong>。&quot;估值处于 2011 年以来最低&quot;只是 WSJ 的单一指标。你用一个无法验证的估值论据支撑&quot;便宜&quot;,这是价值陷阱的典型起点。营收周期性极强:2023 年营收曾从 83 亿滑落至 59 亿(约 -29%),当时市场同样认为&quot;基本面强劲&quot;。利润率 75% 的公司,一旦收入见顶,利润回落的幅度也会很大。</p>
+<h5>五、技术面:你把&quot;超卖&quot;当成买入理由</h5>
+<ul>
+<li>价格低于 10 EMA、50 SMA、200 SMA 和布林下轨;MACD 柱状图 -4.28 仍在<strong>扩大</strong>;50 SMA(217.97)与 200 SMA(204.26)间距在缩小,死叉风险上升。</li>
+<li>11/09 跳空低开,11/10 再创新低(最低 165.89),<strong>连续两天 4 亿股以上放量</strong>。这是抛压仍在释放,不是衰竭。</li>
+<li>技术报告自己写明&quot;没有底背离,不建议无条件抄底&quot;。</li>
+<li>RSI 23.95 在强趋势中可以持续很久。&quot;超卖&quot;是描述,不是信号。</li>
+<li>你的 +13.6% 反弹目标(到 10 EMA 约 192)是指标推导值,技术报告明确说<strong>没有经过历史验证</strong>。而 200 SMA 已从支撑变成阻力,反弹很容易在此夭折。</li>
+</ul>
+<h5>六、财报前的非对称风险</h5>
+<p>11 月 17 日财报只有约一周。花旗、富国已下调目标价。你说&quot;下调常是在为低预期铺路&quot;,这是<strong>猜测</strong>,摘要没有给出幅度。</p>
+<p>事件驱动的结构是这样的:</p>
+<ul>
+<li>财报即使数字漂亮,管理层必须当众回应丑闻、中国转运、出口合规。这些问题没有&quot;完美答案&quot;,任何含糊都可能引发二次下杀。</li>
+<li>若指引不及高企的预期,或毛利率低于 70% 的关口,没有估值缓冲。</li>
+<li>即便利好,也可能被&quot;利好出尽&quot;和宏观加息担忧抵消。</li>
+</ul>
+<p>上行是&quot;超卖反弹 + 估值修复&quot;;下行是&quot;监管升级 + 管理层变动 + 估值压缩 + 份额流失&quot;。多头自己都承认<strong>必须用 8.7–13 美元的宽止损并控制仓位</strong>,这本身就说明风险回报比并不像你说的那么&quot;有利&quot;。</p>
+<h5>七、回答你的两个问题</h5>
+<p><strong>问:75 亿美元会在哪个层面损害盈利能力?</strong>
+答:不在于这笔收入本身,而在于(1)出口许可和审查收紧导致的对华及相关渠道销量下降,(2)罚款与合规成本,(3)管理层可信度折价对估值倍数的压缩。第三项影响最大,且无法用季报对冲。</p>
+<p><strong>问:有什么证据说明需求见顶?</strong>
+答:我没有断言需求已见顶,我也没有这样的硬证据。但我不需要。举证责任在买方:在一份三个月前的财报、一个无法验证的估值指标、一个单一来源的 GPU 续约故事之上,你要求投资者在<strong>事件风险未落地、技术趋势未止跌、财报一周后</strong>的时点加仓。需求的先行信号(份额流向 Broadcom、Nscale 融资受阻、微软租约调整)偏向放缓而非加速。</p>
+<h5>八、结论</h5>
+<ul>
+<li><strong>事件风险未定价完毕</strong>:调查、国会、出口许可的后续是未知的下行尾部。</li>
+<li><strong>数据滞后</strong>:基本面截至 7 月,无法覆盖当前冲击;净利润质量、负债增长存疑。</li>
+<li><strong>份额与竞争</strong>:AI 融资流向定制芯片,NVDA 相对强度下降。</li>
+<li><strong>宏观与估值</strong>:加息预期压缩高倍数成长股,而&quot;便宜&quot;无法验证。</li>
+<li><strong>技术面</strong>:趋势向下、放量、无背离,逆势接刀。</li>
+<li><strong>财报二元风险</strong>:一周后即见分晓,当前入场是在赌,而不是投资。</li>
+</ul>
+<p>我承认 NVDA 是一家极其优秀的企业,长期可能仍然强劲。但好公司不等于好价格,更不等于好时点。在事件澄清、成交量衰竭、出现底背离和财报落地之前,<strong>谨慎、不追多</strong>才是理性的选择。我的立场:不买入,等待证据。</p>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: <strong>多头最有力的论据</strong>:最新季度(截至 2026-07-26)营收约 962 亿美元,毛利率约 75%,半年自由现金流约 700 亿美元,资产负债表稳健。股价从高点回撤约 29%,RSI 约 24,深度超卖。旧款 GPU 续约有溢价,这是需求仍然紧张的直接证据,但它只来自单一来源的转述。</p>
+<p><strong>空头最有力的论据</strong>:</p>
+<ol>
+<li>财报数据已滞后三个多月,不能覆盖 CEO 丑闻、75 亿美元对华转运报道和出口合规调查。多头用旧数据反驳新风险,逻辑上有缺口。</li>
+<li>风险主要是尾部风险,不能按营收占比线性估算。可能的后果包括出口许可收紧、罚款和管理层可信度折价,这些都无法用季报对冲。</li>
+<li>技术面没有止跌迹象:价格在所有主要均线之下,MACD 柱状图仍在扩大,连续两天成交量超过 4 亿股,也没有底背离。</li>
+<li>11 月 17 日财报只剩约一周,是二元事件。管理层必须当众回应丑闻。</li>
+<li>AI 融资向 Broadcom 等定制芯片供应商分流,说明 NVDA 的份额可能被分走。这是边际信号,不是需求见顶的证据。</li>
+<li>空头也承认自己没有需求见顶的硬证据。</li>
+</ol>
+<p><strong>权衡</strong>:</p>
+<ul>
+<li>空头在时点和事件风险上更有说服力,所以现在不应加仓。</li>
+<li>但空头没有证明基本面恶化。净利润增速弱于营业利润、负债上升这两点,原因都未明,只是疑点,不能当作结论。</li>
+<li>多头的&quot;便宜&quot;论证缺少市盈率和市值数据,只靠 WSJ 的单一指标,说服力不足。</li>
+<li>空头提出&quot;Sell&quot;,等于要在已跌近三成、深度超卖、又缺少恶化证据时清仓,而财报一周后就可能出现反弹或二次下杀。这种两头风险都很大的情形下,卖出的证据也不够。</li>
+<li>双方都没能决定性地胜出,证据对称偏薄,所以评级为 Hold。短期偏谨慎,不追多,也不在超卖和财报前恐慌性清仓。</li>
+</ul>
+<p><strong>缺失信息</strong>:市盈率和市值、内部人交易、丑闻的官方确认和监管后果、净利润与营业利润背离的原因、分析师目标价下调幅度,以及预测市场或宏观数据对加息的确认。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<p><strong>Strategic Actions</strong>: 1. <strong>仓位</strong>:维持现有仓位,不在财报前加仓,也不新开仓。若持仓高于标准配置,可在 11 月 17 日财报前趁反弹把超出部分减回标准配置,以降低跳空风险。
+2. <strong>风控</strong>:对现有仓位设置保护。可用 1–1.5 倍 ATR(约 8.7–13 美元)的止损,或用认沽期权对冲财报事件。若收盘有效跌破 165.89 的新低,应减仓至标准配置的约一半。
+3. <strong>加仓触发条件</strong>(需满足至少两项):</p>
+<ul>
+<li>财报后毛利率保持在 70% 以上,且指引不低于预期;</li>
+<li>管理层对出口合规和转运问题给出明确、可核实的回应;</li>
+<li>成交量萎缩并出现底背离,价格收复 10 EMA(约 192)。
+满足后分 2–3 批加回,每批不超过标准配置的 1/3。</li>
+</ul>
+<ol start="4">
+<li><strong>降仓触发条件</strong>:官方确认转运违规、出口许可被收紧、管理层变动,或指引与毛利率明显不及预期。出现任一项,降至 Underweight。</li>
+<li><strong>跟踪</strong>:这几项数据目前缺失,需要补齐——市盈率与市值、内部人交易、净利润增速低于营业利润增速的原因、负债增加的构成、分析师目标价下调幅度。</li>
+<li><strong>反弹预期</strong>:到 200 SMA(约 204)附近可能遇到阻力,不要把约 +13.6% 的反弹目标当作已验证的预期。</li>
+</ol>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: 研究计划的评级是 Hold,我同意。技术面明显偏空:价格在所有主要均线和布林带下轨之下,MACD 柱状图仍在扩大,连续两天成交量超过 4 亿股,也没有底背离。但 RSI 约 24 已深度超卖,较 10 月高点回撤约 29%,基本面也没有被证明恶化。下跌原因未经证实,11 月 17 日财报是二元事件,所以不追空、不抄底,也不在财报前加仓。价位只依据指标推导,未经历史验证。持仓情况未提供,以下按现有持仓处理:止损取收盘跌破 165.89(当日低点)再下移约 1 倍 ATR(8.70),即 157.2。若想在 175.36(布林下轨)被收复后小仓位试探,回踩 10 EMA 约 191.86 是第一阻力,200 SMA 约 204.26 是更强阻力。</p>
+<p><strong>Entry Price</strong>: 175.4</p>
+<p><strong>Stop Loss</strong>: 157.2</p>
+<p><strong>Position Sizing</strong>: 维持现有仓位,财报前不新开仓、不加仓。若持仓高于标准配置,可趁反弹减回标准配置。收盘有效跌破 165.89 时减至标准配置的约一半。满足计划中的加仓触发条件后,分 2–3 批加回,每批不超过标准配置的 1/3。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 我先开场，因为保守派和中立派还没发言，我先把他们大概率会说的话摆出来，再逐条反驳。</p>
+<p>先说结论：我支持 Hold，但这不是躲在场边的 Hold，而是持枪待发的 Hold。有人会觉得在 168.89 这个位置不动是怂，我认为恰恰相反，该动的时候不能被一周的噪音吓出局。</p>
+<p>保守派最可能的论点是：CEO 丑闻加上 75 亿美元对华芯片转运的报道，治理和合规风险不可量化，应该先减仓。我的回应有三点。第一，这个风险不是新的。Culper 几个月前就公开示警过，市场并非完全不知情。第二，75 亿美元是&quot;据报道&quot;，没有官方确认。拿一个未证实的数字去做不可逆的清仓，是拿确定的成本换不确定的收益。第三，我们看看公司本身：最新季度营收 962 亿美元，毛利率约 75%，营业利润率约 66%，六个月经营现金流 744 亿美元，资本开支只有约 44 亿美元，流动比率约 4.6。75 亿美元放在这样的现金流面前，既不是致命伤，也不是公司能力的证明题。真正的风险是出口管制升级或管理层动荡，这个我认。所以我才主张设止损，而不是主张盲目死扛。</p>
+<p>保守派还会拿技术面说事：所有均线之下，MACD 柱状图还在扩大，没有底背离，成交量连续两天超过 4 亿股。这些都是事实，我不反驳。但要看这些信号说明了什么：价格从 239.24 跌到 168.89，回撤 29.4%，RSI 23.95，收盘价低于布林下轨约 6.5。放量加急跌，往往是抛压集中释放的阶段，而不是下跌刚开始的阶段。等到 MACD 柱状图收窄、RSI 背离、价格收复下轨都确认了，反弹通常已经走掉一大截。保守派要的&quot;全部确认&quot;，代价就是买在更高的价位。</p>
+<p>中立派最可能的说法是：二元事件，财报前不动，等 11 月 17 日再说。这个结论我基本同意，但我想点出这个等待的价值。从收盘价看，第一目标 10 EMA 约 191.86，上行约 13.6%；200 SMA 约 204.26，上行约 20.9%；止损 157.2，下行约 6.9%。也就是说风险回报比大约在 2 比 1 到 3 比 1。这个赔率值得做一份预案，而不是被动观望。所以我的&quot;激进版 Hold&quot;是：财报前不加仓，保留火力；财报和指引一旦打消对中国业务和利润率的担忧，立刻按计划分 2 到 3 批加回，别等到价格涨回 200 SMA 才犹豫。再配合 175.36 收复后的小仓位试探，进攻的路径是写好的。</p>
+<p>还有一点，别被情绪面数据带偏。情绪报告的得分 2.8/10，但置信度是低的，StockTwits 和 Reddit 都没抓到。这个分数几乎全来自当天的新闻标题，是单日的恐慌，而不是已验证的共识。对逆向思维的人来说，标题一片看空、CPI 超预期、加息 50 个基点被炒作、微软短暂超越市值，这些叠加在一起，恰恰是情绪接近极端的特征。同时 WSJ 提到按某一指标估值是 2011 年以来最低，旧款 GPU 续约有 20% 溢价，H100 重新签约价格翻倍，这说明需求和残值并没有崩。</p>
+<p>当然，我不装作没有风险，几个硬事实必须摆在桌面上。第一，估值最低只是单一指标，我们没有拿到完整的估值数据，不能拿它当底部的证据。第二，财报前后有跳空风险，157.2 的止损在隔夜跳空下可能无法按价成交。第三，宏观数据缺失，加息路径只来自新闻措辞。第四，所有价位都是指标推导，没有历史验证。这些就是我坚持&quot;不重仓抄底、不财报前加仓&quot;的原因：我要的是用可承受的损失，换取财报后的大弹性，而不是赌一把。</p>
+<p>至于有人建议现在就大幅减仓或直接做空，我认为这是在最糟糕的位置追逐已经发生的下跌。放量 29% 回撤后追空，赚的是别人已经赚过的钱，而且一旦财报确认基本面完好，空头面临的是急速反弹。反过来，如果持仓高于标准配置，趁反弹减回标准配置，是我完全赞同的纪律，而且收盘有效跌破 165.89 就减到约一半，也是给自己设了一条清晰的逃生线。</p>
+<p>所以我的立场是：Hold 是对的，因为它在信息缺口最大的时刻保住了选择权；而激进之处在于，一旦催化剂落地，行动要果断，该加就加，不要被&quot;再等等确认&quot;磨掉全部赔率。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 我同意 Hold 这个方向，但对激进派那套&quot;持枪待发&quot;的说法，有几处我不能放过。</p>
+<p>先说他最得意的赔率。他说止损下行约 6.9%，上行到 10 EMA 约 13.6%、到 200 SMA 约 20.9%，所以赔率是 2 比 1 到 3 比 1。问题是，10 EMA 和 200 SMA 是阻力位，不是目标位，报告里也明说这些价位没有经过历史验证。赔率只有乘上概率才有意义，而我们对到达概率一无所知。再看风险端：ATR 是 8.70，约 5.2%，11 月 5 日单日跌了 9.3%，11 月 9 日还跳空低开。157.2 的止损只比现价低 6.9%，也就是一两天的正常波动。财报前后一个跳空就可能直接穿过去，成交价会比 157.2 差得多。他自己也承认了这一点，但还是把 6.9% 当作实际亏损上限，这是在用最好情况算账。</p>
+<p>第二，他说 75 亿美元对 962 亿美元的季度营收和 744 亿美元的现金流算不上致命伤。这是拿错了尺子。市场担心的不是这笔金额，而是出口管制收紧、监管调查、国会审查、董事会和管理层信誉，还有对华收入的不确定性。这些风险没有上限，也没法用现金流抵消。他说 Culper 几个月前就示警过，所以风险已被消化，我反过来看：示警过却没被定价，现在被媒体放大，正说明这是尚未解决的问题。何况所谓&quot;据报道&quot;，既不能证明属实，也不能证明不实，在官方澄清之前，这个尾部风险应该按存在来对待。</p>
+<p>第三，他说放量急跌往往是抛压释放的阶段。这是推测，不是证据。现有数据是 MACD 柱状图还在扩大，没有底背离，连续两天成交量超过 4 亿股，价格还在布林带下轨之外。这些都没有显示衰竭。强趋势里 RSI 可以长期停在 24 附近，而且 CPI 超预期、12 月可能加息 50 个基点的讨论还没有落地。他还说等确认就会买在更高的价位，可是买高一点的代价是几个点，买在继续下探里的代价是几十个点。这两种错误不对称，保守的做法是愿意付前者。</p>
+<p>第四，他拿情绪分数的低置信度来论证&quot;恐慌接近极端&quot;，这是双重标准。报告说置信度低，是因为 StockTwits 和 Reddit 都没数据，所以它既不能证明恐慌过度，也不能证明共识已经形成。拿&quot;数据缺失&quot;当逆向买入的依据，是在空白处填上自己想要的结论。同样，WSJ 说估值最低只是单一指标，我们连市值和市盈率都没拿到，这也可能是价值陷阱。基本面方面，最近披露的是 7 月季度的数据，而财报还没出，财务数据本身有列对齐不确定的问题，净利润增速也落后于营业利润，负债一个季度增加约 273 亿。公司在 2022 到 2023 年还有过营收大幅回落，周期性风险是真实存在的。</p>
+<p>所以我对交易员方案的调整有这几条。第一，持仓如果高于标准配置，不要等反弹再减。反弹不是保证，10 EMA 附近就是第一道抛压。我主张在财报前就把仓位降到标准配置，甚至略低，不要带着超配进入一个二元事件。第二，如果持仓是标准配置，可以考虑再减一小部分，或者用期权做保护，比如买入认沽或做领口。隐含波动率高会让保护变贵，那就用减仓代替，宁可少赚也不要承担隔夜跳空无法止损的风险。第三，把 165.89 的收盘跌破触发减半，进一步改成盘中有效跌破就执行，因为收盘价判断在跳空市场里太慢。第四，加仓条件要更严：必须在财报之后，同时满足管理层对中国业务和指引的明确表态、成交量回落、MACD 柱状图收窄，而且价格连续两日收复 175.36。加仓批次也建议每批不超过标准配置的 1/4，而不是 1/3。第五，不要因为&quot;想买更便宜&quot;去摊低成本。</p>
+<p>总结一下，我反对的不是 Hold，而是把 Hold 包装成进攻姿态。保住本金的价值在于：财报若好，我们晚几天加仓，少赚几个点；财报若差，或者监管消息升级，我们躲过的是一次可能无法回补的亏损。在信息缺口最大的时候，先缩小可能的最大亏损，再谈弹性。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 我同意 Hold，但两位对 Hold 的包装我都不完全接受。一个把它说成进攻，一个把它说成撤退的前奏，而它其实只是在信息缺口最大的一周里，承认自己不知道答案。</p>
+<p>先说激进派。他的 2 比 1 到 3 比 1 赔率有三个问题。第一，分子是阻力位，不是目标位，这些价位没有经过历史验证，到达概率未知。第二，分母是 157.2，但这个止损不是硬上限。11 月 5 日单日跌 9.3%，11 月 9 日跳空低开，财报是二元事件，隔夜穿过止损并不罕见。所以真正的最大亏损要按跳空 10% 到 15% 来估，赔率会明显变差。第三，他说抛压集中释放往往意味着接近尾声。这有可能，但现有证据没有证实：MACD 柱状图还在扩大，没有底背离，价格仍在布林下轨之外。他说得对的是，等所有信号确认再行动，确实会买得更高，这个代价真实存在。他拿低置信度的情绪分数当逆向依据，也站不住。数据缺失既不证明恐慌过度，也不证明没有。</p>
+<p>再说保守派。他抓住了赔率和尾部风险，但他的方案有几处过度。</p>
+<p>第一，他要在财报前就把仓位压到标准配置以下，理由是买高几个点的代价小于继续下探几十个点的代价。这个不对称只说了一半。价格已经从 239 跌到 169，回撤近 29%，在放量超卖区间卖出，也可能卖在一周后的反弹起点之前，这同样是几十个点的错误。他的理由其实只适用于超配的仓位，不适用于标准仓位。</p>
+<p>第二，他把 165.89 的减半触发改成盘中有效跌破。可 165.89 就是昨天的盘中低点，ATR 是 8.70，一个普通交易日的波动就能轻易碰到它。盘中触发在这个波动环境里很容易被洗出去，然后第二天又弹回来。我更倾向于保留收盘判断，或者用盘中跌破加收盘仍在其下的组合确认。他说收盘判断太慢，这是对的，但解法不是更灵敏，而是在跳空风险上提前用仓位去承担，而不是靠止损。</p>
+<p>第三，他想用认沽或领口保护，同时又承认隐含波动率很高、保护很贵。领口还会封顶反弹收益，而反弹恰恰是这个位置最合理的上行情景。所以保护只适合已经超配、又不想减仓的人。</p>
+<p>第四，他把加仓条件叠成四项同时满足，再加连续两日收复 175.36。财报后这些条件很可能出现得很晚，实际上等于永远不加回。他说&quot;买高几个点&quot;可以接受，但四个条件全满足，买高的就不是几个点了。</p>
+<p>我的折中方案是这样的。</p>
+<p>一，仓位大小比止损位更重要。每个人应该先问：如果财报后一个跳空下跌 15%，这个仓位的亏损我能不能承受？不能，就在财报前减到能承受为止。这比争论 157.2 还是盘中触发更实在。</p>
+<p>二，超配的部分不要全等反弹。可以现在先减超配部分的一半，另一半放在 175 到 192 区间的反弹里减。这样既不押反弹一定出现，也不在超卖低位把超配全抛。已经是标准配置或以下的，就维持不动，不新开仓，不加仓，不摊低成本。</p>
+<p>三，保留收盘有效跌破 165.89 减至约一半的规则。想更谨慎的人，可以把触发改成&quot;盘中跌破且收盘仍在其下&quot;，避免被一次长下影洗出去。</p>
+<p>四，加仓分两层。财报后的第一批最多标准配置的 1/4，条件是管理层对中国业务和指引有明确表态，且价格收复 175.36。三项里满足两项就够，不必要求全部。第二批、第三批可以到 1/3，但需要成交量回落或 MACD 柱状图收窄这类动能确认。这样既不错过反弹，也不在一次表态上押满。</p>
+<p>五，关于中国芯片转运的报道，在官方澄清前不押对错。我们该做的是保证它不管真假，都不会让我们受不了。如果监管升级、管理层变动，这些都应当成为触发再评估的事件，而不只是看价格。</p>
+<p>最后提醒一点：这些价位都是指标推导，没有历史验证；估值、内部人、宏观数据都缺失。所以整个方案的目的不是预测，而是让两边的错误都能承受：财报好，我们晚几天加回，少赚一点；财报差，我们的亏损被仓位限制住，不依赖一个可能成交不了的止损价。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: NVDA 维持 Hold:财报前不新开仓、不加仓、不摊低成本。若持仓高于标准配置,现在先减掉超配部分的约一半,另一半在 175–192 的反弹中减回标准配置。收盘有效跌破 165.89 时减至标准配置的约一半。11 月 17 日财报后再按条件分批加回。持仓情况未提供,以上按你的现有仓位套用。</p>
+<p><strong>Investment Thesis</strong>: 三方都支持 Hold,分歧在于如何执行,我逐项权衡后取中间偏谨慎的方案。</p>
+<p><strong>偏向空头的证据:</strong></p>
+<ul>
+<li>技术面没有衰竭迹象:价格在所有主要均线之下,MACD 柱状图仍在扩大,没有底背离,连续两天成交量超过 4 亿股,收盘价低于布林下轨。</li>
+<li>CEO 丑闻、据报 75 亿美元的对华转运、出口合规调查都没有官方确认,也没有结论。它们是尾部风险,不能拿 962 亿美元的季度营收或 744 亿美元的经营现金流去抵消。</li>
+<li>11 月 17 日的财报是二元事件,管理层必须当众回应。</li>
+<li>激进派的 2:1 到 3:1 赔率站不住。10 EMA 约 191.86 和 200 SMA 约 204.26 是阻力位,不是目标位,到达概率未知。157.2 的止损在 11 月 5 日单日下跌 9.3% 和近期跳空的环境中不是硬上限。</li>
+</ul>
+<p><strong>偏向多头的证据:</strong></p>
+<ul>
+<li>价格较高点回撤约 29%,RSI 约 24。</li>
+<li>毛利率约 75%,营业利润率约 66%,流动比率约 4.6。</li>
+<li>没有证据显示需求见顶。旧款 GPU 续约溢价只来自单一来源。</li>
+</ul>
+<p><strong>为什么不是 Underweight 或 Sell:</strong></p>
+<ul>
+<li>在放量超卖区清仓,可能卖在反弹起点之前。中立派指出这同样可能是几十个点的错误。</li>
+<li>基本面恶化没有被证明。净利润增速低于营业利润增速,以及负债增加,原因都未明。</li>
+<li>估值数据只有 WSJ 的单一指标,缺少市盈率和市值,所以&quot;便宜&quot;也不成立。</li>
+</ul>
+<p><strong>为什么不是 Overweight 或 Buy:</strong></p>
+<ul>
+<li>技术面未止跌,事件风险一周内就会兑现。</li>
+<li>情绪分数置信度低,不能作为逆向买入的依据,这一点保守派的反驳成立。</li>
+</ul>
+<p><strong>执行(中立派方案,吸收保守派对仓位的提醒):</strong></p>
+<ul>
+<li>仓位大小比止损位更重要。先问自己:财报后一个跳空下跌 15%,这个仓位能否承受?不能,就在财报前减到能承受为止。</li>
+<li>165.89 的减半触发,用&quot;盘中跌破且收盘仍在其下&quot;确认,避免被一根长下影线洗出去。</li>
+<li>加仓分层。第一批最多标准配置的 1/4,条件是管理层对中国业务、出口合规和指引有明确表态,且价格收复 175.36,三项满足两项即可。第二批、第三批每批不超过 1/3,需要成交量回落或 MACD 柱状图收窄。四项全满足的要求过严,实际上等于永远不加回。</li>
+<li>期权保护只适合超配又不想减仓的人。隐含波动率高,保护很贵,领口还会封顶反弹收益。</li>
+</ul>
+<p><strong>降级触发:</strong> 官方确认转运违规、出口许可收紧、管理层变动,或指引与毛利率(70% 以下)明显不及预期。出现任一项,降至 Underweight。</p>
+<p><strong>升级触发:</strong> 财报后毛利率保持在 70% 以上,指引不低于预期,管理层给出可核实的回应,价格站稳 175.36 并收复 10 EMA。</p>
+<p><strong>缺失信息:</strong> 市盈率和市值、内部人交易、丑闻和监管后果的官方确认、净利润与营业利润背离的原因、负债增加的构成、分析师目标价调整、宏观加息路径的确认。所有价位都是指标推导,没有经过历史验证。</p>
+<p><strong>Price Target</strong>: 192.0</p>
+<p><strong>Time Horizon</strong>: 1-3周(以11月17日财报为界)</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>

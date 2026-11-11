@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>BRK-B 2026-11-10 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">BRK-B</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-10</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-11 04:21</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>BRK-B 技术分析报告(分析日期:2026-11-10)</h4>
+<p><strong>数据说明</strong>:价格和指标数值均来自 <code>get_verified_market_snapshot</code>,并以它为准。我没有逐个调用 <code>get_indicators</code> 取时间序列,所以下面关于指标走势的判断,只基于快照里的最新值和近期收盘价。价格数据与快照之间没有发现冲突。</p>
+<h5>一、选定的 8 个指标及理由</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>指标</th>
+<th>选择理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>趋势(长)</td>
+<td>close_200_sma</td>
+<td>判断长期趋势的基准</td>
+</tr>
+<tr>
+<td>趋势(中)</td>
+<td>close_50_sma</td>
+<td>判断中期趋势,也是动态支撑参考</td>
+</tr>
+<tr>
+<td>趋势(短)</td>
+<td>close_10_ema</td>
+<td>反映短期动能,用来衡量价格偏离均线的程度</td>
+</tr>
+<tr>
+<td>动能</td>
+<td>macd / macds / macdh</td>
+<td>同时给出趋势动能的方向、交叉和强弱变化</td>
+</tr>
+<tr>
+<td>动能</td>
+<td>rsi</td>
+<td>判断超买超卖</td>
+</tr>
+<tr>
+<td>波动</td>
+<td>boll_ub / boll(中轨)</td>
+<td>判断价格是否贴近或突破通道上沿</td>
+</tr>
+<tr>
+<td>波动</td>
+<td>atr</td>
+<td>用于止损距离和仓位大小</td>
+</tr>
+</tbody>
+</table></div>
+<p>这组指标覆盖趋势、动能、波动三个维度,彼此重复较少。我没有选 VWMA,因为近期成交量的信息用原始成交量数据看更直接。</p>
+<h5>二、最新验证数据(2026-11-10)</h5>
+<ul>
+<li><strong>OHLC</strong>:开 575.59,高 586.45,低 574.00,收 583.34。</li>
+<li><strong>成交量</strong>:4,660,500。</li>
+<li><strong>均线</strong>:10 EMA 为 565.11,50 SMA 为 524.55,200 SMA 为 498.70。</li>
+<li><strong>MACD</strong>:MACD 为 15.68,信号线为 12.81,柱状图为 2.86。</li>
+<li><strong>RSI</strong>:78.01。</li>
+<li><strong>布林带</strong>:中轨 549.73,上轨 585.18,下轨 514.29。</li>
+<li><strong>ATR</strong>:10.01。</li>
+</ul>
+<h5>三、趋势观察</h5>
+<h6>1. 趋势结构:多头排列,涨势强劲</h6>
+<ul>
+<li>收盘价 583.34 高于 10 EMA(565.11)、50 SMA(524.55)和 200 SMA(498.70),三条均线呈标准的多头排列。</li>
+<li>收盘价比 10 EMA 高约 18.2 点,比 50 SMA 高约 58.8 点,比 200 SMA 高约 84.6 点。价格明显偏离中长期均线,说明趋势很强,但回归均线的空间也不小。</li>
+<li>9 月 30 日收盘价为 497.95,之后一路走高。10 月 1 日至 11 月 10 日的收盘价从 500.50 升到 583.34,期间只有几次小幅回撤,例如 10 月 23 日、10 月 27–28 日和 11 月 5–6 日。</li>
+<li>11 月 10 日的最高价 586.45,是这份数据(2026-05-01 起)里的最高价。</li>
+</ul>
+<h6>2. 近期关键事件(数据支持)</h6>
+<ul>
+<li><strong>11 月 4 日跳涨</strong>:收盘 579.09,前一日收盘 557.07,成交量 6,783,400,明显高于近期常见的 300 万至 500 万水平。</li>
+<li><strong>11 月 5 日冲高回落</strong>:开盘 584.23,最高 586.30,收盘 572.33,成交量 9,829,900。这是冲高后的回落,伴随放量,是一个值得留意的短期分歧信号。</li>
+<li><strong>之后的修复</strong>:11 月 6 日收 570.89,11 月 9 日收 575.25,11 月 10 日收 583.34。价格重新回到 11 月 4 日收盘价上方,并创出新高,说明 11 月 5 日的回落没有演变为趋势反转。</li>
+<li>11 月 10 日的成交量(4,660,500)低于 11 月 4–5 日,创新高时放量不明显。</li>
+</ul>
+<h6>3. 动能:MACD 仍偏多,RSI 过热</h6>
+<ul>
+<li>MACD(15.68)高于信号线(12.81),柱状图为正(2.86),说明多头动能仍在。</li>
+<li>我没有取柱状图的时间序列,因此无法判断它是在扩张还是收缩。后续可补充 <code>macdh</code> 的序列来确认。</li>
+<li><strong>RSI 为 78.01</strong>,明显高于 70 的超买线。在强趋势中 RSI 可以长期停留在高位,所以它是风险提示,不是单独的卖出信号。</li>
+</ul>
+<h6>4. 波动:贴近布林上轨</h6>
+<ul>
+<li>收盘价 583.34 略低于布林上轨 585.18,差约 1.84 点。当日最高价 586.45 曾短暂高于上轨。</li>
+<li>价格比中轨(549.73)高约 33.6 点,通道宽度较大(上轨减下轨约 70.9 点),反映近期波动在放大。</li>
+<li>ATR 为 10.01,约等于每日 10 点的平均真实波幅。这对止损和仓位很重要。</li>
+</ul>
+<h5>四、可操作的观察</h5>
+<ol>
+<li><strong>趋势跟随者</strong>:趋势和动能都偏多,没有趋势反转的信号。但价格已经远离均线,在这个位置追高的性价比较低。</li>
+<li><strong>风险管理</strong>:按 ATR 10.01 计算,一倍 ATR 约 10 点,两倍约 20 点。若以 2 倍 ATR 设止损,距当前价约 563 附近,这与 10 EMA(565.11)接近。这只是按指标做的参考,不是已被历史验证的支撑位。</li>
+<li><strong>回调的参考区域</strong>:若出现回调,可观察的参考位依次是布林中轨 549.73 和 50 SMA 524.55。这些是指标水平,我没有历史数据证明它们曾起过支撑作用。</li>
+<li><strong>需要警惕的信号</strong>:
+<ul>
+<li>RSI 在 70 以上持续走弱,或出现价格新高而 RSI 不创新高的背离。</li>
+<li>MACD 柱状图转为收缩,或 MACD 下穿信号线。</li>
+<li>价格收盘跌破 10 EMA。</li>
+<li>再次出现类似 11 月 5 日的放量冲高回落。</li>
+</ul>
+</li>
+<li><strong>波动特征</strong>:11 月初的单日波动比之前明显扩大,例如 11 月 4 日的最高价与最低价相差约 18 点,11 月 5 日相差约 15 点。短线交易者要预留更宽的止损空间。</li>
+</ol>
+<h5>五、结论</h5>
+<p>BRK-B 处于强势上升趋势,趋势和动能指标一致偏多。但 RSI 超买,价格贴近布林上轨,并且远离 10 EMA、50 SMA 和 200 SMA,短期有回调或横盘整理的风险。已持仓者适合继续持有,并用 ATR 或 10 EMA 管理风险。尚未入场者追高的风险回报比一般,可以等回调或整理后再评估。以上只是技术面的观察,最终交易决定由其他环节做出。</p>
+<h5>六、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值 / 观察</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价</td>
+<td>583.34</td>
+<td>接近 11 月 10 日最高价 586.45,是数据区间内的新高</td>
+</tr>
+<tr>
+<td>10 EMA</td>
+<td>565.11</td>
+<td>价格高于短期均线,短线偏多</td>
+</tr>
+<tr>
+<td>50 SMA</td>
+<td>524.55</td>
+<td>中期趋势向上,可作为较深回调的参考位</td>
+</tr>
+<tr>
+<td>200 SMA</td>
+<td>498.70</td>
+<td>长期趋势向上,价格明显高于它</td>
+</tr>
+<tr>
+<td>MACD / 信号线</td>
+<td>15.68 / 12.81</td>
+<td>MACD 在信号线上方,动能偏多</td>
+</tr>
+<tr>
+<td>MACD 柱状图</td>
+<td>2.86</td>
+<td>为正,但未取序列,无法判断是否在收缩</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>78.01</td>
+<td>超买,但强趋势中可持续,需防回调</td>
+</tr>
+<tr>
+<td>布林带</td>
+<td>下 514.29 / 中 549.73 / 上 585.18</td>
+<td>价格贴近上轨,通道较宽</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>10.01</td>
+<td>每日约 10 点的波幅,用于止损和仓位</td>
+</tr>
+<tr>
+<td>11 月 4–5 日</td>
+<td>放量跳涨后冲高回落(收 579.09 → 572.33)</td>
+<td>有短期分歧,但之后已被修复</td>
+</tr>
+<tr>
+<td>11 月 10 日成交量</td>
+<td>4,660,500</td>
+<td>创新高时量能一般</td>
+</tr>
+<tr>
+<td>数据一致性</td>
+<td>价格数据与快照一致</td>
+<td>没有发现冲突</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bullish</strong> (Score: 6.2/10)
+<strong>Confidence:</strong> Medium</p>
+<h5>BRK-B 情绪报告(2026-11-03 至 2026-11-10)</h5>
+<p><strong>数据限制说明</strong>:Reddit 数据抓取失败(r/wallstreetbets、r/stocks、r/investing 均不可用),这不代表没有讨论,只是本报告缺少这一来源。因此只能依据新闻和 StockTwits 两个来源,稳健性有所下降。StockTwits 只有 29 条消息,其中 14 条没有情绪标签,样本较小。</p>
+<h6>1. 分来源分析</h6>
+<p><strong>新闻(Yahoo Finance,约 18 条,其中与 BRK 直接相关的约 11 条)——偏中性,略带谨慎</strong></p>
+<ul>
+<li>事件:第三季度营业利润下降 5.8%(StockTwits 引用的数字为约 127 亿美元),主要因为保险业务疲弱。保险承保利润据称下降 43%,这一数字来自 StockTwits 上的转述,不是新闻原文。</li>
+<li>现金储备创纪录,为 3774 亿美元。</li>
+<li>单季回购创纪录,为 96 亿美元,是 Q2 的两倍多。这是在新任 CEO Greg Abel 任内授权的。</li>
+<li>董事会正式确认 Abel 接任 Buffett 的日常管理职责。</li>
+<li>正面框架:Fortune 称 BRK 在 AI 股票大幅下跌时再度成为避风港。Barron's 提到低波动股票表现强劲。Motley Fool 报道 Abel 投入 2700 万美元买入一家近乎垄断的公司。</li>
+<li>估值与谨慎框架:Simply Wall St. 认为股价可能高估约 7%。Class A 股近一个月上涨 10.2%,年初至今上涨 14.7%(Motley Fool 给出的是约 11%)。Motley Fool 提到 6 月回购价约 488 美元,而现价接近 557 美元。TheStreet 称财报&quot;暴露出强劲经济之下的消费需求问题&quot;。</li>
+<li>其余多为与 BRK 无关的噪音,例如 Occidental、STRW、Netflix、Nvidia 间谍丑闻。</li>
+</ul>
+<p><strong>StockTwits——明显偏多</strong></p>
+<ul>
+<li>带标签的消息中,看多 15 条(52%),看空 0 条,无标签 14 条。</li>
+<li>没有任何看空标签,这在 29 条的样本里很少见。但 14 条无标签消息大多也是中性到偏正面的评论,例如&quot;新高&quot;、&quot;现金派上用场&quot;。</li>
+<li>主要主题:
+<ul>
+<li>&quot;避风港&quot;和&quot;停车位&quot;:多位用户把 BRK.B 当作 AI 回撤期间的避险资产。</li>
+<li>创 52 周新高:多条消息提到,有用户在约 590 美元附近犹豫是否获利了结。</li>
+<li>现金储备:3770 亿美元被视为&quot;弹药&quot;。</li>
+<li>一位用户嘲讽 Burry 看错方向。</li>
+</ul>
+</li>
+<li>谨慎或负面声音(均无看空标签):
+<ul>
+<li>有人说&quot;财报不被市场接受&quot;。</li>
+<li>有人说&quot;盘中涨幅在下午 3 点后回吐了 2/3&quot;。</li>
+<li>一位用户批评管理层在达到&quot;净现金基础&quot;之前不增加股东回报,并称优先股要到 2029 年才完全赎回。</li>
+<li>一位用户认为未来 4 个月没有真正的上涨趋势。</li>
+</ul>
+</li>
+<li>临近的事件:有用户提到下周发布 13F 报告。</li>
+</ul>
+<p><strong>Reddit</strong>:不可用,无法评估。</p>
+<h6>2. 来源之间的分歧与一致</h6>
+<ul>
+<li>新闻侧重基本面的小幅走弱:营业利润下降、保险疲软、估值略高。散户侧重价格走势和避险属性:新高、避风港、现金。</li>
+<li>两者在三点上一致:现金储备庞大、回购加大、BRK 被当作防御性资产。</li>
+<li>分歧在于:新闻语气偏中性到谨慎,而散户几乎一边倒看多。这可能是散户在追逐动量。同时,&quot;新高&quot;与&quot;盈利下降&quot;并存,说明股价上涨更多靠避险资金流入,而不是盈利改善。</li>
+<li>无看空标签、用户谈论获利了结,这类一边倒的氛围有一定的反向风险,但样本太小,不能下强结论。</li>
+</ul>
+<h6>3. 主要叙事主题</h6>
+<ol>
+<li>避风港:资金从 AI 和科技股流向低波动的 BRK。</li>
+<li>Abel 过渡期和资本配置:创纪录回购,以及 3774 亿美元现金迟迟没有部署的争议。</li>
+<li>盈利质量:保险业务疲软和消费需求担忧。</li>
+<li>估值:股价接近历史高位,回购价与现价之间差距明显。</li>
+</ol>
+<h6>4. 催化剂与风险</h6>
+<p><strong>催化剂</strong>:</p>
+<ul>
+<li>下周的 13F 披露,将显示 Abel 的组合调整。</li>
+<li>持续的回购。</li>
+<li>科技股回撤继续带来的避险资金流入。</li>
+<li>现金部署,例如大型并购。</li>
+</ul>
+<p><strong>风险</strong>:</p>
+<ul>
+<li>保险承保利润下滑。</li>
+<li>消费需求疲弱。</li>
+<li>估值偏高,有分析认为高估约 7%。</li>
+<li>若 AI 股企稳,避险资金可能回流。</li>
+<li>现金闲置和股东回报政策引发的批评。</li>
+<li>新高之后的获利回吐。</li>
+</ul>
+<h6>5. 汇总表</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>散户情绪</td>
+<td>看多</td>
+<td>StockTwits</td>
+<td>15 条看多、0 条看空、14 条无标签,共 29 条</td>
+</tr>
+<tr>
+<td>避风港叙事</td>
+<td>看多</td>
+<td>Fortune、StockTwits</td>
+<td>AI 抛售期间资金流入,多条&quot;safe haven&quot;、&quot;parking spot&quot;</td>
+</tr>
+<tr>
+<td>52 周新高</td>
+<td>看多</td>
+<td>StockTwits</td>
+<td>多条消息,约 590 美元附近有人考虑获利了结</td>
+</tr>
+<tr>
+<td>创纪录回购</td>
+<td>偏多</td>
+<td>新闻</td>
+<td>Q3 回购 96 亿美元</td>
+</tr>
+<tr>
+<td>现金储备</td>
+<td>偏多</td>
+<td>新闻、StockTwits</td>
+<td>3774 亿美元</td>
+</tr>
+<tr>
+<td>营业利润下滑</td>
+<td>偏空</td>
+<td>新闻</td>
+<td>下降 5.8%,保险疲软</td>
+</tr>
+<tr>
+<td>估值偏高</td>
+<td>偏空</td>
+<td>Simply Wall St.、Motley Fool</td>
+<td>可能高估约 7%,现价约 557 美元</td>
+</tr>
+<tr>
+<td>消费需求担忧</td>
+<td>偏空</td>
+<td>TheStreet</td>
+<td>&quot;一组数据,两种解读&quot;</td>
+</tr>
+<tr>
+<td>资本配置批评</td>
+<td>偏空</td>
+<td>StockTwits</td>
+<td>净现金基础门槛、优先股 2029 年才赎回</td>
+</tr>
+<tr>
+<td>Reddit</td>
+<td>无数据</td>
+<td>—</td>
+<td>抓取失败</td>
+</tr>
+</tbody>
+</table></div>
+<h6>结论</h6>
+<p>整体偏多,但属于温和偏多。散户明显看多,新闻中性略谨慎,基本面略有走弱,股价上涨主要靠避险需求。这是情绪信号,不构成价格预测,请与基本面和技术面一并权衡。</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>BRK-B 新闻与宏观研究报告(2026-11-03 至 2026-11-10)</h4>
+<h5>一、数据可用性说明</h5>
+<ul>
+<li>FRED 宏观数据(联邦基金利率、10年期美债收益率、VIX)均返回 DATA_UNAVAILABLE,原因是未设置 FRED_API_KEY。本报告不提供这些具体数值,也不做推测。</li>
+<li>预测市场(Fed 降息、2026 衰退概率)的赔率在 2026-11-10 被屏蔽,所以没有市场隐含概率可用。</li>
+<li>因此,宏观部分只能依据新闻中的零散信息。结论的可信度低于有完整数据时的结论。</li>
+</ul>
+<h5>二、BRK-B 公司层面要点</h5>
+<ol>
+<li><strong>三季度业绩好坏参半</strong>:营业利润同比下降 5.8%,主要原因是保险业务承保表现走弱,投资收益也承压(Investing.com、Simply Wall St.)。</li>
+<li><strong>现金创纪录</strong>:现金储备升至 3774 亿美元。这既提供安全垫,也说明公司仍找不到足够大的收购标的。</li>
+<li><strong>回购大幅加码</strong>:本季度回购金额创纪录,为 96 亿美元。6 月回购价约 488 美元/股(按 B 股口径,Motley Fool 的表述),当前价格约 557 美元,较回购价高约 14%。管理层在更高价位仍继续买入,说明他们认为股价仍低于内在价值。这是一个正面信号,但也可能随股价上涨而放缓。</li>
+<li><strong>接班确认</strong>:董事会正式确认 Greg Abel 接替巴菲特负责日常经营。过渡风险已大幅降低,但市场仍会关注他的资本配置风格。</li>
+<li><strong>投资组合调整</strong>:三季度买入股票 24 亿美元,卖出约 28 亿美元,净卖出。Motley Fool 报道称 Abel 个人投入 2700 万美元买入某“近乎垄断”的公司(具体标的未在摘要中给出,需自行核实)。</li>
+<li><strong>避险属性</strong>:Fortune 称,投资者逃离 AI 板块的大幅下跌,转向 Berkshire,使其再次成为避险标的。Barron's 也提到低波动股票表现亮眼。</li>
+<li><strong>估值</strong>:A 股近一个月上涨约 10.2%,年初至今约涨 14.7%(另一来源称 B 股年初至今约 11%,口径略有差异)。Simply Wall St. 估计其可能被高估约 7%,但不是极端高估。</li>
+<li><strong>消费需求隐忧</strong>:TheStreet 指出,业绩数据显示强劲经济之下存在消费需求问题。这需要后续跟踪,因为 Berkshire 旗下有大量消费类和零售类业务。</li>
+</ol>
+<h5>三、宏观与市场背景(仅来自新闻,缺少硬数据)</h5>
+<ul>
+<li><strong>AI 板块波动</strong>:Barron's 提到“英伟达间谍丑闻”,英伟达承压、AMD 受益;另有“AI 血洗”的说法。市场风险偏好在科技板块出现裂痕。</li>
+<li><strong>地缘与油价</strong>:有报道称美国打击伊朗 Qeshm 岛,油价上涨。这对 Berkshire 有两面影响:一方面,Occidental 持仓(OXY)和能源资产受益于油价上涨;另一方面,油价上涨会推高通胀并增加成本。OXY 三季度现金流为 41 亿美元,债务降至 100 亿美元,但文中提到原油价格较弱。两条信息有一定张力,需要核实。</li>
+<li><strong>通胀</strong>:一篇 Moneywise 文章提到通胀回到 3.7%。这是未经核实的二手说法,且不清楚是哪项指标,不能当作确认数据。如果属实,通胀偏高会限制美联储降息空间。</li>
+<li><strong>估值环境</strong>:美股估值被描述为“历史高位”。以金价计价,标普 500 三年下跌 14%,反映美元走弱或股市实际回报被高估。</li>
+<li><strong>财报季</strong>:Take-Two 因《GTA VI》预订量高于计划而上涨约 5%,On Holding 因直销业务承压下跌。个股分化明显。</li>
+</ul>
+<h5>四、对交易者的含义</h5>
+<ul>
+<li><strong>多头逻辑</strong>:防御属性、巨额现金、持续回购(对股价形成支撑)、接班不确定性消除、资金从 AI 板块轮动出来。</li>
+<li><strong>空头与风险</strong>:营业利润下降、保险承保走弱、净卖出股票、股价已接近回购价上方约 14%、估值不再便宜、消费需求疑虑、通胀与油价的宏观风险。</li>
+<li><strong>关注点</strong>:回购在更高股价下的节奏;Abel 的首个大型收购;13F 披露的持仓变化;下一次 CPI 和美联储表态(当前缺少数据);油价与伊朗局势。</li>
+<li><strong>总体判断</strong>:BRK-B 是一只在市场动荡时的防御型核心持仓,但短期上涨空间受限。偏向持有,逢回调(接近回购价区间)再加仓更合理。这只是研究判断,最终交易决策由其他环节做出。</li>
+</ul>
+<h5>五、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>要点</th>
+<th>影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>三季度业绩</td>
+<td>营业利润同比下降 5.8%,保险承保与投资收益走弱</td>
+<td>偏负面</td>
+</tr>
+<tr>
+<td>现金</td>
+<td>创纪录的 3774 亿美元</td>
+<td>安全垫,但缺少可部署的标的</td>
+</tr>
+<tr>
+<td>回购</td>
+<td>本季度创纪录的 96 亿美元;6 月回购价约 488 美元,当前约 557 美元</td>
+<td>支撑股价,偏正面</td>
+</tr>
+<tr>
+<td>管理层</td>
+<td>Abel 正式接班;个人买入 2700 万美元</td>
+<td>过渡风险降低,偏正面</td>
+</tr>
+<tr>
+<td>持仓</td>
+<td>买入 24 亿美元、卖出 28 亿美元(净卖出)</td>
+<td>中性偏谨慎</td>
+</tr>
+<tr>
+<td>估值</td>
+<td>年初至今约 +11% 至 +15%;可能高估约 7%</td>
+<td>上涨空间有限</td>
+</tr>
+<tr>
+<td>市场风格</td>
+<td>AI 板块抛售,资金转向低波动与防御股</td>
+<td>短期偏正面</td>
+</tr>
+<tr>
+<td>宏观</td>
+<td>通胀 3.7%(未核实)、油价因伊朗局势上涨</td>
+<td>不确定,利率路径存疑</td>
+</tr>
+<tr>
+<td>数据缺口</td>
+<td>FRED 数据与预测市场均不可用</td>
+<td>宏观结论可信度低</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>BRK-B(伯克希尔·哈撒韦)基本面分析报告(截至 2026-11-10)</h4>
+<h5>一、数据可得性说明</h5>
+<ul>
+<li><strong>get_fundamentals</strong>:该数据源不提供历史时点的公司概况(市值、估值倍数、52周区间、TTM 数据均被屏蔽),因此本报告<strong>没有</strong>市盈率、市净率、股息率或当前股价等估值数据。</li>
+<li><strong>get_insider_transactions</strong>:内部人交易数据被屏蔽(无法确认哪些交易在 2026-11-10 已公开),因此<strong>无法</strong>对内部人买卖作出判断。</li>
+<li>资产负债表、利润表、现金流量表来自 SEC EDGAR 申报数据,可以使用。以下分析仅基于这些报表。</li>
+<li>数据缺口:流动资产/流动负债、营业成本、毛利、稀释每股收益等项目未标记(伯克希尔不使用分类资产负债表)。部分季度的数值为空白。利润表末列(2026-09-30)的数字是否为单季度数据,无法完全确认。</li>
+</ul>
+<h5>二、资产负债表(单位:百万美元)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>总资产</th>
+<th>总负债</th>
+<th>股东权益</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2019-12-31</td>
+<td>817,729</td>
+<td>389,166(2019-09 为 386,924)</td>
+<td>424,791(2019-12 附近)</td>
+</tr>
+<tr>
+<td>2024-12-31 前后</td>
+<td>约 1,153,881</td>
+<td>约 515,445</td>
+<td>约 629,069</td>
+</tr>
+<tr>
+<td>最新一期(2026-09-30)</td>
+<td>1,303,907</td>
+<td>540,279</td>
+<td>761,368</td>
+</tr>
+</tbody>
+</table></div>
+<p>要点:</p>
+<ul>
+<li>总资产已达约 1.30 万亿美元,较上一期(2026-06-30)的 1,263,071 增长约 3.2%。</li>
+<li>股东权益 761,368,较上一期 747,910 增长约 1.8%,创出新高。</li>
+<li>总负债 540,279,权益占总资产约 58%,杠杆较低,资本实力雄厚。</li>
+<li>现金及等价物一项只披露到 2017-12(31,583),此后该数据缺失。因此本工具<strong>无法直接确认</strong>当前现金规模。公开认知中,伯克希尔近年持有大量现金和短期国债,但这需要其他数据源核实。</li>
+</ul>
+<h5>三、利润表(单位:百万美元)</h5>
+<ul>
+<li><strong>营收</strong>:最近几期约为 59,357、61,406、63,747、63,137、70,115、74,322(最新一列)。最新一期营收环比增长约 6%,为表中最高值之一。</li>
+<li><strong>净利润</strong>波动极大,主要受投资组合未实现损益(GAAP 要求计入利润)驱动:最近几期约为 −12,767、12,702、30,348、26,251、4,603、12,370、30,796、10,106、25,667、22,112。</li>
+<li>最新一期净利润 22,112,低于上一期的 25,667。</li>
+<li>这一波动说明 GAAP 净利润不是衡量伯克希尔盈利能力的良好指标。应关注营业利润和经营现金流。营业利润在近期数据中缺失。</li>
+</ul>
+<h5>四、现金流量表(累计口径,单位:百万美元)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>期间</th>
+<th>经营现金流</th>
+<th>资本开支</th>
+<th>投资现金流</th>
+<th>融资现金流</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026 Q1(3个月)</td>
+<td>10,438</td>
+<td>4,986</td>
+<td>-4,308(近似对应)</td>
+<td>174</td>
+</tr>
+<tr>
+<td>2026 前6个月</td>
+<td>21,653</td>
+<td>10,631</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2026 前9个月</td>
+<td>33,914</td>
+<td>16,137</td>
+<td>-30,595</td>
+<td>-14,137</td>
+</tr>
+</tbody>
+</table></div>
+<p>要点:</p>
+<ul>
+<li>前9个月经营现金流 33,914,资本开支 16,137,粗略自由现金流约 17,777。</li>
+<li>前9个月经营现金流低于上一年同期(34,777),基本持平略降。资本开支上升(上年同期 14,725),自由现金流有所收窄。</li>
+<li>前9个月融资现金流为 −14,137,与上年同期的 −4,109 相比,资金流出明显增加。可能与回购、债务偿还等有关,但本数据无法拆分。</li>
+<li>前9个月投资现金流为 −30,595,与上年同期 −28,644 接近。</li>
+</ul>
+<h5>五、综合判断</h5>
+<p><strong>优势</strong>:</p>
+<ol>
+<li>资产负债表规模持续扩大,权益占比高,财务稳健。</li>
+<li>营收达到阶段性高位,多元化业务保持增长。</li>
+<li>经营现金流稳定,足以覆盖资本开支。</li>
+</ol>
+<p><strong>风险与关注点</strong>:</p>
+<ol>
+<li>GAAP 利润受投资损益影响而大幅波动,季度业绩难以预测。</li>
+<li>资本开支上升,同时经营现金流增长停滞,自由现金流承压。</li>
+<li>融资现金流流出扩大,需要确认原因。</li>
+<li>缺少估值和内部人数据,无法判断当前价格是否具有吸引力。</li>
+</ol>
+<p><strong>对交易者的建议</strong>:基本面显示的是一家财务稳健、增长平稳的公司,但本次可用数据不足以得出价格上是否便宜的结论。建议结合当前股价、市净率(相对于约 7,614 亿美元的账面权益)、回购动态和现金储备等信息,再作决策。基于现有信息,倾向于持有观望。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h5>六、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数据/结论</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总资产(2026-09)</td>
+<td>1,303,907 百万美元</td>
+<td>规模创新高,环比增长约 3.2%</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>761,368 百万美元</td>
+<td>环比增长约 1.8%</td>
+</tr>
+<tr>
+<td>总负债</td>
+<td>540,279 百万美元</td>
+<td>权益占总资产约 58%,杠杆低</td>
+</tr>
+<tr>
+<td>最新营收</td>
+<td>74,322 百万美元</td>
+<td>环比增长约 6%</td>
+</tr>
+<tr>
+<td>最新净利润</td>
+<td>22,112 百万美元</td>
+<td>受投资损益影响,波动大</td>
+</tr>
+<tr>
+<td>前9个月经营现金流</td>
+<td>33,914 百万美元</td>
+<td>略低于上年同期 34,777</td>
+</tr>
+<tr>
+<td>前9个月资本开支</td>
+<td>16,137 百万美元</td>
+<td>高于上年同期 14,725</td>
+</tr>
+<tr>
+<td>前9个月融资现金流</td>
+<td>−14,137 百万美元</td>
+<td>资金流出扩大</td>
+</tr>
+<tr>
+<td>估值指标</td>
+<td>不可用</td>
+<td>数据被屏蔽</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td>不可用</td>
+<td>数据被屏蔽</td>
+</tr>
+<tr>
+<td>评级倾向</td>
+<td>持有</td>
+<td>基本面稳健,但缺少估值依据</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # BRK-B 多头论证:这是一家在动荡市场里“被资金选中”的复利机器</p>
+<p>由于空头分析师尚未发言,我先把多头的核心逻辑摆出来,并主动回应空头最可能提出的几点质疑。</p>
+<h5>一、增长潜力:现金、回购与接班,三股力量叠加</h5>
+<p><strong>1. 3774 亿美元现金是期权,不是负担。</strong>
+空头会说“钱放着不用”。但在美股估值处于历史高位、AI 板块剧烈波动的环境里,现金恰恰是最稀缺的资产。一旦出现市场冲击或大型标的折价,伯克希尔几乎是唯一能在短时间内完成超大规模交易的买家。Abel 上任后的首个大型收购,是一个尚未被定价的上行催化剂。</p>
+<p><strong>2. 创纪录回购是管理层最直接的表态。</strong>
+第三季度回购 96 亿美元,是第二季度的两倍多。6 月回购价约 488 美元,而管理层在股价更高的区间仍在加码,说明他们认为内在价值明显高于现价。回购还为股价提供持续的下方买盘。</p>
+<p><strong>3. 接班不确定性已经消除。</strong>
+董事会正式确认 Abel 接任日常管理,他个人还投入 2700 万美元买入一家“近乎垄断”的公司。管理层用自己的钱下注,这是比任何分析师观点都更有说服力的信号。</p>
+<p><strong>4. 资产负债表持续扩张。</strong>
+总资产约 1.30 万亿美元,较上季度增长约 3.2%。股东权益 7,614 亿美元,创新高,季度环比增长约 1.8%。权益占总资产约 58%,杠杆很低。营收最新一期 743 亿美元,环比增长约 6%,处于阶段性高位。</p>
+<h5>二、竞争优势:无法复制的结构</h5>
+<ul>
+<li><strong>多元化的经营现金流</strong>:前 9 个月经营现金流 339 亿美元,足以覆盖 161 亿美元资本开支,自由现金流仍约 178 亿美元。</li>
+<li><strong>保险浮存金加投资能力</strong>,加上铁路、能源、制造和零售的组合,使它可以在任何经济环境中配置资本。</li>
+<li><strong>品牌与信誉</strong>:在需要“可信的对手方”的大型交易中,伯克希尔具有结构性优势。</li>
+</ul>
+<h5>三、正面指标:技术、情绪与资金流</h5>
+<ul>
+<li><strong>技术面</strong>:收盘价 583.34,站上 10 EMA(565.11)、50 SMA(524.55)、200 SMA(498.70),三线多头排列。MACD 为 15.68,高于信号线 12.81,柱状图为正。10 月以来从约 500 涨到 583,中间只有小幅回撤。</li>
+<li><strong>自我修复能力</strong>:11 月 5 日放量冲高回落(收 572.33),之后三个交易日收复并创新高。这说明回调买盘很强。</li>
+<li><strong>情绪</strong>:StockTwits 带标签消息中看多 15 条、看空 0 条;Fortune 与 Barron's 都把它描述为 AI 抛售中的避风港。</li>
+</ul>
+<h5>四、回应空头的预期论点</h5>
+<p><strong>“营业利润下降 5.8%,保险承保走弱。”</strong>
+保险承保利润本就具有周期性,单季波动不改变浮存金的长期价值。营业利润下滑幅度有限,而公司同时以创纪录的力度回购,管理层显然不认为这是趋势性恶化。另外,GAAP 净利润受投资损益扰动很大,最新一期仍有 221 亿美元,营收同时创高。</p>
+<p><strong>“估值偏高,可能高估约 7%。”</strong>
+这是一个并不极端的估值判断,而且来自单一来源。对一家低杠杆、现金充裕、有回购托底的公司,7% 的偏离远低于科技股当前的估值风险。在市场整体处于历史高位时,防御性资产的溢价是合理的。</p>
+<p><strong>“RSI 78 超买、贴近布林上轨。”</strong>
+我承认这是短期风险。但强趋势中 RSI 可以长时间停留在高位,且没有任何趋势反转信号:无死叉、无跌破 10 EMA。即使回调,回购、现金与资金轮动也会提供支撑。</p>
+<p><strong>“上涨只是避险资金,不是盈利改善。”</strong>
+避险资金流入恰恰说明伯克希尔的定位被市场认可。若 AI 板块继续动荡,这股资金会延续;若风险偏好回升,伯克希尔的现金与低估值敏感度也使其下行有限。</p>
+<p><strong>“净卖出股票、融资现金流流出扩大。”</strong>
+前 9 个月融资现金流流出 141 亿美元,与回购大幅增加相吻合,这是对股东的回报,不是风险。净卖出股票是在高估值阶段保持纪律的体现。</p>
+<h5>五、坦率的局限</h5>
+<p>我需要如实指出:估值倍数与内部人数据在本次研究中不可用,宏观数据也有缺口,所以我不主张“极度低估”。我的论点是:<strong>质量、安全边际、催化剂与资金流的组合,使 BRK-B 具有不对称的风险回报</strong>,即使短期追高需要谨慎,回调(靠近 550 或回购价区间)就是更好的加仓机会。</p>
+<h5>结论</h5>
+<p>空头需要证明的是:现金永远不会被有效使用,回购会停止,避险需求会消失,保险周期会持续恶化。这些都缺乏证据。而多头只需要看到:Abel 完成一笔像样的交易、回购维持、市场继续动荡。我认为这个概率更高。</p>
+<p>我期待听到空头如何解释:一家在高位仍大举回购、杠杆极低、现金创纪录的公司,为什么应该被看空?</p>
+<p><strong>Rating</strong>: Buy</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # BRK-B 空头论证:好公司,但在错误的价格、错误的理由下被追捧</p>
+<p>多头把 BRK-B 写成了&quot;复利机器&quot;,我不否认它的质量。但我要讨论的不是公司好不好,而是<strong>现在以 583 美元买入,回报是否对得起风险</strong>。我认为不对。</p>
+<h5>一、多头的核心论据,逐条拆解</h5>
+<p><strong>1. &quot;3774 亿美元现金是期权&quot;——期权如果永不行权,就是拖累。</strong>
+现金规模创纪录,恰恰说明过去几年找不到足够大、足够便宜的标的。多头说 Abel 的首笔大收购是&quot;尚未定价的催化剂&quot;,但这是假设,不是证据。更现实的是,Q3 公司<strong>净卖出股票</strong>(买入约 24 亿、卖出约 28 亿)。管理层自己都在高位减持股票,这与&quot;价值被低估&quot;的叙事相矛盾。多头一边用回购证明低估,一边把净卖出解释为&quot;纪律&quot;,两头都占,逻辑上站不住。</p>
+<p><strong>2. &quot;创纪录回购是最强信号&quot;——先看规模。</strong>
+96 亿美元的回购放在 1.3 万亿美元总资产、3774 亿美元现金面前,不到现金的 3%。而且 6 月回购价约 488 美元,现价 583 美元,<strong>已高出约 19%</strong>(报告里用 557 美元算是 14%,但收盘已远超此)。管理层在 488 买入不等于在 583 还会买。回购向来对价格敏感,股价越涨,这个&quot;托底&quot;越弱。多头把过去的买入价当成未来的支撑,这是时间错配。</p>
+<p><strong>3. &quot;资产负债表扩张、营收创高&quot;——利润质量才是问题。</strong></p>
+<ul>
+<li>营业利润同比<strong>下降 5.8%</strong>,这是衡量伯克希尔真实盈利能力的核心指标。</li>
+<li>保险承保利润据称大幅下滑(43% 的数字来自社交媒体转述,我不将它当作确凿事实,但方向与新闻一致)。保险是浮存金的源头,承保走弱意味着&quot;免费杠杆&quot;的质量下降。</li>
+<li>多头引用 221 亿美元 GAAP 净利润来反驳,但基本面报告已明确:GAAP 净利润被投资损益扭曲,&quot;不是衡量盈利能力的良好指标&quot;。用一个不可靠的指标来辩护,说服力有限。</li>
+<li>前 9 个月经营现金流 339 亿,<strong>低于</strong>去年同期的 348 亿;资本开支从 147 亿升到 161 亿。自由现金流在收窄,而不是扩张。多头说&quot;足以覆盖&quot;,但趋势是向下的。</li>
+</ul>
+<p><strong>4. &quot;消费需求&quot;被多头完全忽略。</strong>
+TheStreet 指出财报暴露了强劲经济下的消费需求问题。伯克希尔旗下有大量零售、消费和工业业务,这不是边缘风险。</p>
+<h5>二、技术面:多头自己都承认的风险,其实比他说的更大</h5>
+<ul>
+<li><strong>RSI 78</strong>,价格 583.34,紧贴布林上轨 585.18,盘中曾突破。</li>
+<li>价格高于 10 EMA 约 18 点,高于 50 SMA 约 59 点,高于 200 SMA 约 85 点。偏离 200 日线近 17%,对于一只典型的低波动防御股而言,这是极不寻常的拉伸。</li>
+<li><strong>量价背离</strong>:11 月 5 日放量(983 万股)冲高回落,是典型的分歧信号;11 月 10 日创新高时成交量只有 466 万,<strong>新高没有量能确认</strong>。</li>
+<li>多头说&quot;三个交易日收复&quot;证明买盘强。但换个角度:同样的价位附近已经出现过一次放量被卖的迹象,说明那里有大量供给。StockTwits 上也有用户在 590 附近纠结是否获利了结。</li>
+<li>回调参考位:布林中轨 549.73,距现价约 6%;50 SMA 524.55,距现价约 10%。仅仅回到均线,就是显著的账面损失。</li>
+</ul>
+<h5>三、&quot;避险资金&quot;叙事恰恰是最脆弱的一环</h5>
+<p>多头把&quot;资金从 AI 转入 BRK&quot;当作长期利好。但请注意:</p>
+<ul>
+<li>这说明股价上涨靠的是<strong>资金轮动</strong>,不是盈利改善。盈利在下降,股价在创新高,估值扩张是唯一解释。</li>
+<li>避险资金是<strong>租客</strong>,不是业主。一旦 AI 股企稳,资金会原路返回。多头自己也说&quot;风险偏好回升时下行有限&quot;,但没有任何数据支持这个&quot;有限&quot;。</li>
+<li>情绪:StockTwits 29 条消息里<strong>零看空</strong>,而且 Reddit 数据缺失。这样的一边倒在样本小的情况下不能下强结论,但它至少说明<strong>短期预期已经很满</strong>。当所有人都认为是&quot;避风港&quot;时,风险往往已经被拥挤交易定价。</li>
+</ul>
+<h5>四、估值与宏观:多头的&quot;坦率局限&quot;其实是软肋</h5>
+<p>多头承认估值倍数、内部人数据、宏观数据都缺失,然后依然给出 <strong>Buy</strong>。这是我最想质疑的一点:</p>
+<ul>
+<li>缺失估值数据意味着<strong>无法证明现价有安全边际</strong>。多头说&quot;不主张极度低估&quot;,却又说&quot;不对称的风险回报&quot;。没有估值锚,&quot;不对称&quot;从何而来?</li>
+<li>唯一能看到的估值信息是 Simply Wall St. 的约 7% 高估。多头说&quot;来自单一来源,所以不重要&quot;,但他自己的看多证据同样大量来自单一来源(StockTwits 的 29 条、少数新闻标题)。标准要一致。</li>
+<li>账面权益约 7614 亿美元,以现价推算市净率水平已不低,在盈利下降的背景下继续上移,空间有限。</li>
+<li>宏观:通胀 3.7% 的说法未经核实,但如果属实,降息空间受限;油价因伊朗局势上涨。FRED 数据与预测市场数据全部缺失,<strong>我们对利率路径是盲飞</strong>。在盲飞的情况下重仓追高,不是谨慎。</li>
+<li>融资现金流流出从 41 亿扩大到 141 亿,多头认定&quot;全是回购&quot;。但报告明确写了&quot;本数据无法拆分&quot;,可能包含债务偿还。这是推断,不是事实。</li>
+</ul>
+<h5>五、回答多头的最后一问</h5>
+<blockquote>
+<p>&quot;一家在高位仍大举回购、杠杆极低、现金创纪录的公司,为什么应该被看空?&quot;</p>
+</blockquote>
+<p>我的回答:<strong>我看空的是价格,不是公司。</strong></p>
+<ul>
+<li>在 583 美元,你付出的是高于回购价约 19% 的溢价,买的是营业利润下降、承保走弱、自由现金流收窄的一份资产。</li>
+<li>现金巨大,但部署没有时间表;回购有力,但对价格敏感;接班已确认,但 Abel 的资本配置风格仍未验证。</li>
+<li>技术面处于极端拉伸,量能不配合,情绪一边倒。</li>
+<li>上行催化剂(大收购、持续回购)都是&quot;可能&quot;,下行风险(AI 资金回流、消费疲软、保险周期、获利回吐)都有当前数据支持。</li>
+</ul>
+<p>多头说空头需要证明&quot;现金永远不被使用、回购会停止、避险需求消失&quot;。其实不需要。我只需要:<strong>价格已经提前反映了这些好消息,而基本面正在走弱</strong>。在这种情形下,即便公司本身稳健,股票的预期回报也是不利的:向上空间也许几个百分点,向下回到 550 或 525 是 6% 到 10%。</p>
+<h5>结论</h5>
+<p>我承认 BRK-B 不会&quot;崩盘&quot;,它的资产负债表足以抵御大多数冲击。但投资不是评选最安全的公司,而是评估<strong>价格与回报的匹配</strong>。当前的结构是:盈利下滑、估值抬升、技术超买、情绪拥挤、宏观数据盲区。在这样的组合下,&quot;买入&quot;缺乏足够的安全边际;更合理的做法是持有观望,不追高,等待回调至中轨或 50 日线附近、或者等到 Abel 真正落地一笔交易再评估。我的立场是:<strong>不买,已持仓者应考虑在强势中减仓锁定部分收益。</strong></p>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: 我认为多空双方对公司质量的判断基本一致:BRK-B 资产负债表稳健,杠杆低,现金达 3774 亿美元,Abel 接班也已确认。分歧在于 583 美元这个价格是否合理。</p>
+<p>多头的有效论点:</p>
+<ul>
+<li>资产负债表强劲,现金是真实的选择权。</li>
+<li>第三季度回购创纪录,为 96 亿美元。</li>
+<li>趋势完好,价格在 10 EMA、50 SMA、200 SMA 之上,三线多头排列。</li>
+</ul>
+<p>多头的弱点:</p>
+<ul>
+<li>他承认估值倍数、内部人数据和宏观数据都缺失,但仍给出 Buy。没有估值锚,&quot;不对称的风险回报&quot;就缺乏依据。</li>
+<li>他用 GAAP 净利润反驳盈利下滑,而基本面报告本身说明这个指标受投资损益扭曲。</li>
+<li>他把 6 月约 488 美元的回购价当作现价的支撑,存在时间错配。回购对价格敏感,股价越高,托底作用越弱。</li>
+</ul>
+<p>空头的有效论点:</p>
+<ul>
+<li>营业利润同比下降 5.8%。</li>
+<li>前 9 个月经营现金流从 348 亿降到 339 亿,资本开支从 147 亿升到 161 亿,自由现金流在收窄。</li>
+<li>第三季度净卖出股票,与&quot;价值被低估&quot;的叙事不符。</li>
+<li>RSI 约 78,价格贴近布林上轨,偏离 200 日线约 17%,对低波动股而言拉伸极端。</li>
+<li>11 月 10 日创新高时成交量只有 466 万股,低于 11 月 5 日放量冲高回落时的 983 万股,量能没有确认新高。</li>
+<li>上涨主要来自避险资金轮动,而不是盈利改善。</li>
+</ul>
+<p>空头的弱点:</p>
+<ul>
+<li>他认为应减仓或卖出,但没有任何基本面恶化到需要离场的证据。</li>
+<li>保险承保下滑 43% 的数字只是社交媒体转述,未经证实。</li>
+<li>通胀 3.7% 的说法也未经核实。</li>
+<li>他自己也承认公司不会崩盘。</li>
+<li>趋势没有出现反转信号,没有死叉,也没有跌破 10 EMA。</li>
+</ul>
+<p>综合来看,双方的证据互相抵消。公司质量高、下行有保护,但短期价格拉伸,盈利趋势偏弱。估值数据缺失,所以买入和卖出的证据都不够。空头的&quot;价格已透支利好&quot;比多头的&quot;不对称&quot;更有数据支持,但这只支持不追高,不足以支持减仓。我选择 Hold,偏向等待更好的入场点。</p>
+<p><strong>Strategic Actions</strong>: 1. 已持仓者:维持标准配置,不加仓,也不因短期超买而清仓。若组合内该仓位已因上涨明显超过目标权重,可只把超出部分的约 10% 到 20% 再平衡回目标权重。
+2. 未持仓者或低配者:不在 583 美元附近追高。等回调到布林中轨约 550 美元,再分批建仓至标准配置的约 50%。若回到 50 日线约 525 美元附近,可补足剩余部分。
+3. 加仓触发条件:</p>
+<ul>
+<li>价格回调到 550 美元以下并企稳。</li>
+<li>回购在更高价位继续放大。</li>
+<li>Abel 宣布一笔有说服力的大型收购。</li>
+<li>营业利润和保险承保出现企稳。</li>
+</ul>
+<ol start="4">
+<li>减仓或转向 Underweight 的触发条件:</li>
+</ol>
+<ul>
+<li>收盘跌破 10 EMA(约 565 美元)并伴随放量。</li>
+<li>MACD 死叉。</li>
+<li>营业利润继续下滑。</li>
+<li>回购在高价位明显收缩。</li>
+</ul>
+<ol start="5">
+<li>数据缺口:估值倍数、内部人交易和宏观数据(FRED、预测市场)均缺失,应在下一轮研究中补齐。补齐后若显示估值合理,可上调评级。</li>
+<li>不使用杠杆,也不做短线追涨。</li>
+</ol>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: 研究计划的结论是 Hold,我同意。公司质量高、资产负债表稳健、趋势完好(收盘价 583.34 高于 10 EMA 565.11、50 SMA 524.55、200 SMA 498.70,MACD 仍为正)。但 RSI 为 78.01,价格贴近布林上轨 585.18,距 200 日线约 17%,11 月 10 日创新高时成交量只有 466 万股,量能不确认。营业利润下滑 5.8%,估值数据缺失。这些只支持不追高,不足以支持减仓。组合信息未提供,所以建议按各自现有仓位操作:已持仓者继续持有,未持仓者等回调。</p>
+<p><strong>Entry Price</strong>: 550.0</p>
+<p><strong>Stop Loss</strong>: 528.0</p>
+<p><strong>Position Sizing</strong>: 已持仓者维持标准配置,不加仓;超配部分可再平衡 10% 到 20%。未持仓者在 550 附近先建标准配置的约 50%,回到 525 附近再补足剩余部分。不使用杠杆。止损 528 约为入场价下方 2 倍 ATR(约 20 点)再留缓冲,并略高于 50 SMA 524.55。收盘跌破 10 EMA(约 565)并放量,或 MACD 死叉,则转为减仓。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 先说结论：我支持 Hold，但理由和保守派会给的不一样。他们大概会说 RSI 78、贴着布林上轨、离 200 日线 17%，所以该减仓。我认为这套逻辑在强趋势里恰恰最容易让人卖在半山腰。</p>
+<p>先看 RSI。78 确实超买，但技术报告自己也写了，强趋势里 RSI 可以长时间停在高位，它是风险提示，不是卖出信号。眼下价格站在 10 EMA、50 SMA、200 SMA 之上，三线多头排列。MACD 是 15.68，高于信号线 12.81，柱状图为正。10 月 1 日到 11 月 10 日，收盘价从 500.50 走到 583.34，中间只有几次小幅回撤。为了一个还没转坏的超买读数就砍仓，是拿确定的趋势收益去换不确定的择时收益。</p>
+<p>再看&quot;量能不确认&quot;。11 月 10 日创新高时成交量 466 万股，确实低于 11 月 4 日的 678 万和 11 月 5 日的 983 万。但换个角度看：11 月 5 日放量冲高回落，收在 572.33，这是整份数据里最像派发的一天。之后价格没有跌破 10 EMA，11 月 6 日、9 日、10 日一路收复并创新高。放量的抛压被市场消化了，之后缩量上行，更像是供给被吃掉后的惜售，不一定是顶部的虚弱。我不会说缩量是利好，但它不足以支持减仓。</p>
+<p>估值和营业利润下滑 5.8% 是保守派最爱用的两张牌。先说估值：基本面报告明确写了估值数据被屏蔽，没有市盈率、市净率。拿一个我们没有的数据去论证&quot;太贵&quot;，站不住。能拿到的只有 Simply Wall St. 说可能高估约 7%，这个幅度不算极端，而且是第三方模型的估计。再说利润：营业利润下降主要来自保险承保，而这家公司的股价驱动力早就不只是承保利润。账面权益 7,614 亿美元，环比增长 1.8%，创新高；权益占总资产约 58%，杠杆低。现金 3,774 亿美元，单季回购 96 亿美元，是上一季度的两倍多。管理层在比 6 月回购价（约 488 美元）高得多的价位上还在加大买入，这就是最硬的一条信号：最了解这家公司的人没有因为股价上涨而停手。</p>
+<p>保守派还会拿&quot;股价上涨靠避险资金而不是盈利改善&quot;来说事。我同意这个判断，但这恰好是持有的理由。AI 板块出现裂痕，资金往低波动资产里躲，这个轮动还没有结束的迹象。只要这个叙事成立，BRK-B 就是市场里少数有资金托底的大盘股。如果你因为&quot;涨得不是靠盈利&quot;就卖掉，等于在资金流向还没反转的时候主动下车。</p>
+<p>至于情绪过热，我承认 StockTwits 上 15 条看多、0 条看空，样本只有 29 条，还有 14 条无标签，又缺了 Reddit。这个样本太小，当不了反向指标。有人在 590 附近犹豫要不要获利了结，说明还没人狂热到不管价格。这是温和偏多，6.2 分，离疯狂很远。</p>
+<p>中性派可能会说&quot;既然有风险也有机会，那就折中，减一点、等一点&quot;。我觉得折中恰恰是这个计划里最该警惕的地方。交易员的计划其实已经很偏稳了：已持仓者不加仓、超配部分再平衡 10% 到 20%，未持仓者要等到 550 才建一半仓位，525 再补满。问题在于，布林中轨 549.73，价格现在是 583.34，等于要求价格回撤约 6% 才开始动手。如果趋势继续，没持仓的人就一直踏空。我的建议是：Hold 的框架不变，但未持仓者不要把整个计划都押在 550 一个价位上。可以在 565 的 10 EMA 附近就先建一小部分试探仓，比如标准配置的 20% 到 25%，剩下的仍然按 550 和 525 分批。这样既尊重了不追高的原则，也给了趋势延续留一个入口。</p>
+<p>风险控制我认为够用，而且是我敢这么说的底气。止损 528 在入场价 550 下方，约 2 倍 ATR 再留缓冲，又略高于 50 SMA 524.55。ATR 是 10.01，11 月初单日波幅有 15 到 18 点，所以止损不能太近，否则会被噪音震出去。离场信号也很清楚：收盘跌破 10 EMA 并放量，或者 MACD 死叉，就转为减仓。规则明确、不加杠杆，下行有边界，上行没有封顶，这就是我愿意承担风险的结构。</p>
+<p>最后提醒一点，宏观数据确实缺：FRED 没有、预测市场赔率被屏蔽，通胀 3.7% 也是未经核实的二手说法。保守派会把这些空白当成&quot;不确定所以要减&quot;。我的看法相反：数据空白不是看空的证据。在我们看不清的地方，应该由价格和规则说话，而价格和规则目前都站在持有这一边。下周还有 13F 披露，会是一个催化剂，如果里面有 Abel 的新动作，这个位置的持仓者会是受益的一方。</p>
+<p>所以我的立场是：已持仓者继续拿，不要在 RSI 78 的时候逃；未持仓者别空等，用小仓位先上车，大部分仓位留给回调。跌破 10 EMA 并放量再认错，不需要提前认错。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 我同意 Hold，但不接受你说的&quot;给未持仓者在 565 先上 20% 到 25% 试探仓&quot;。这是我们俩分歧最大的地方，我一条条说。</p>
+<p>先说 RSI 和趋势。你说超买不是卖出信号，这没错，技术报告也这么写。但没人在主张清仓，交易员的计划本来就是持有不追。你的试探仓恰恰是在 RSI 78、价格刚刺破又收在布林上轨下方的位置加新风险。11 月 10 日最高 586.45，收盘 583.34，上影线很明显。价格离 10 EMA 18 点，离 50 SMA 近 59 点，离 200 SMA 近 85 点。这些数字说明趋势强，同时也说明均值回归的距离很大。</p>
+<p>再看你的入场点。565 是 10 EMA，而且这条线每天都在上移，不是固定价位。计划里的止损 528 是按 550 入场设计的，大约 22 点。如果改成 565 入场，到 528 就是 37 点，接近 3.7 倍 ATR，每一份仓位的风险比原计划高出七成。你要么放宽止损，要么把止损收近，而收近就会被你自己说的 15 到 18 点单日噪音震出去。这个试探仓和风控框架是对不上的。</p>
+<p>关于量能，你把 11 月 5 日解读成抛压被消化、之后惜售。我承认这个解读可能成立，但它同样可能是派发：983 万股放量冲高回落，收 572.33，随后三天缩量爬回新高，最后一天只有 466 万股。两种解读我们都无法证伪。证据模糊的时候，保守的做法是不往上加仓，而不是替它选一个乐观的解释。</p>
+<p>估值你说数据被屏蔽，所以不能说贵。但反过来也不能说不贵。没有市盈率、市净率，我们就没有安全边际可以引用，这应该让仓位更小，而不是更大。我们手里仅有的线索偏谨慎：Simply Wall St. 估计高估约 7%；股价从 6 月回购价约 488 美元涨到现在 583 美元，涨了将近 20%。管理层加大回购确实是正面信号，但回购是价格敏感的，股价越高，节奏越可能放缓，所谓托底会变弱。而且同一个季度，公司买入股票 24 亿、卖出约 28 亿，是净卖出。3774 亿美元现金闲置，一方面是安全垫，另一方面也说明找不到值得买的东西，这和你说的最了解公司的人在加码，并不完全是一回事。</p>
+<p>利润你说承保不是股价的核心驱动。但基本面报告也显示，前九个月经营现金流略低于上年同期，资本开支上升，自由现金流收窄，融资现金流流出从 41 亿扩大到 141 亿。再加上营业利润下降 5.8%，还有 TheStreet 提到的消费需求隐忧，几条线都指向同一个方向：盈利质量在走弱，而股价在创新高。这个背离不能靠避险资金一直填。</p>
+<p>避险资金这点我反而最担心。你说这是持有的理由，我说这恰恰是脆弱性的来源。一只被当作低波动防御股的票，一个月涨 10%，离 200 日线 17%，单日波幅扩大到 15 到 18 点，这已经不是低波动的行为，而是动量资金在推。资金因 AI 股抛售而来，也会因 AI 股企稳而走。你问下车的时机，我的回答是：不需要全下车，但不应该在这个位置再上人。</p>
+<p>情绪和宏观也一样。29 条消息、零条看空、有人在 590 附近琢磨获利了结，样本小，我不当反向指标，但也不能当作安全的证据。更重要的是宏观数据一片空白：FRED 没有，预测市场赔率被屏蔽，3.7% 的通胀只是未经核实的二手说法，还有伊朗和油价的消息。你说空白不是看空的证据，我同意，但空白同样不是看多的证据。看不清的时候该做的是缩小风险敞口。另外下周的 13F 是双向事件，如果显示出更多净卖出，对一个已经涨了这么多的价位是不利的。</p>
+<p>最后算一笔风险收益。从 583 到止损 528 是下跌约 9.5%，到 200 日线 498.7 是下跌约 14.5%，而回到 10 EMA 只是 3%。上行呢，没有任何估值数据能告诉我们天花板在哪里，而基本面和估值的线索都说空间有限。你说下行有边界上行没封顶，但这个边界是靠止损单实现的，遇到跳空就不一定成立，11 月 4 日一天就跳了 22 点。</p>
+<p>所以我对计划的具体调整是这几条：
+第一，未持仓者不在 565 试探，最多在 550 附近先建标准配置的三分之一，而不是一半，525 附近再分批补。回到 550 只需要约 6%，对一只 ATR 10 点的股票来说，这在一个月内并不罕见，等待的成本不高。
+第二，已持仓者维持不加仓，超配部分直接降回标准配置，不是只降 10% 到 20%。
+第三，离场信号别要求同时收破 10 EMA 和放量。放量这个条件会让我们等得太久，收盘有效跌破 565 就应该先减仓，MACD 死叉再进一步减。
+第四，全程不用杠杆，宏观数据补齐、13F 看过之前，不扩大总敞口。</p>
+<p>这样做我们不会错过趋势里属于持仓者的收益，也不会在数据残缺、估值不明、盈利质量走弱的位置，用新资金去赌趋势继续。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 两位的结论都是 Hold，真正的分歧只有一处：未持仓者要不要在 565 先上一小笔。我觉得双方各有对的地方，也各有一个漏洞。</p>
+<p>先说激进派。他说 RSI 78 不是卖出信号，这没问题。但他把&quot;不是卖出信号&quot;悄悄换成了&quot;可以放心加仓的信号&quot;，这是两回事。三线多头、MACD 为正，只能支持继续持有，不能证明现在是好的新入场点。价格离 10 EMA 18 点，离 50 SMA 近 59 点，赚的是趋势的钱，买的是距离均值最远的价格。</p>
+<p>他对 11 月 5 日放量冲高回落的解读是&quot;供给被吃掉&quot;，保守派说是&quot;派发&quot;，两种说法现在都无法证伪。拿一个无法证伪的乐观解释去支持加仓，证据太薄。他说&quot;有人在 590 附近犹豫，说明没人狂热&quot;，这个推理也站不住。一个样本只有 29 条、零看空的情绪池，既不能当反向指标，也不能当安全证据。</p>
+<p>回购这条他讲得过满。新闻里用的&quot;现价约 557&quot;其实是 11 月 3 日的收盘价，到 11 月 10 日已经是 583.34，相对 6 月回购价约 488 的涨幅接近 20%，不是 14%。回购在更高价位还会不会继续这么猛，是个问号，不能直接当托底。另外&quot;下行有边界&quot;要靠止损单，而 11 月 4 日一天就跳了 22 点，边界遇到跳空是会漏的。</p>
+<p>再说保守派。他有一个很好的点：565 的 10 EMA 每天都在上移，不是固定价位，所以拿它做入场锚不严谨。但他的风险算法有漏洞。他说 565 入场到 528 是 37 点，每份仓位风险比原计划高七成，这对单股是对的。可激进派给的是标准配置的 20% 到 25%，而原计划首笔是 50%。按总风险算，25% 乘 37 点约 9 个单位，50% 乘 22 点约 11 个单位，小试探仓的总亏损反而不高于原计划首笔。风险是由止损距离乘仓位决定的，不能只看止损距离。所以我反对 565 试探，理由不是风险预算，而是那个位置没有安全边际，性价比差。</p>
+<p>保守派把几条证据读得偏重。融资现金流从 41 亿流出扩大到 141 亿，他当成盈利质量走弱的旁证。但多出来的约 100 亿，量级上和 Q3 回购的 96 亿很接近，大概率就是回购本身，这是资本回报，不该算在风险一栏。股票净卖出 28 亿减 24 亿，只有约 4 亿，相对 3774 亿现金几乎是噪音。至于 13F，它披露的是已经发生并且基本已在季报里出现过的 Q3 持仓，对价格的新增信息有限。两位都把它当大事件，我觉得都高估了。</p>
+<p>他的离场修改我也只同意一半。把&quot;放量&quot;条件去掉可以，因为这个条件确实可能让人等太久。但&quot;收盘跌破 565 就减仓&quot;太敏感：10 EMA 才贴着价格 3%，ATR 是 10，强趋势里一次正常回踩就会碰到，每次都减会被反复洗出去。他要求超配部分一次性降回标准配置，也没有考虑税务和成本，我们并不知道持仓背景。</p>
+<p>我的折中方案是这样。</p>
+<p>已持仓者：核心仓位继续拿，不加。超配部分不必一次砍到位，可以先降超出标准配置那部分的三分之一到一半，剩下的交给触发条件。触发条件我把它分级：收盘跌破 10 EMA 且连续两天收不回，或者跌幅明显超过一个 ATR，先减仓约三分之一；MACD 死叉再减一档；有效收破 50 SMA 附近，也就是 528 一带，才算趋势定性转坏，大幅减。放量作为加速信号，而不是必要条件。</p>
+<p>未持仓者：不在 565 追，也不把全部希望押在 550 一个价位。更现实的是同时用价格和时间两种方式等回调。价格上，在 550 到 555 区间先建标准配置的大约三分之一，535 到 540 一带再补三分之一，525 附近补足。时间上，如果价格没有大回撤，而是横盘两三周，让 10 EMA 和布林中轨追上来、RSI 回到 70 以下，同样可以启动第一笔。这样趋势继续时，不会因为一个价位没触发就彻底踏空，因为&quot;整理&quot;本身也能消化超买。</p>
+<p>止损维持 528 的收盘价口径，但每笔仓位按&quot;到止损的亏损不超过账户的固定比例&quot;来定大小，入场越高，仓位越小。全程不用杠杆。宏观数据补齐之前，不扩大总敞口，这一条我同意保守派。</p>
+<p>总结一下：激进派的价值在于提醒我们别因为超买就逃，保守派的价值在于提醒我们别在没有安全边际时追。把两者的优点拿过来，就是持有核心、分批等回调、按风险定仓位、分级离场。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: BRK-B 评级为 Hold。已持仓者继续持有核心仓位,不在 583 美元附近加仓。超配部分可先降超出标准配置的约三分之一到一半。未持仓者不追高,分三批等回调:550–555 美元建约三分之一,535–540 美元再建三分之一,525 美元附近补足。也可以在横盘 2–3 周、RSI 回到 70 以下后启动第一笔。止损按收盘价 528 美元,仓位按&quot;到止损的亏损占账户的固定比例&quot;来定,不使用杠杆。</p>
+<p><strong>Investment Thesis</strong>: 三位分析师都落在 Hold,真正的分歧是未持仓者要不要在 565 美元(10 EMA)先建 20%–25% 的试探仓。我判断保守派和中性派更有说服力,理由如下。</p>
+<p><strong>支持持有的证据</strong></p>
+<ul>
+<li>趋势完好:收盘 583.34 高于 10 EMA 565、50 SMA 524.55、200 SMA 498.70,MACD 为正。</li>
+<li>基本面稳健:现金 3774 亿美元,权益 7614 亿美元创新高,Q3 回购 96 亿美元。</li>
+<li>没有离场信号:没有死叉,也没有跌破 10 EMA。所以没有理由清仓或明显减仓,Underweight 和 Sell 缺乏依据。</li>
+</ul>
+<p><strong>反对加仓和追高的证据</strong></p>
+<ul>
+<li>RSI 约 78,贴近布林上轨 585.18,距 200 日线约 17%。</li>
+<li>11 月 10 日创新高时成交量只有 466 万股,低于 11 月 5 日的 983 万股。</li>
+<li>营业利润下降 5.8%,前九个月自由现金流收窄。</li>
+<li>估值倍数缺失,唯一线索是 Simply Wall St. 估计高估约 7%。</li>
+<li>回购价格敏感。6 月回购价约 488 美元,现价已高出近 20%。</li>
+<li>激进派把&quot;RSI 超买不是卖出信号&quot;换成了&quot;可以加仓&quot;,并用无法证伪的&quot;供给被吃掉&quot;来支持试探仓,证据太薄。</li>
+<li>565 的 10 EMA 每天上移,不是固定入场锚。</li>
+<li>11 月 4 日单日跳空 22 点,说明止损在跳空时会漏,&quot;下行有边界&quot;不够牢靠。</li>
+</ul>
+<p><strong>对保守派和中性派的取舍</strong></p>
+<ul>
+<li>中性派指出,融资现金流多流出的约 100 亿与 Q3 回购 96 亿量级相近,更像资本回报,不是盈利恶化的证据。</li>
+<li>中性派还指出,净卖出股票只有约 4 亿,相对现金几乎是噪音。</li>
+<li>他又指出 13F 对价格的新增信息有限。这几点说明保守派对盈利质量走弱的读法偏重。</li>
+<li>保守派&quot;收盘跌破 565 就减仓&quot;过于敏感,距价格只有约 3%,强趋势里正常回踩就会触发。</li>
+<li>保守派要求超配部分一次降回标准配置,不了解持仓背景和税务成本,也过于刚性。</li>
+<li>所以我采用中性派的分级方案。</li>
+</ul>
+<p><strong>分级离场</strong></p>
+<ul>
+<li>收盘跌破 10 EMA 且连续两天收不回,或跌幅明显超过一个 ATR(约 10 点):减约三分之一。</li>
+<li>MACD 死叉:再减一档。</li>
+<li>有效收盘跌破 50 SMA 附近(约 528 美元):趋势转坏,大幅减仓。放量只作为加速信号,不作为必要条件。</li>
+</ul>
+<p><strong>升级条件</strong></p>
+<ul>
+<li>价格回到 550 美元以下并企稳,或横盘消化超买。</li>
+<li>回购在更高价位继续放大,或 Abel 宣布有说服力的大型收购。</li>
+<li>营业利润和保险承保企稳。</li>
+<li>估值倍数补齐后显示合理。</li>
+</ul>
+<p><strong>降级条件</strong></p>
+<ul>
+<li>上述分级离场信号出现。</li>
+<li>营业利润继续下滑,或回购在高价位明显收缩。</li>
+</ul>
+<p><strong>数据缺口</strong>
+估值倍数、内部人交易、FRED 宏观数据和预测市场赔率均缺失。3.7% 通胀和保险承保下滑 43% 都未经证实。组合持仓信息也未提供。补齐这些数据前,不扩大总敞口。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<p><strong>Price Target</strong>: not provided</p>
+<p><strong>Time Horizon</strong>: 1-3 个月(等待回调或横盘消化超买,并观察季报后的回购与营业利润趋势)</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>

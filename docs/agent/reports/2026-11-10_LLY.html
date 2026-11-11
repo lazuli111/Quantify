@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>LLY 2026-11-10 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">LLY</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-10</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-11 04:17</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<p>(见上方完整报告)</p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bullish</strong> (Score: 6.3/10)
+<strong>Confidence:</strong> Medium</p>
+<p><strong>LLY 情绪报告(2026-11-03 至 2026-11-10)</strong></p>
+<p><strong>数据局限:</strong> Reddit 数据获取失败(r/wallstreetbets、r/stocks、r/investing),这不代表没有讨论,只是本报告没有这部分证据。StockTwits 仅有 29 条最新消息,其中 13 条无标签。新闻共 20 条左右,但有不少与 LLY 只是间接相关。因此整体置信度为中等。</p>
+<p><strong>1. 新闻(机构视角,偏事实)</strong></p>
+<ul>
+<li>基本面催化剂偏正面。Q3 营收约 244 亿美元,同比增长约 39%(TIKR 报道;另一篇 Insider Monkey 标题称增长 48%,两者口径不一致,以 Simply Wall St. 和 TIKR 的数字为准)。全年营收指引上调至 910–920 亿美元,上调幅度约 55 亿美元。</li>
+<li>TIKR 提醒质量问题:销量增长 53%,但实际价格下降 15%,所以上调靠的是需求,而不是价格。</li>
+<li>分析师动作:美国银行(BofA)维持买入,目标价上调至 1,557 美元,估值倍数从 25 倍提高到 26 倍(2028 年预测收益),理由是非肥胖症管线。Morgan Stanley 也上调了目标价。TheStreet 称股价接近纪录高位。</li>
+<li>产品方面:Foundayo(口服减重药)的 III 期试验显示对睡眠呼吸暂停有效,Lilly 计划向 FDA 申报。这有望与 Novo 的口服 Wegovy 拉开差距。</li>
+<li>资金流:XLV 在 11 月 2 日和 11 月 4 日增持 LLY(分别约 1.75 亿和 2.85 亿美元),但这属于被动 ETF 资金,信号较弱。</li>
+<li>风险与噪音:FDA 要求为 GLP-1 产品增加视力丧失警告,但据报道 LLY 和 Novo 股价&quot;未受影响&quot;。Pfizer 计划开展一批 III 期肥胖症试验,带来竞争。Pharma Voice 指出,GLP-1 以外的管线部分项目未达预期,并已放弃一些候选药。Novo 的 Q3 财报反响尚可。Hims &amp; Hers 与 LLY 合作,但 HIMS 估值偏高(约 80.6 倍),这是对 HIMS 的看空,对 LLY 的影响间接。</li>
+</ul>
+<p><strong>2. StockTwits(散户,快变)</strong></p>
+<ul>
+<li>有标签的消息中,看多 10 条(34%),看空 6 条(21%),无标签 13 条。有标签样本中看多约 62.5%,偏多但样本很小(16 条)。</li>
+<li>看多的内容:11 月 10 日 LLY 收盘创历史新高(Nick_Drendel);&quot;从 880 美元持有至今最轻松的持仓&quot;;有人说&quot;卖早了&quot;;有人问何时拆股。</li>
+<li>看空的内容:&quot;估值过高&quot;、&quot;这里要大跌了&quot;、&quot;什么时候转红&quot;。还有一条看空消息引用一项新研究:停用 GLP-1 的 2 型糖尿病患者,心脏病发作、中风或死亡风险约为持续用药者的两倍(该条的标签是看空,但内容更像是对用药持续性有利)。</li>
+<li>其他:一条期权推广帖给出股价 1,436.33 美元;多条帖子把 LLY 与 HIMS 的合作和潜在收购联系起来(属于猜测)。部分帖子是垃圾推广(例如 ELTP、SLS),应忽略。</li>
+<li>有人&quot;想在回调时买入&quot;,说明有逢低买入的需求,也说明追高情绪有所克制。</li>
+</ul>
+<p><strong>3. 跨来源对比</strong></p>
+<ul>
+<li>新闻和散户方向一致,偏多,主线都是 GLP-1 需求、指引上调与股价创新高。</li>
+<li>没有出现极端的看多比例(远低于 90/10),所以反向风险信号不强。</li>
+<li>分歧点:新闻指出价格下降 15% 与竞争加剧(Pfizer、Novo);散户中少数人在谈估值过高。</li>
+</ul>
+<p><strong>4. 主要主题</strong>
+GLP-1 需求加速、指引上调、Foundayo 适应症扩展(睡眠呼吸暂停)、股价创历史新高、HIMS 合作、竞争者进入。</p>
+<p><strong>5. 催化剂与风险</strong></p>
+<ul>
+<li>催化剂:Foundayo 睡眠呼吸暂停申报;非肥胖管线(BofA 观点);继续上调的目标价。</li>
+<li>风险:单价下行(-15%);估值与创新高后的回调;FDA 标签警告;Pfizer/Novo 竞争;GLP-1 之外的管线失败;Reddit 数据缺失。</li>
+</ul>
+<p><strong>6. 汇总表</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q3 业绩与指引上调至 910–920 亿美元</td>
+<td>看多</td>
+<td>新闻</td>
+<td>营收约 +39%,销量 +53%</td>
+</tr>
+<tr>
+<td>价格下降 15%</td>
+<td>偏空</td>
+<td>新闻(TIKR)</td>
+<td>增长靠销量而非价格</td>
+</tr>
+<tr>
+<td>分析师目标价上调</td>
+<td>看多</td>
+<td>新闻</td>
+<td>BofA 1,557 美元,Morgan Stanley 上调</td>
+</tr>
+<tr>
+<td>Foundayo 睡眠呼吸暂停数据</td>
+<td>看多</td>
+<td>新闻</td>
+<td>III 期数据,将向 FDA 申报</td>
+</tr>
+<tr>
+<td>FDA 视力警告</td>
+<td>中性</td>
+<td>新闻</td>
+<td>股价基本未受影响</td>
+</tr>
+<tr>
+<td>竞争(Pfizer、Novo)</td>
+<td>轻微看空</td>
+<td>新闻</td>
+<td>Pfizer 计划多项 III 期肥胖试验</td>
+</tr>
+<tr>
+<td>历史新高</td>
+<td>看多</td>
+<td>StockTwits</td>
+<td>11/10 收盘创新高</td>
+</tr>
+<tr>
+<td>有标签多空比</td>
+<td>偏多</td>
+<td>StockTwits</td>
+<td>10 多 / 6 空,13 条无标签</td>
+</tr>
+<tr>
+<td>估值担忧</td>
+<td>偏空</td>
+<td>StockTwits</td>
+<td>&quot;way overpriced&quot;、&quot;big fat dump&quot;</td>
+</tr>
+<tr>
+<td>Reddit</td>
+<td>无数据</td>
+<td>Reddit</td>
+<td>获取失败</td>
+</tr>
+</tbody>
+</table></div>
+<p>以上是情绪信号,不是价格预测,请结合基本面和技术面判断。</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>LLY(礼来)一周新闻与宏观研究报告(2026-11-03 至 2026-11-10)</h4>
+<h5>一、数据可得性说明</h5>
+<ul>
+<li><strong>宏观数据(FRED)</strong>:联邦基金利率、10年期美债收益率等查询均返回 DATA_UNAVAILABLE(缺少 FRED_API_KEY)。本报告<strong>不提供</strong>这些指标的具体数值,也不做推测。</li>
+<li><strong>预测市场</strong>:&quot;Fed rate cut&quot;和&quot;recession 2026&quot;的赔率因防止信息泄露而被屏蔽,所以没有市场隐含概率可用。</li>
+<li><strong>全球新闻</strong>:返回的内容主要是个股财报(Take-Two、CoreWeave、On Holding 等)和市场盘面评论,缺少有实质内容的宏观政策或利率新闻。宏观部分的结论因此很有限。</li>
+</ul>
+<h5>二、LLY 公司层面要点</h5>
+<p><strong>1. 三季度业绩与上调指引(最核心的催化剂)</strong></p>
+<ul>
+<li>据 Simply Wall St:Q3 2026 销售额约 244 亿美元,净利润约 65 亿美元。</li>
+<li>全年收入指引上调至 <strong>910–920 亿美元</strong>,TIKR 称上调幅度约 55 亿美元。</li>
+<li>据 TIKR,Q3 收入同比增长约 39%,销量增长 53%,实现价格下降 15%。<strong>增长靠需求放量,而不是靠提价。</strong></li>
+<li>另一篇文章(Insider Monkey)称收入增长 48%。两者口径不同,可能是不同期间或不同指标,我无法核实,请谨慎引用。</li>
+<li>财报后一周股价上涨约 10%,Barron's 和 TheStreet 的报道称股价接近历史高位。</li>
+</ul>
+<p><strong>2. 分析师动作</strong></p>
+<ul>
+<li>美国银行(BofA)把目标价上调至 <strong>1,557 美元</strong>,维持买入。估值倍数从 25 倍提高到 26 倍(基于 2028 年预期每股收益),理由是肥胖症以外的管线有上行空间。</li>
+<li>摩根士丹利也上调了目标价,理由是 Zepbound 和 Mounjaro 需求强劲。</li>
+<li>XLV 在 11 月 2 日和 4 日继续增持 LLY,说明有被动资金流入。</li>
+</ul>
+<p><strong>3. 产品与管线</strong></p>
+<ul>
+<li><strong>Foundayo(口服减重药)</strong>:2026 年 1 月在美国获批,之后在欧盟获批。AHA26 上公布的 III 期数据显示对睡眠呼吸暂停有益,礼来计划申请该适应症。Barron's 认为这可能使它相对诺和诺德的口服 Wegovy 有差异化优势。</li>
+<li><strong>FDA 标签更新</strong>:FDA 要求 GLP-1 类产品(Mounjaro、Zepbound、Ozempic、Wegovy)增加视力损失警告。礼来和诺和诺德股价基本没受影响,属于类别风险,目前对股价的影响有限。</li>
+<li><strong>非肥胖症业务</strong>:有大规模制造投资、通过 SpeechDx 授权布局 AI 辅助阿尔茨海默病研究,以及晚期肿瘤管线。PharmaVoice 提到部分非肥胖症项目没有成功,已被放弃,管线并非全线顺利。</li>
+</ul>
+<p><strong>4. 竞争与行业动态</strong></p>
+<ul>
+<li><strong>诺和诺德</strong>:Q3 业绩带来一些积极信号,口服减重药表现亮眼。Barron's 的标题是&quot;股价对礼来的威胁不为所动&quot;,说明它不再一味下跌,但今年整体表现仍然很差。</li>
+<li><strong>辉瑞</strong>:计划开展一系列肥胖症 III 期试验,是中长期的新进入者。</li>
+<li><strong>Hims &amp; Hers</strong>:与礼来达成协议,在其消费者平台提供礼来的 GLP-1 药物。Hims 自己的 Q3 收入增长 49%,但现金流转弱,估值约 80 倍。这说明礼来在拓展直接面向消费者的渠道。</li>
+<li><strong>下游影响</strong>:有报道称 GLP-1 对麦当劳等消费品牌构成长期威胁,这反映的是需求扩散的广度。</li>
+</ul>
+<h5>三、宏观与市场环境(有限)</h5>
+<ul>
+<li>周五医疗板块小幅走低(NYSE 医疗指数),LLY 的强势主要来自个股因素。</li>
+<li>市场整体处于财报季,新闻焦点是科技和消费类公司财报,没有找到本周的 CPI、美联储或收益率的可靠数据。交易者需自行核对利率路径和政策定价风险(如药价政策),这些我没有数据支持。</li>
+</ul>
+<h5>四、交易含义与风险</h5>
+<p><strong>多头逻辑</strong></p>
+<ul>
+<li>销量增长 50% 以上,指引大幅上调,盈利可见度高。</li>
+<li>分析师目标价持续上调,有被动资金流入。</li>
+<li>口服药 Foundayo 的适应症扩展,以及 Hims 等渠道,扩大了可触达的市场。</li>
+</ul>
+<p><strong>风险</strong></p>
+<ul>
+<li><strong>价格侵蚀</strong>:实现价格下降 15%,若降幅继续扩大,会抵消销量增长。</li>
+<li><strong>估值与追高</strong>:一周上涨约 10%,接近高位,短期回调风险上升。</li>
+<li><strong>竞争</strong>:诺和诺德口服药、辉瑞入局。</li>
+<li><strong>监管</strong>:GLP-1 安全标签(视力损失)可能扩大。</li>
+<li><strong>管线</strong>:非肥胖症项目有失败案例。</li>
+<li><strong>数据缺口</strong>:无宏观数据和预测市场数据,无法判断利率或衰退风险对估值的影响。</li>
+</ul>
+<h5>五、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>要点</th>
+<th>影响</th>
+<th>置信度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>财报</td>
+<td>Q3 销售额约 244 亿美元,净利润约 65 亿美元,销量增长 53%,价格下降 15%</td>
+<td>偏多(需求驱动,价格有压力)</td>
+<td>中高(来源口径不一)</td>
+</tr>
+<tr>
+<td>指引</td>
+<td>2026 年收入指引上调至 910–920 亿美元</td>
+<td>偏多</td>
+<td>高</td>
+</tr>
+<tr>
+<td>分析师</td>
+<td>BofA 目标价 1,557 美元(26 倍 2028 年 EPS);摩根士丹利上调</td>
+<td>偏多</td>
+<td>高</td>
+</tr>
+<tr>
+<td>资金流</td>
+<td>XLV 持续增持</td>
+<td>小幅偏多</td>
+<td>中</td>
+</tr>
+<tr>
+<td>产品</td>
+<td>Foundayo 睡眠呼吸暂停 III 期获胜,计划申报</td>
+<td>偏多(中期)</td>
+<td>中高</td>
+</tr>
+<tr>
+<td>监管</td>
+<td>FDA 为 GLP-1 增加视力损失警告</td>
+<td>中性,股价基本无反应</td>
+<td>中</td>
+</tr>
+<tr>
+<td>竞争</td>
+<td>诺和诺德口服药表现好转;辉瑞计划 III 期试验</td>
+<td>中性偏空(中长期)</td>
+<td>中</td>
+</tr>
+<tr>
+<td>渠道</td>
+<td>与 Hims &amp; Hers 合作</td>
+<td>小幅偏多</td>
+<td>中</td>
+</tr>
+<tr>
+<td>管线</td>
+<td>部分非肥胖症项目被放弃</td>
+<td>小幅偏空</td>
+<td>中</td>
+</tr>
+<tr>
+<td>宏观</td>
+<td>FRED 数据和预测市场均不可用</td>
+<td>无法评估</td>
+<td>—</td>
+</tr>
+<tr>
+<td>价格走势</td>
+<td>一周涨约 10%,接近历史高位</td>
+<td>短期回调风险</td>
+<td>中</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>说明</strong>:以上仅汇总工具能支持的事实,交易决策由后续环节判断。</p>
+<p><strong>注意</strong>:本报告中的评级与交易建议标签均不在此环节给出。</p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>LLY(礼来)基本面分析报告(截至 2026-11-10)</h4>
+<h5>0. 数据说明与局限</h5>
+<ul>
+<li><code>get_fundamentals</code> 没有返回数据。供应商不提供历史时点的市值、估值倍数、52 周区间和 TTM 数据,所以本报告没有 PE、PS、市值和分析师预期。</li>
+<li><code>get_insider_transactions</code> 同样被屏蔽。供应商只记录交易发生日,不记录申报日,无法判断 2026-11-10 当时哪些交易已公开。本报告没有内部人买卖信号。</li>
+<li>三大报表来自 SEC EDGAR,按当时申报的数值提供。
+<ul>
+<li>季度列不连续,第四季度缺失。</li>
+<li>毛利和营业利润字段为&quot;未标注&quot;。</li>
+<li>资本支出近年缺失。</li>
+<li>现金流为年内累计口径(6 个月、9 个月)。</li>
+</ul>
+</li>
+<li>毛利率是我按 收入 − 营业成本 自行估算的,仅供参考。</li>
+</ul>
+<h5>1. 利润表:收入增长强劲,利润增速落后于收入</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>季度</th>
+<th>收入(百万美元)</th>
+<th>营业成本</th>
+<th>净利润</th>
+<th>稀释 EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-09</td>
+<td>11,439</td>
+<td>2,448</td>
+<td>970</td>
+<td>1.07</td>
+</tr>
+<tr>
+<td>2025-03</td>
+<td>12,729</td>
+<td>3,008</td>
+<td>2,759</td>
+<td>3.06</td>
+</tr>
+<tr>
+<td>2025-06</td>
+<td>15,558</td>
+<td>3,577</td>
+<td>5,661</td>
+<td>6.29</td>
+</tr>
+<tr>
+<td>2025-09</td>
+<td>17,601</td>
+<td>3,268</td>
+<td>5,583</td>
+<td>6.21</td>
+</tr>
+<tr>
+<td>2026-03</td>
+<td>19,799</td>
+<td>缺失</td>
+<td>7,396</td>
+<td>8.26</td>
+</tr>
+<tr>
+<td>2026-06</td>
+<td>22,974</td>
+<td>缺失</td>
+<td>7,095</td>
+<td>7.94</td>
+</tr>
+<tr>
+<td>2026-09</td>
+<td>24,397</td>
+<td>3,933</td>
+<td>6,451</td>
+<td>7.22</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>收入</strong>:2026 年 9 月季度收入 243.97 亿美元,同比增长约 38.6%,环比增长约 6.2%。两年前(2024-09)为 114 亿美元,约翻了一倍。</li>
+<li><strong>毛利率(估算)</strong>:2026-09 约为 83.9%(1 − 3,933/24,397)。2025-09 约为 81.4%,2024-09 约为 78.6%。2026-06 的成本数据缺失,无法比较环比。</li>
+<li><strong>净利润</strong>:2026-09 为 64.51 亿美元,同比增长约 15.5%,明显慢于收入的 38.6%。
+<ul>
+<li>净利率约 26.4%,低于 2026-06 的约 30.9% 和 2026-03 的约 37.4%。</li>
+<li>净利润和 EPS 已连续两个季度环比下降:净利润从 73.96 亿降到 70.95 亿,再降到 64.51 亿;EPS 从 8.26 降到 7.94,再降到 7.22。</li>
+<li>毛利率仍在提升,所以压力很可能来自费用端,例如研发、销售管理费用或一次性项目(如收购在研项目费用)。工具没有提供费用明细,需要用财报原文核实。</li>
+</ul>
+</li>
+<li>2026-09 稀释 EPS 为 7.22 美元。Q4 2025 缺失,本报告无法给出 TTM EPS。</li>
+</ul>
+<h5>2. 资产负债表:规模迅速扩张,杠杆上升</h5>
+<p>由于部分季度缺失,历史列的对齐存在不确定性,以下只引用最新一期(2026-09)数据:</p>
+<ul>
+<li>总资产 1,480.7 亿美元,股东权益 402.7 亿美元,隐含总负债约 1,078 亿美元,权益占总资产约 27%。</li>
+<li>流动资产 652.6 亿美元,流动负债 470.0 亿美元,流动比率约 1.39,短期偿付能力尚可。</li>
+<li>现金 48.9 亿美元,低于近期约 90 亿美元以上的水平。</li>
+<li>总资产从 2024 年初的约 640 亿美元增长到约 1,480 亿美元,增幅远超净利润的积累。这很可能来自存货、应收款和大额投资或并购(见下文投资现金流),并伴随举债。总债务明细不在工具返回范围内,需要另行核对。</li>
+</ul>
+<h5>3. 现金流:经营现金流强劲,投资支出同样巨大</h5>
+<p>2026 年前 9 个月(累计):</p>
+<ul>
+<li>经营现金流 <strong>274.2 亿美元</strong>,2025 年同期为 160.2 亿美元,同比增长约 71%。</li>
+<li>投资现金流 <strong>−276.1 亿美元</strong>,2025 年同期为 −193.1 亿美元。</li>
+<li>融资现金流 −22.6 亿美元,2025 年同期为 +49.6 亿美元。</li>
+<li>经营现金流基本被投资活动全部吸收,期末现金下降。投资活动可能包括产能扩建、并购或证券投资。资本支出明细缺失,无法精确计算自由现金流。</li>
+<li>经营现金流 274 亿美元高于同期累计净利润(三个季度合计约 209 亿美元),说明盈利的现金含量良好。</li>
+</ul>
+<h5>4. 对交易者的要点</h5>
+<ol>
+<li><strong>增长逻辑完好</strong>:收入同比增长 39%,毛利率处于高位,经营现金流强劲。</li>
+<li><strong>利润质量需要核实</strong>:净利润和 EPS 连续两个季度环比下降,净利率从约 37% 降到约 26%。需要查看研发、销售管理和一次性费用,判断这是暂时因素还是结构性变化。</li>
+<li><strong>资本开支和并购强度大</strong>:现金下降,资产负债表扩张。关注债务水平、利息支出和产能投放后的回报。</li>
+<li><strong>缺失信息</strong>:缺少估值、预期和内部人交易数据,无法判断价格是否已反映这些信息。下游分析师需要用行情、新闻和预期数据补足。</li>
+<li>本报告不给出买卖评级,仅提供基本面事实供决策参考。</li>
+</ol>
+<h5>5. 汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数据 / 结论</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收入(2026-09 季度)</td>
+<td>243.97 亿美元,同比 +38.6%</td>
+<td>环比 +6.2%</td>
+</tr>
+<tr>
+<td>估算毛利率</td>
+<td>约 83.9%</td>
+<td>2025-09 约 81.4%</td>
+</tr>
+<tr>
+<td>净利润(2026-09 季度)</td>
+<td>64.51 亿美元,同比 +15.5%</td>
+<td>连续两个季度环比下降</td>
+</tr>
+<tr>
+<td>净利率</td>
+<td>约 26.4%</td>
+<td>2026-03 约 37.4%</td>
+</tr>
+<tr>
+<td>稀释 EPS</td>
+<td>7.22 美元</td>
+<td>2026-06 为 7.94 美元</td>
+</tr>
+<tr>
+<td>总资产</td>
+<td>1,480.7 亿美元</td>
+<td>两年多翻倍</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>402.7 亿美元</td>
+<td>权益占比约 27%</td>
+</tr>
+<tr>
+<td>流动比率</td>
+<td>约 1.39</td>
+<td>流动性尚可</td>
+</tr>
+<tr>
+<td>现金</td>
+<td>48.9 亿美元</td>
+<td>较前期下降</td>
+</tr>
+<tr>
+<td>9 个月经营现金流</td>
+<td>274.2 亿美元</td>
+<td>同比约 +71%</td>
+</tr>
+<tr>
+<td>9 个月投资现金流</td>
+<td>−276.1 亿美元</td>
+<td>资本支出明细缺失</td>
+</tr>
+<tr>
+<td>估值和 52 周区间</td>
+<td>数据不可用</td>
+<td>供应商限制</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td>数据不可用</td>
+<td>无法判断公开时点</td>
+</tr>
+<tr>
+<td>主要风险</td>
+<td>利润率下滑、杠杆上升、现金减少</td>
+<td>需核对费用与债务明细</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # LLY(礼来)看多论证:增长、护城河与现金流都在兑现</p>
+<p>我先开场,等空头发言后再逐点交锋。</p>
+<h5>一、增长潜力:需求驱动,而不是靠提价</h5>
+<ul>
+<li><strong>Q3 收入约 244 亿美元,同比增长约 38.6%</strong>,两年前同期仅 114 亿美元,基本翻倍。这样的规模下还能保持近 40% 的增速,在大型制药公司里极为罕见。</li>
+<li><strong>销量增长 53%</strong>,这是真实需求,不是财务技巧。</li>
+<li><strong>全年收入指引上调至 910–920 亿美元</strong>,上调幅度约 55 亿美元。管理层在已经很高的基数上继续上调,说明对需求和供给的可见度很高。</li>
+<li><strong>产品扩展</strong>:Foundayo(口服减重药)已在美国和欧盟获批,III 期数据显示对睡眠呼吸暂停有效,计划申报该适应症。口服剂型降低了使用门槛,打开了注射剂触达不到的人群。</li>
+<li><strong>渠道扩展</strong>:与 Hims &amp; Hers 合作,进入直接面向消费者的渠道,扩大可触达市场。</li>
+</ul>
+<h5>二、竞争优势</h5>
+<ul>
+<li><strong>规模和产能</strong>:大规模制造投资(投资现金流 9 个月 −276 亿美元)是在抢占供给端壁垒。在 GLP-1 这个供给长期紧张的市场,产能本身就是护城河。</li>
+<li><strong>产品组合</strong>:Zepbound 和 Mounjaro 需求强劲(摩根士丹利上调目标价的理由)。口服 Foundayo 与注射剂形成覆盖。</li>
+<li><strong>相对竞争者的位置</strong>:诺和诺德今年表现很差,口服 Wegovy 虽有起色,但 Foundayo 的睡眠呼吸暂停适应症有望拉开差距(Barron's 观点)。辉瑞的 III 期试验是中长期事件,从试验到上市到放量,距离还很远。</li>
+<li><strong>管线深度</strong>:除肥胖症外,还有阿尔茨海默病研究和晚期肿瘤管线。BofA 把目标价上调至 1,557 美元(26 倍 2028 年 EPS),核心理由正是非肥胖症管线的上行空间。</li>
+</ul>
+<h5>三、财务健康</h5>
+<ul>
+<li><strong>毛利率估算约 83.9%</strong>,高于一年前的约 81.4% 和两年前的约 78.6%。规模扩大的同时毛利率仍在提升,说明经营杠杆在发挥作用。</li>
+<li><strong>9 个月经营现金流 274.2 亿美元,同比增长约 71%</strong>,高于同期累计净利润(约 209 亿美元)。盈利的现金含量高,不是纸面利润。</li>
+<li><strong>流动比率约 1.39</strong>,短期偿付能力没有问题。</li>
+<li><strong>市场验证</strong>:财报后一周股价上涨约 10%,创历史新高,BofA 和摩根士丹利上调目标价。</li>
+</ul>
+<h5>四、预判空头的论点</h5>
+<p><strong>1. “价格下降 15%,增长质量差。”</strong>
+价格下降是在销量增长 53% 的背景下发生的,净结果仍是收入增长约 39%。以价换量是扩大渗透的策略,也是巩固市场份额的手段。更重要的是,毛利率仍在上升,说明降价没有损伤单位盈利能力。</p>
+<p><strong>2. “净利润和 EPS 连续两个季度环比下降,净利率从约 37% 降到约 26%。”</strong>
+这个数据我承认,也不回避。但要看三点:第一,毛利率在上升,所以问题不在产品盈利能力;第二,压力很可能来自费用端,如研发、销售管理费用,或收购在研项目费用等一次性项目,这类费用是为未来管线和渠道投入,并非需求恶化;第三,经营现金流同比增长 71%,说明经营质量并未恶化。我也坦率地说,费用明细现在没有数据,这是需要在后续核实的点。但把一个“投入期”的信号解读为“基本面恶化”,证据不足。</p>
+<p><strong>3. “资产负债表扩张,杠杆上升,现金减少。”</strong>
+总资产翻倍,权益占比约 27%,现金降到 48.9 亿美元。但经营现金流 274 亿美元在为扩张买单,投资支出对应的是产能和管线。对一个收入每年增长近 40%、毛利率 80% 以上的公司,把现金投入产能是合理的资本配置。流动比率 1.39 说明短期风险可控。</p>
+<p><strong>4. “估值过高,一周涨 10%,回调风险大。”</strong>
+短期回调的可能性确实存在,我不否认。但估值要和增长一起看:BofA 用 26 倍 2028 年 EPS,意味着市场定价基于未来盈利的兑现。收入指引不断上调、销量增长 50% 以上,盈利预期有继续上修的空间。散户情绪也并不极端(有标签样本约 62.5% 看多,远低于 90/10 的拥挤水平),且有人在“等回调买入”,这提供了价格支撑。</p>
+<p><strong>5. “监管和竞争风险。”</strong>
+FDA 的视力损失警告是整个 GLP-1 类别的标签更新,礼来和诺和诺德股价基本未受影响,市场已经给出了判断。竞争方面,辉瑞入局是中长期事件,而礼来现在的产能、产品组合和渠道已经在先。</p>
+<h5>五、坦率承认的不确定性</h5>
+<ul>
+<li>缺少估值倍数、预期和内部人交易数据,无法精确判断价格是否已充分反映预期。</li>
+<li>缺少宏观数据(利率、预测市场)。</li>
+<li>非肥胖症项目有失败案例。</li>
+<li>Reddit 数据缺失,情绪样本较小。</li>
+</ul>
+<p>这些是需要持续跟踪的变量,但没有一项推翻核心逻辑。</p>
+<h5>六、结论</h5>
+<p>LLY 的核心逻辑很清楚:<strong>销量增长 50% 以上、收入增长约 39%、指引上调、毛利率提升、经营现金流大幅增长、产品和渠道持续扩展</strong>。利润率的短期回落是我们需要跟踪的问题,但它更像是投入期的费用,而非需求或定价权的恶化。</p>
+<p>空头需要回答的关键问题是:如果需求如此强劲、毛利率仍在提升、经营现金流同比增长 71%,那么净利率下降究竟是结构性的,还是投资周期的暂时现象?在这个问题被证明是结构性之前,我认为看多的证据明显更强。</p>
+<p>期待听到空头的具体论点。</p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # LLY(礼来)看空论证:增长是真的,但价格已经把完美写进去了,而利润端的裂缝正在扩大</p>
+<p>多头开场很有力,但我想先指出一点:多头的核心问题&quot;净利率下降是结构性还是暂时的&quot;被它自己设成了举证责任在空头。实际上,<strong>在费用明细缺失的情况下,&quot;暂时论&quot;同样没有证据</strong>。多头承认了&quot;没有数据&quot;,却仍用&quot;更像投入期&quot;下结论。这是推测,不是证据。</p>
+<h5>一、利润增长已经明显落后于收入</h5>
+<ul>
+<li>收入同比 +38.6%,净利润同比只有 +15.5%。<strong>利润增速不到收入增速的一半。</strong></li>
+<li>净利润从 73.96 亿降到 70.95 亿,再降到 64.51 亿;EPS 从 8.26 降到 7.94,再降到 7.22。<strong>连续两个季度环比下降,而收入同期环比还在增长(198→230→244 亿美元)。</strong></li>
+<li>净利率从约 37.4% 降到 30.9%,再降到 26.4%。两个季度掉了约 11 个百分点。</li>
+</ul>
+<p>多头说&quot;毛利率在上升,所以不是产品盈利能力问题&quot;。这恰恰说明问题更严重:毛利率在改善,净利率仍大幅恶化,意味着<strong>费用端的增长速度远超收入</strong>。每多卖一美元,留给股东的比例在下降。这是负的经营杠杆,不是多头说的&quot;经营杠杆在发挥作用&quot;。而且,毛利率是我们自己估算的,2026-03 和 2026-06 的成本数据缺失,根本无法证明毛利率趋势是连续上升的。</p>
+<h5>二、&quot;销量 +53%&quot;背后是价格侵蚀</h5>
+<ul>
+<li>实际价格下降 15%。多头称之为&quot;以价换量的扩张策略&quot;,但这是一个<strong>会自我强化的趋势</strong>:竞争(诺和诺德口服药、辉瑞的多项 III 期试验)、直销渠道(Hims &amp; Hers)和医保/药价政策压力,都会推动价格继续下行。</li>
+<li>通过 Hims &amp; Hers 这类渠道销售,通常意味着更低的单价和渠道分成。多头把它当作&quot;扩大市场&quot;,我认为它同时是价格压力的来源。</li>
+<li>若价格再降 15%,销量需要再增长约 18% 才能抵消。基数越大,维持 50% 以上的销量增速越难。收入增速环比已从 +16%(2026-03→06)放缓到 +6.2%(06→09)。</li>
+</ul>
+<h5>三、现金流和资产负债表:扩张的代价</h5>
+<ul>
+<li>9 个月经营现金流 274 亿美元,但投资现金流 −276 亿美元,<strong>几乎被全部吃掉,没有自由现金流可言</strong>(资本支出明细缺失,所以连自由现金流都算不准)。</li>
+<li>现金降至 48.9 亿美元;融资现金流由 +49.6 亿转为 −22.6 亿,说明外部输血在减少,内部造血却全部被消耗。</li>
+<li>总资产两年多翻倍至 1,480 亿美元,权益只占约 27%,隐含负债约 1,078 亿美元。债务结构、利息支出我们都没有数据。多头说&quot;流动比率 1.39 风险可控&quot;,但 1.39 在现金只有 49 亿、流动负债 470 亿的结构下,说明流动资产大量是存货和应收款。<strong>产能在为一个价格正在下降的产品线大规模扩张,如果需求或定价不及预期,这些资产将变成沉重的固定成本。</strong></li>
+<li>经营现金流高于净利润,多头视为质量好的证据。但这也可能来自应付款增加或营运资本变动,我们没有明细。不能直接当作质量证明。</li>
+</ul>
+<h5>四、估值:已经按&quot;一切顺利&quot;定价</h5>
+<ul>
+<li>股价一周涨约 10%,创历史新高,接近 BofA 目标价 1,557 美元的区间。BofA 的 26 倍是基于 <strong>2028 年</strong>预期 EPS,也就是要求投资者为两年后还没发生的盈利付钱。</li>
+<li>目标价上调、被动 ETF(XLV)买入、历史新高,这些都是&quot;价格已经反映好消息&quot;的特征,不是继续上涨的理由。XLV 的买入本身就是被动资金,多头也承认信号弱。</li>
+<li>多头拿&quot;62.5% 看多、不拥挤&quot;当支撑,但样本只有 16 条有标签消息,Reddit 数据缺失,统计意义几乎为零。</li>
+<li>我们没有任何估值倍数、市值和一致预期数据。多头同样承认。<strong>在不知道估值的情况下推荐买在历史高点,本身就是风险。</strong></li>
+</ul>
+<h5>五、竞争与管线:护城河没有想象的深</h5>
+<ul>
+<li>多头说辉瑞入局&quot;距离还很远&quot;,但这是行业共识的后果:GLP-1 市场利润如此丰厚,意味着每家大药企都会进来。Novo 的口服药已经&quot;状况好转&quot;,Barron's 提到的&quot;不为所动&quot;说明它并没有退出。</li>
+<li>Foundayo 的睡眠呼吸暂停数据是 III 期结果,还需 FDA 审批,而且 Zepbound 已经有类似适应症。差异化被多头夸大。</li>
+<li>非肥胖症管线是 BofA 上调目标价的核心理由,但 PharmaVoice 指出部分项目已失败被放弃。<strong>这恰恰是估值最依赖、最没被验证的部分。</strong></li>
+<li>FDA 视力损失警告现在&quot;股价未受影响&quot;,但标签风险是累积性的,如果后续出现更多安全信号或诉讼,影响会放大。市场当前不反应,不代表风险不存在。</li>
+</ul>
+<h5>六、集中度风险与数据缺口</h5>
+<ul>
+<li>公司增长几乎完全依赖 GLP-1 一条产品线(Zepbound/Mounjaro/Foundayo)。任何价格、政策、安全或竞争事件,都会直接冲击整体业绩。</li>
+<li>我们没有宏观数据(利率、预测市场),也没有内部人交易数据。在利率路径未知时,对&quot;2028 年盈利&quot;用高倍数估值,对贴现率非常敏感。</li>
+</ul>
+<h5>七、对多头五点反驳的回应</h5>
+<ol>
+<li><strong>&quot;降价但毛利率上升&quot;</strong>:毛利率是估算的,且不能解释净利率下滑。</li>
+<li><strong>&quot;费用是投入期&quot;</strong>:无数据支持。如果是研发和并购在研项目费用,意味着公司需要靠收购来补管线,正好印证了内部管线的不足。</li>
+<li><strong>&quot;现金流为扩张买单&quot;</strong>:买单之后现金只剩 49 亿,没有安全垫。</li>
+<li><strong>&quot;回调有人接盘&quot;</strong>:&quot;等回调买入&quot;的人多,意味着现价买入的人更脆弱。</li>
+<li><strong>&quot;监管竞争是中长期&quot;</strong>:估值已经把中长期的好处提前兑现,风险却没有被定价。</li>
+</ol>
+<h5>八、结论</h5>
+<p>LLY 是一家优秀的公司,但我们讨论的是<strong>股票,不是公司</strong>。当前的证据组合是:收入增速环比放缓、利润连续两个季度下滑、价格下降 15%、现金被投资耗尽、杠杆上升、股价创历史新高、估值依赖 2028 年盈利与尚未验证的非肥胖症管线。这是一个<strong>好消息已被定价、坏消息尚未定价</strong>的不对称结构。</p>
+<p>多头问我利润率下降是不是结构性的。我的回答是:在能证明它是暂时的之前,<strong>把它当作风险处理才是审慎的</strong>。在历史高位追入,安全边际几乎为零。我建议不在当前价位买入,至少等待费用明细被证实、价格回调或估值数据能支持后再评估。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: <strong>Rating</strong>: Hold</p>
+<p>多头的证据更扎实,也更能核实。Q3 收入约 244 亿美元,同比增长约 38.6%;销量增长 53%;全年收入指引上调至 910–920 亿美元;9 个月经营现金流 274 亿美元,同比增长约 71%。这些都是实打实的基本面,空头没有真正反驳。空头说&quot;现金流可能来自营运资本变动&quot;只是推测,同样没有明细支持。</p>
+<p>空头最有力的论点在利润端和估值端:</p>
+<ul>
+<li>净利润同比只增长约 15.5%,而收入增长约 38.6%。</li>
+<li>净利润和 EPS 连续两个季度环比下降(EPS 从 8.26 降到 7.94,再降到 7.22),净利率从约 37% 降到约 26%。</li>
+<li>价格下降 15%。</li>
+<li>投资现金流 −276 亿美元,几乎吃掉全部经营现金流,现金只剩约 48.9 亿美元。</li>
+<li>股价一周涨约 10%,创历史新高。</li>
+</ul>
+<p>多头把利润率下滑解释为费用投入期,但承认没有费用明细。空头说这是结构性问题,同样没有证据。双方在这个关键点上都是推测。</p>
+<p>空头对毛利率的质疑有一定道理:毛利率是估算值,部分季度成本数据缺失。不过即使毛利率趋势不确定,收入和销量的强度也不容忽视。</p>
+<p>此外,估值倍数、一致预期、内部人交易、宏观数据都缺失,所以无法判断&quot;好消息已被定价&quot;是否成立。空头的&quot;估值已按完美定价&quot;同样缺少数据支撑。BofA 的目标价(26 倍 2028 年 EPS)只说明卖方预期,不等于安全边际。</p>
+<p>权衡下来,基本面偏多,但在历史高位、利润率走势未明、估值数据缺失的情况下,没有足够的安全边际去加仓。空头建议的 Sell 与现有证据不匹配:它依赖对利润率的负面推断,而基本面并没有恶化到需要退出。因此证据在加仓和减仓之间大体平衡,判断为 Hold。</p>
+<p><strong>Strategic Actions</strong>: 1. 仓位:维持现有持仓,不新增也不减持,保持标准配置(不超过标准配置)。若目前没有持仓,不要在历史高位追入,等待回调或新证据。
+2. 加仓条件(满足任一项可考虑升级到 Overweight):(a) 财报或 10-Q 披露的费用明细显示净利率下降主要来自一次性项目,如收购在研项目费用;(b) 股价从高点回调约 10–15% 且收入和销量指引未变;(c) 能拿到估值倍数和一致预期,显示 2027–2028 年的盈利预期有上修空间。分 2–3 批建仓,每批约为标准配置的 1/3。
+3. 减仓条件(满足任一项可考虑降到 Underweight):(a) 下一季度净利率继续下降,且费用增速仍高于收入增速;(b) 价格降幅扩大到 15% 以上,而销量增速明显放缓;(c) 出现新的安全或监管信号,或非肥胖症管线出现重大失败。
+4. 风险控制:对现有仓位设定止损或回撤提醒,例如从高点回撤约 15% 时复核逻辑。不要用杠杆。
+5. 需补齐的数据:费用明细(研发、销售管理、一次性项目)、资本支出和自由现金流、债务结构和利息支出、估值倍数和一致预期、内部人交易、宏观利率环境。
+6. 跟踪指标:季度净利率和 EPS 趋势、净价格变动与销量增速、Foundayo 的放量情况和睡眠呼吸暂停适应症审批进展、竞争对手(诺和诺德口服药、辉瑞 III 期)的进展。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: 研究计划的结论是 Hold。基本面偏强:Q3 收入约 244 亿美元,同比增长约 38.6%;销量增长 53%;全年收入指引上调至 910–920 亿美元。但净利率从约 37% 降到约 26%,EPS 连续两个季度环比下降,价格下降 15%,而且股价刚在一周内上涨约 10% 并创历史新高。估值倍数、一致预期和费用明细都缺失,所以没有足够的安全边际去加仓,也没有足够的恶化证据去减仓。提示:技术报告正文没有出现在本提示中,我拿不到当前价、ATR 和支撑阻力的具体数值,所以无法给出有依据的绝对价位。入场价和止损价因此留空,不凭空编造。风险控制沿用计划的规则:从高点回撤约 15% 时复核逻辑。</p>
+<p><strong>Entry Price</strong>: not provided</p>
+<p><strong>Stop Loss</strong>: not provided</p>
+<p><strong>Position Sizing</strong>: 维持现有持仓,不新增也不减持,不超过标准配置,不用杠杆。没有持仓的话,不在历史高位追入,等回调约 10–15% 或拿到费用明细后再分 2–3 批建仓,每批约为标准配置的 1/3。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位,我先开场,因为我觉得这份 Hold 的结论,保守派和中性派都会想把它往自己那边拉。我支持 Hold,但理由和他们不一样:这是一个&quot;带着进攻意图的 Hold&quot;,不是胆小的 Hold。</p>
+<p>先说核心事实。LLY 单季收入 243.97 亿美元,同比增长 38.6%,两年前同期只有 114 亿,基本翻了一倍。销量增长 53%,全年指引上调到 910–920 亿美元,一次上调约 55 亿。估算毛利率还在往上走,从 78.6% 到 81.4% 再到 83.9%。经营现金流前九个月 274 亿美元,同比增长约 71%,明显高于同期累计净利润的约 209 亿。这不是靠会计手法撑起来的增长,这是需求拉动加现金兑现。</p>
+<p>保守派接下来一定会抓三个点:净利率从 37% 掉到 26%,EPS 连续两个季度环比下降,价格下降 15%。我逐个回应。</p>
+<p>先说净利率。毛利率在上升,利润率却在下降,那压力只可能来自费用端。这只有两种可能:一是研发和销售投入在为下一个增长曲线铺路,二是有一次性项目,比如收购在研项目的费用。这两种情况都不等于商业模式变差。我承认,工具没有给费用明细,所以我不能断言就是一次性的。但保守派要拿这个当做减仓的理由,同样需要证据,而他们同样没有。证据缺失对双方是对称的,不能只拿它来压制多头。</p>
+<p>再说价格下降 15%。保守派会说这是定价权被侵蚀。我的看法正相反:在价格下降 15% 的情况下,收入还能增长 39%,说明需求弹性极强,市场在被打开,而不是被榨干。TIKR 的拆解说得很清楚,指引上调靠的是需求而不是提价。真正危险的公司是靠涨价撑业绩的,LLY 是靠放量。而且放量之后,制造规模和口服剂型 Foundayo 还有继续摊薄成本、扩大可触达人群的空间。睡眠呼吸暂停的 III 期数据加上准备向 FDA 申报,说明适应症还在扩张。</p>
+<p>关于创新高。保守派会说一周涨 10% 又创历史新高,追高不安全。但情绪数据并不显示狂热:有标签的 StockTwits 消息里看多约 62.5%,远低于 90/10 那种反向信号区间,而且还有人明说想等回调再买。这是一个被持有、没被挤爆的行情。BofA 目标价 1,557 美元,基于 2028 年收益 26 倍;Morgan Stanley 也在上调。我要提醒一句,散户帖里出现的 1,436.33 美元来自期权推广帖,可信度低,不能当作当前价,所以我不拿&quot;离目标价还有多少空间&quot;来下结论。但方向很清楚:卖方在上调,不是在下调。</p>
+<p>对于中性派,我估计他们会说&quot;信息不全,Hold 最平衡,别多想&quot;。我同意动作是 Hold,但我不同意把它当成终点。这份计划里最值得挑战的是&quot;等回调 10–15% 才建仓&quot;这条。强势成长股创新高后,不一定给你 10–15% 的回调,可能一直横着消化,也可能直接上去。如果费用明细一旦确认主要是研发投入或一次性项目,我认为就不该再等价格,而应该立刻启动第一批,即标准配置的约三分之一。也就是说,触发条件应该是&quot;证据&quot;,不只是&quot;价格&quot;。对于已有持仓的人,我也主张放在标准配置的上沿,不要因为害怕高位就主动缩小敞口。</p>
+<p>当然我也要正视风险,否则就不是可信的进攻。资产负债表在快速扩张:总资产约 1,480 亿美元,权益占比只有约 27%,现金降到 48.9 亿美元,前九个月投资现金流是 −276 亿美元,几乎把经营现金流全部吃掉。这是重注押产能和并购。我的判断是,这是在抢占 GLP-1 的产能和渠道,例如与 Hims &amp; Hers 的合作,竞争对手 Novo 与 Pfizer 正在追赶,此时收缩投入反而更危险。但这笔账要靠后续的债务水平和利息支出来验证,这也是我支持保留 15% 回撤复核规则的原因。进攻不等于不设防。</p>
+<p>最后说一下我的局限。技术面的当前价、ATR、支撑阻力我们都没有,估值倍数和一致预期也缺失,宏观数据同样不可用,所以我不会编造入场价和止损价。我的建议是:保持这份计划的框架,不加杠杆,不超过标准配置;但把加仓的触发条件从单纯等价格,改为&quot;价格回调&quot;或&quot;费用明细证实利润率下滑是暂时因素&quot;二者满足其一,就分批进场。这样我们既不追高,也不会因为过度谨慎而错过一个销量增长 50% 以上、指引还在上调的龙头。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 先说结论:我同意 Hold,但不同意激进派把它说成&quot;带着进攻意图的 Hold&quot;。在我们缺这么多数据的情况下,这个 Hold 应该偏防守,理由如下。</p>
+<p>第一,激进派说证据缺失对双方是对称的,我认为不成立。证据缺失在风险上并不对称。现在我们没有当前价、没有估值倍数、没有一致预期、没有费用明细、没有债务明细、没有宏观数据,等于不知道自己在什么价位买了什么。在这种情况下,多买一档的下行风险是真实的亏损,少买一档的代价只是机会成本。亏掉的本金需要更高比例的收益才能补回来,而错过的涨幅不会伤到本金。所以信息不全时,默认动作应该偏向不增加风险。</p>
+<p>第二,关于&quot;费用明细一确认就启动第一批&quot;。我的问题是,即使确认是研发投入或一次性项目,也不能直接得出可以买的结论。研发加码意味着利润率可能长期被压在较低水平。如果是收购在研项目费用,它说明公司在持续并购,这类&quot;一次性&quot;项目很容易年年出现。而且前九个月投资现金流是 −276 亿美元,几乎吃掉全部经营现金流,现金降到 48.9 亿美元,权益占总资产只有约 27%。利润率下滑的原因是好是坏只是其中一环,价格、杠杆、债务成本都没有核实。用单一证据去触发建仓,过于草率。如果一定要设触发条件,至少应该同时满足:价格回调、费用解释清楚、债务和利息数据核对完毕。</p>
+<p>第三,价格下降 15% 的解读。激进派说收入还涨了 39%,是需求弹性强。这个方向我部分同意,但他回避了一个问题:如果量增长 53%、价降 15%,价格这一项是连续的吗?会不会继续扩大?药价政策、竞争、渠道合作(比如 Hims 这类直接面向消费者的渠道)都可能压价。销量增长能否持续抵消降价,是个假设,不是事实。放量有天花板,降价没有。</p>
+<p>第四,有个数字大家都没提。前三个季度收入合计约 671.7 亿美元(198.0 + 229.7 + 244.0),全年指引 910–920 亿美元,意味着第四季度大约 238–248 亿美元,和第三季度基本持平。环比增速从第二季度的约 16% 降到第三季度的约 6%,指引暗示第四季度几乎没有环比增长。指引通常偏保守,所以这不一定是坏事,但它至少说明&quot;增长还在加速&quot;这个说法站不住,而股价刚刚一周涨了 10%、创历史新高,这是在为更强的增长定价。</p>
+<p>第五,关于情绪。激进派说看多比例只有 62.5%,不算狂热。但这个样本只有 16 条有标签消息,13 条无标签,Reddit 数据完全缺失。拿这么小的样本证明&quot;没有被挤爆&quot;,证据太弱。而且情绪不极端,并不等于价格有安全边际。卖方上调目标价也是滞后信号:BofA 的 1,557 美元是基于 2028 年收益 26 倍,这是三年后的盈利和未贴现的估值,而且它把倍数从 25 倍调到 26 倍,恰恰是股价上涨之后。目标价上调往往跟着股价走,不是领先指标。</p>
+<p>第六,关于&quot;等回调 10–15% 可能等不到&quot;。这个担心对,但代价有限:错过的只是一部分涨幅。我更在意的是已有持仓的人。激进派建议已有持仓放在标准配置上沿,这和我们不知道对方现有仓位、也没有价格数据的现实矛盾。如果对方已经因为这轮上涨而超配,我的建议是别再加,甚至考虑把超出标准配置的部分减回标准配置。这不是看空,是仓位纪律,因为上涨本身会让仓位被动变大。</p>
+<p>第七,风控规则也应该收紧。&quot;从高点回撤约 15% 才复核逻辑&quot;对一只刚创新高、体量巨大的股票来说偏晚。我建议增加事件触发:一是下季度实际价格降幅超过 15%,二是净利率继续下降,三是 FDA 标签风险扩大,四是债务或利息数据显示杠杆明显恶化。任何一条出现就提前复核。等拿到价格和 ATR 数据后,再把具体止损位补上,在此之前不用凭空编造数字。</p>
+<p>总结我的立场:维持 Hold,不新增、不加杠杆,持仓不超过标准配置;没有持仓的人不追高,只有在价格回调且费用与债务数据都核实后,才分 2–3 批、每批不超过标准配置的三分之一建仓。基本面确实强,但我们现在最缺的恰恰是判断&quot;价格是否已经反映这些好消息&quot;的数据,在补齐之前,保护本金比抢先一步更重要。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 两位说得都有道理,但各自都有一处用力过猛。我先挑毛病,再给一个折中方案。</p>
+<p>先说激进派。你说证据缺失对双方是对称的,这一点我不同意,保守派在这点上是对的。我们不知道当前价、估值倍数和一致预期,在这种情况下加仓,赌的是&quot;价格还合理&quot;,而这恰恰是我们无法验证的。其次,你把&quot;费用明细证实是暂时因素&quot;单独作为触发条件,太窄了。费用明细只回答了净利率为什么下滑,没回答债务、利息和价格走向。投资现金流 −276 亿美元,几乎吃掉全部经营现金流,现金只剩 48.9 亿美元,权益占比约 27%,这些都还悬着。还有一点,你说需求弹性极强,但&quot;价降 15%、量增 53%&quot;同时也可以理解为单位经济在变薄,这两种读法目前都无法排除。你说&quot;已有持仓放在标准配置上沿&quot;,也没有考虑到我们不知道对方的仓位。</p>
+<p>再说保守派。你的第四点很有价值,指引隐含第四季度基本与第三季度持平,这对&quot;增长在加速&quot;是个有用的纠正。不过要补一句:LLY 这类公司的指引往往留有余地,而且你自己也承认了这一点,所以它更像是提醒&quot;别把增速外推&quot;,不是看空证据。你的&quot;三个条件同时满足才建仓&quot;又走过头了。价格回调、费用解释、债务核对三件事全部到位,往往意味着市场早已消化,到时候的价格未必还有吸引力。这等于把一个原本就很苛刻的条件再叠一层,实际上是永远不买。你说错过的只是机会成本,这在数量上是对的,但如果这家公司的收入两年翻倍、现金流同比增长 71%,长期空仓的机会成本并不小。另外,你建议把超配部分减回标准配置,这个纪律我认同,但它应该是对&quot;超配&quot;的纪律,不是对这只股票的看法,不要和看空混在一起。</p>
+<p>那么我的折中是这样。动作上维持 Hold,这点三方一致,我不再多说。有分歧的是触发条件和仓位纪律,我建议这样处理。</p>
+<p>第一,已有持仓的人:持有到标准配置为止,不主动加,也不因为恐高而主动砍。如果这一周的上涨使仓位超出标准配置,把超出部分减回去,这是再平衡,不是择时。</p>
+<p>第二,没有持仓的人:不必死等 10–15% 的回调,也不必等三件事都齐。我建议用两档触发。第一档,回调约 5–8%,或者费用明细核实后确认利润率下滑主要来自研发投入、一次性项目,二者满足其一,可以建第一批,大约标准配置的 1/4 到 1/3。第二档,需要债务和利息数据核对没有明显恶化,再加第二批。第三批留给下一次财报:看净利率是否止跌、价格降幅是否仍在 15% 附近、第四季度是否超出指引隐含水平。这样既不会因为追求完美而踏空,也不会在信息缺口最大的时候一次性押注。</p>
+<p>第三,风控:保留 15% 回撤复核,但我同意保守派的补充,加上事件触发,即价格降幅明显超过 15%、净利率继续下滑、FDA 标签风险扩大、杠杆恶化,任何一项出现就提前复核。止损价和入场价仍然留空,等拿到价格和 ATR 数据再填,编一个数字比留空更危险。</p>
+<p>最后做个提醒:我们三个人用的是同一组残缺数据,很容易各自把缺口往自己的立场上补。真正稳妥的做法,是尽快把估值倍数、一致预期、费用明细和债务数据补齐,这比争论该进攻还是防守更有价值。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: 对 LLY 维持 Hold:已有持仓者持有至标准配置为止,不加杠杆。若上涨使仓位超过标准配置,把超出部分减回标准配置,这是再平衡,不是看空。没有持仓者不要在历史高位追入。可用两档触发建仓:第一档是回调约 5–8%,或费用明细确认净利率下滑主要来自研发投入或一次性项目,满足其一即可建第一批,约为标准配置的 1/4 到 1/3。第二档要等债务和利息数据核对没有明显恶化,再加第二批。第三批留到下一次财报,看净利率是否止跌。入场价和止损价留空,因为当前价和 ATR 都缺失。从高点回撤约 15% 时复核逻辑,并加上事件触发。</p>
+<p><strong>Investment Thesis</strong>: 基本面偏强。Q3 收入约 243.97 亿美元,同比增长 38.6%;销量增长 53%;全年指引上调至 910–920 亿美元;前九个月经营现金流 274 亿美元,同比增长约 71%。三位分析师都没有真正反驳这些事实。</p>
+<p>但决定不加仓的是三个未解问题。第一,净利率从约 37% 降到约 26%,EPS 连续两个季度环比下降。激进派认为毛利率在上升,所以压力来自费用端,这个推断合理,但费用明细缺失,无法证实是研发投入或一次性项目。第二,投资现金流 −276 亿美元,几乎吃掉全部经营现金流,现金只剩约 48.9 亿美元,权益占总资产约 27%,债务和利息数据缺失。第三,当前价、估值倍数和一致预期都缺失,无法判断股价一周涨约 10% 并创历史新高之后,好消息是否已被定价。</p>
+<p>保守派指出证据缺失在风险上不对称,这一点更有说服力:信息不全时多买一档,下行是真实亏损,少买一档只是机会成本。保守派的第四点也有价值:前三季度收入合计约 671.7 亿美元,按指引推算,第四季度约 238–248 亿美元,与第三季度基本持平。这说明不能把增速外推,而且卖方上调目标价(BofA 的 1,557 美元,按 26 倍 2028 年 EPS)滞后于股价,不是安全边际。</p>
+<p>中性派的批评同样成立。保守派要求价格回调、费用解释、债务核对三项同时满足,条件过于苛刻,实际上等于永远不买。激进派只凭费用明细一项就建仓,又过于草率。两个方向的论据都不足以压倒对方,所以评级是 Hold。仓位处理采用中性派方案:两档触发,分批建仓。</p>
+<p>触发升级到 Overweight 的条件:费用明细证实利润率下滑是暂时因素,债务和利息无恶化,估值和一致预期显示 2027–2028 年盈利有上修空间。</p>
+<p>触发降到 Underweight 的条件(任一项出现即提前复核):下季度净利率继续下降,且费用增速仍高于收入增速;价格降幅明显超过 15%,而销量增速放缓;FDA 标签或安全风险扩大;杠杆或利息数据显示明显恶化;非肥胖症管线出现重大失败。</p>
+<p>需补齐的数据:费用明细、资本支出和自由现金流、债务结构和利息、估值倍数和一致预期、当前价和 ATR、内部人交易、宏观利率环境。这些数据比立场争论更重要。</p>
+<p><strong>Price Target</strong>: not provided</p>
+<p><strong>Time Horizon</strong>: 3–6 个月,到下一次财报后复核</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>
