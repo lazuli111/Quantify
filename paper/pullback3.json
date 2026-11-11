@@ -1,31 +1,17 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 135.35283455989997,
+ "cash": 33.42965960637298,
  "position": {
-  "symbol": "PLTR",
-  "entry_date": "2026-11-05",
-  "entry_price": 166.7984,
-  "shares": 7,
-  "held_days": 3,
-  "entry_fees": 0.11675884768524171,
+  "symbol": "MNST",
+  "entry_date": "2026-11-10",
+  "entry_price": 45.6628,
+  "shares": 28,
+  "held_days": 1,
+  "entry_fees": 0.12785589429016114,
   "stop": null
  },
- "pending": [
-  {
-   "action": "sell",
-   "symbol": "PLTR",
-   "reason": "收盘高于前一天最高价",
-   "ref_price": 169.2
-  },
-  {
-   "action": "buy",
-   "symbol": "MNST",
-   "reason": "三连跌回调信号",
-   "ref_price": 45.64,
-   "est_shares": 28
-  }
- ],
+ "pending": [],
  "trades": [
   {
    "symbol": "AMAT",
@@ -78,6 +64,19 @@
    "fees": 0.24,
    "pnl": 26.8,
    "ret_pct": 2.232
+  },
+  {
+   "symbol": "PLTR",
+   "entry_date": "2026-11-05",
+   "entry_price": 166.8,
+   "exit_date": "2026-11-10",
+   "exit_price": 168.13,
+   "shares": 7.0,
+   "held_days": 3,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.23,
+   "pnl": 9.06,
+   "ret_pct": 0.776
   }
  ],
  "skipped": [],
@@ -181,16 +180,21 @@
    "date": "2026-11-09",
    "equity": 1319.75,
    "qqq": 679.35
+  },
+  {
+   "date": "2026-11-10",
+   "equity": 1302.95,
+   "qqq": 674.76
   }
  ],
  "quota_used_hkd": {
   "2026-10": 59992.19397083817,
-  "2026-11": 18686.102210348512
+  "2026-11": 37838.53619837494
  },
  "months_charged": [
   "2026-10",
   "2026-11"
  ],
- "fees_paid": 7.4189525151434195,
- "last_processed": "2026-11-09"
+ "fees_paid": 7.664496540630938,
+ "last_processed": "2026-11-10"
 }
