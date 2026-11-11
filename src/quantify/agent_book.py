@@ -37,7 +37,9 @@ YAHOO_ALIAS = {"BRKB": "BRK-B"}
 # Hard rules, enforced in code whatever the AI says (also checked when the decision is made).
 CAPITAL = 5000.0
 MAX_NAMES = 3
-MAX_WEIGHT = 0.33
+MAX_WEIGHT = 0.33         # when TradingAgents' rating agrees with the direction
+HOLD_WEIGHT = 0.165       # when it rated Hold: half size (user's choice 2026-11-11, after 10 Holds in a row)
+LONG_OK, SHORT_OK = {"Buy", "Overweight"}, {"Underweight", "Sell"}
 MAX_GROSS = 1.0           # total position value <= equity: no leverage
 STOP_RANGE = (0.02, 0.08)
 MAX_HOLD = 10             # sessions
@@ -56,7 +58,8 @@ RULES = [
     "下一个交易日美东 09:35，按币安正式站的价格记账成交；不在交易所下单。",
     f"不加杠杆：持仓总值不超过权益；最多同时 {MAX_NAMES} 只，每只不超过权益的 {MAX_WEIGHT:.0%}。",
     f"每笔必须带止损，距离 {STOP_RANGE[0]:.0%}–{STOP_RANGE[1]:.0%}，盘中触及即按止损价成交（周末也算）；最多持有 {MAX_HOLD} 个交易日。",
-    "做多需要 TradingAgents 评级为买入或增持，做空需要减持或卖出；持有评级不开仓。",
+    f"TradingAgents 评级和方向一致（做多：买入或增持；做空：减持或卖出）时每只最多 {MAX_WEIGHT:.0%}；"
+    f"评级为持有时最多 {HOLD_WEIGHT:.1%}（2026-11-11 起）；评级和方向相反不开仓。",
     f"单日亏损超过 {DAILY_LOSS_HALT:.0%}：下一个交易日不开新仓。从峰值回撤 {DRAWDOWN_HALT:.0%}：全部平仓并停机，要人工恢复。",
     f"每周新开仓不超过 {MAX_NEW_PER_WEEK} 笔；平仓后 {NO_REVERSE_SESSIONS} 个交易日内不反向开仓（止损除外）；"
     f"资金费超过 {FUNDING_LIMIT:.1%} 的一方不开仓。",
@@ -210,6 +213,13 @@ def recently_closed(state: dict, ticker: str, d: date) -> dict | None:
     return None
 
 
+def weight_cap(side: str, rating: str | None) -> float | None:
+    """The largest position TradingAgents' rating allows for this direction (None: not allowed)."""
+    if rating in (LONG_OK if side == "long" else SHORT_OK):
+        return MAX_WEIGHT
+    return HOLD_WEIGHT if rating == "Hold" else None
+
+
 def check_open(order: dict, state: dict, d: date, marks: dict | None = None) -> str | None:
     """Why an open order breaks a hard rule (None if it doesn't). `d` is the session it would fill in."""
     side = order["side"]
@@ -219,8 +229,11 @@ def check_open(order: dict, state: dict, d: date, marks: dict | None = None) -> 
         return f"上一个交易日亏损超过 {DAILY_LOSS_HALT:.0%}，今天不开新仓"
     if any(p["ticker"] == order["ticker"] for p in state["positions"]):
         return "已经持有这只"
-    if not 0 < order.get("weight", 0) <= MAX_WEIGHT + 1e-9:
-        return f"仓位必须在 0–{MAX_WEIGHT:.0%} 之间"
+    cap = weight_cap(side, order.get("rating"))
+    if cap is None:
+        return "TradingAgents 的评级和方向相反（或没有评级）"
+    if not 0 < order.get("weight", 0) <= cap + 1e-9:
+        return f"这个评级下仓位最多 {cap:.1%}"
     if not STOP_RANGE[0] - 1e-9 <= order.get("stop_pct", 0) <= STOP_RANGE[1] + 1e-9:
         return f"止损距离必须在 {STOP_RANGE[0]:.0%}–{STOP_RANGE[1]:.0%} 之间"
     if not 1 <= order.get("hold_days", 0) <= MAX_HOLD:

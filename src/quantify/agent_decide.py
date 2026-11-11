@@ -40,7 +40,6 @@ MACRO = {"SPY": "标普 500 ETF", "QQQ": "纳指 100 ETF", "IWM": "罗素 2000 E
          "^TNX": "10 年美债收益率", "DX-Y.NYB": "美元指数", "CL=F": "原油", "GC=F": "黄金", "BTC-USD": "比特币"}
 NEWS_QUERIES = ["stock market today", "Federal Reserve", "tariffs trade policy", "White House economy",
                 "inflation jobs report", "earnings outlook"]
-LONG_OK, SHORT_OK = {"Buy", "Overweight"}, {"Underweight", "Sell"}
 
 
 # ---------------------------------------------------------------- inputs
@@ -179,7 +178,8 @@ RULES_TEXT = (
     f"硬规则（程序会拒绝违反的指令）：1 倍杠杆，持仓总值不超过权益；最多同时 {ab.MAX_NAMES} 只，每只不超过权益的 "
     f"{ab.MAX_WEIGHT:.0%}；每笔止损距离 {ab.STOP_RANGE[0]:.0%}–{ab.STOP_RANGE[1]:.0%}；最多持有 {ab.MAX_HOLD} 个交易日；"
     f"每周新开仓不超过 {ab.MAX_NEW_PER_WEEK} 笔；资金费超过 {ab.FUNDING_LIMIT:.1%} 的一方不开仓；"
-    "做多必须有 TradingAgents 的买入或增持评级，做空必须有减持或卖出评级。"
+    f"开仓仓位上限看 TradingAgents 的评级：和方向一致（做多：买入或增持；做空：减持或卖出）时最多 {ab.MAX_WEIGHT:.0%}，"
+    f"评级为持有时最多 {ab.HOLD_WEIGHT:.1%}，和方向相反不能开仓。"
     f"成本：每边手续费 {ab.FEE:.2%} 加滑点 {ab.SLIP:.2%}，多头通常要付资金费。")
 
 
@@ -246,10 +246,6 @@ def check_plan(plan: Plan, state: dict, deep: dict, table: pd.DataFrame, marks: 
             why = "不在可交易列表里"
         elif not d or not d.get("rating"):
             why = "没有深入分析过"
-        elif side == "long" and d["rating"] not in LONG_OK:
-            why = f"评级是{d['rating_zh']}，不能做多"
-        elif side == "short" and d["rating"] not in SHORT_OK:
-            why = f"评级是{d['rating_zh']}，不能做空"
         order = {"action": "open", "ticker": o.ticker, "symbol": table.at[o.ticker, "symbol"] if o.ticker in table.index else "",
                  "side": side, "weight": round(o.weight, 4), "stop_pct": round(o.stop_pct, 4), "hold_days": o.hold_days,
                  "confidence": o.confidence, "rating": d.get("rating") if d else None, "reason": o.reason}
