@@ -1,0 +1,82 @@
+{
+ "as_of": "2026-11-11",
+ "for_session": "2026-11-12",
+ "model": "Claude Sonnet（订阅）",
+ "status": "ok",
+ "orders": [],
+ "rejected": [],
+ "deep": [
+  {
+   "ticker": "LLY",
+   "direction": "long",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-11_LLY.html"
+  },
+  {
+   "ticker": "BRK-B",
+   "direction": "long",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-11_BRK-B.html"
+  },
+  {
+   "ticker": "NVDA",
+   "direction": "short",
+   "rating": "Hold",
+   "rating_zh": "持有",
+   "report": "agent/reports/2026-11-11_NVDA.html"
+  }
+ ],
+ "universe": 192,
+ "brief": {
+  "regime": "neutral",
+  "summary": "周三美股在CoreWeave财报超预期带动下反弹,SPY涨1.32%,QQQ涨2.31%,VIX回落10%至17.49。但10年期美债收益率约5.00%,美元走强,美联储理事Waller提出12月FOMC讨论加息50bp,政策偏鹰。盘后英伟达因CEO传闻下挫,为明日开盘增加科技股不确定性。整体偏中性。",
+  "drivers": [
+   "美联储加息预期:Waller称12月FOMC应讨论加息50bp,10年期收益率在5.00%高位,压制估值",
+   "AI交易重燃:CoreWeave上涨25%,带动AMD、英特尔、IREN等半导体和AI云板块走强",
+   "盘后英伟达因CEO传闻下挫,可能拖累纳指和芯片股开盘",
+   "美元走强(+0.67%)、比特币和黄金走弱,反映流动性偏紧、风险偏好并不稳固",
+   "VIX回落至17.49,但5日仍上升,标普和纳指的5日、20日表现仍为负,反弹持续性待验证"
+  ],
+  "favored": [
+   "AI基础设施与AI云",
+   "半导体(AMD、英特尔)",
+   "电力与公用事业(AI用电需求)",
+   "小盘股(IWM 20日走势相对较强)"
+  ],
+  "avoid": [
+   "英伟达(盘后消息风险)",
+   "高估值、利率敏感的成长股",
+   "盈利预期下调的消费和医疗个股(如Hims & Hers)",
+   "加密货币相关资产"
+  ]
+ },
+ "screen": {
+  "picks": [
+   {
+    "ticker": "LLY",
+    "direction": "long",
+    "why": "处于一年高点，20日+18.9%，趋势强且波动低，防御属性好，在利率高位和科技不确定时相对抗跌。"
+   },
+   {
+    "ticker": "BRK-B",
+    "direction": "long",
+    "why": "创新高，20日+11.8%，波动仅约20%，低波动价值股，适合中性偏谨慎的市场。"
+   },
+   {
+    "ticker": "NVDA",
+    "direction": "short",
+    "why": "盘后因CEO传闻下挫，放量弱势，位于50日线下方约20%，开盘有继续走弱风险。"
+   }
+  ],
+  "held": []
+ },
+ "plan": {
+  "orders": [],
+  "note": "三只深入分析评级均为持有。LLY、BRK-B 都处在高位,缩量并有背离,追高的盈亏比不好。NVDA 做空有 CEO 传闻的跳空风险,材料也没有核实,而且评级持有时做空方向相反,不能开仓。今天空仓观望,等回踩企稳再说。"
+ },
+ "claude_calls_outside_tradingagents": 3,
+ "minutes": 10.2,
+ "generated_at": "2026-11-12T04:20+00:00"
+}

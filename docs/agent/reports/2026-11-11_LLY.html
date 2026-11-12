@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>LLY 2026-11-11 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">LLY</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-11-11</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-12 04:13</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">claude_code</span> <span class="field">sonnet</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>LLY(礼来)技术分析报告(截至 2026-11-11)</h4>
+<h5>一、数据来源与核对说明</h5>
+<ul>
+<li>所有精确数值以 get_verified_market_snapshot 为准。已调用的指标(close_50_sma、close_200_sma、close_10_ema、macd、macdh、rsi、boll_ub、atr)与快照在最新一行完全一致,没有发现冲突。</li>
+<li>本报告没有为任何支撑/阻力位的&quot;历史有效性&quot;或精确涨跌幅做验证声明,只引用工具输出中带有具体日期和价格的数据。</li>
+</ul>
+<h5>二、最新行情(2026-11-11)</h5>
+<ul>
+<li>开盘 1418.08,最高 1440.47,最低 1414.37,收盘 <strong>1437.29</strong>,成交量 1,872,700。</li>
+<li>近三日收盘:11-09 为 1411.95,11-10 为 1432.29,11-11 为 1437.29。这三天是对 11-05(1364.73)和 11-06(1354.00)回调的收复。</li>
+<li>当日成交量 187 万股,低于 11 月上旬多数交易日(例如 10-30 为 524.78 万,11-05 为 487.89 万)。收盘创新高但量能偏淡,这是一个需要留意的细节。</li>
+</ul>
+<h5>三、趋势结构</h5>
+<p><strong>1. 均线排列(多头排列,距离拉大)</strong></p>
+<ul>
+<li>收盘价 1437.29 &gt; 10 EMA 1389.55 &gt; 50 SMA 1230.06 &gt; 200 SMA 1103.45。</li>
+<li>50 SMA 从 10-12 的 1174.34 升至 11-11 的 1230.06;200 SMA 从 1074.73 升至 1103.45。两者持续上行,中长期趋势明确向上。</li>
+<li>价格比 50 SMA 高出约 207 点,比 200 SMA 高出约 334 点。这说明价格远离长期均值,趋势强,但回归均值的风险也在积累。</li>
+<li>10 EMA 在 11-05 至 11-06 期间基本走平(约 1357),之后重新加速上行,反映回调后动能恢复。</li>
+</ul>
+<p><strong>2. 关键跳涨事件(来自价格数据)</strong></p>
+<ul>
+<li>10-29 收盘 1373.70,前一日为 1288.30;10-30 收盘 1417.54。两日累计大幅跳升,成交量分别为 437.35 万和 524.78 万,明显放大。数据没有说明原因,本报告不推测催化剂。</li>
+<li>10-14、10-15 也出现连续上涨(1166.51 → 1208.74 → 1251.61),显示 10 月中旬起已进入加速阶段。</li>
+</ul>
+<h5>四、动量指标</h5>
+<p><strong>RSI(70.31)</strong></p>
+<ul>
+<li>刚好处于 70 的超买阈值上方。11-04 为 76.56,11-05 回落到 63.42,11-06 为 61.14,随后回升到 70.31。</li>
+<li>强趋势中 RSI 可长期停留在高位。10-30 的峰值是 77.89,当前的峰值(70.31)低于它,而价格(1437.29)高于当时的收盘价(1417.54)。这是一个潜在的 RSI 顶背离雏形,但幅度较小,需要后续确认。</li>
+</ul>
+<p><strong>MACD(57.33)与柱状图(5.47)</strong></p>
+<ul>
+<li>MACD 线 57.33,信号线 51.86,MACD 在信号线上方,仍为多头。</li>
+<li>柱状图在 11-02 到 11-03 为 16.56 和 16.11,之后降到 11-09 的 5.01,11-11 为 5.47。动能柱明显收窄,说明上涨的加速度在减弱,尽管价格仍在创新高。</li>
+<li>MACD 线在 11-04 达到 59.25 的高点后略有回落,11-11 为 57.33,低于该高点,而价格高于当时水平(11-04 收盘 1417.99)。这是与 RSI 一致的轻度背离信号。</li>
+</ul>
+<h5>五、波动率与风险</h5>
+<p><strong>布林带</strong></p>
+<ul>
+<li>上轨 1479.46,中轨 1338.14,下轨 1196.81。收盘价距上轨约 42 点(约 0.9 个 ATR),在中轨之上约 99 点。</li>
+<li>带宽从 10 月中旬的低位大幅扩张(上轨由 10-12 的 1198.70 升至 1479.46),显示波动率放大。</li>
+</ul>
+<p><strong>ATR(46.40)</strong></p>
+<ul>
+<li>ATR 从 10-12 的 33.07 升至 11-09 的 48.66 峰值,目前略降到 46.40。日均波动约 3.2%(46.40 / 1437.29,为本报告的简单换算)。</li>
+<li>以 1.5 倍 ATR 估算,止损距离约 70 点;以 2 倍 ATR 估算,约 93 点。</li>
+</ul>
+<h5>六、情景与可操作的参考位(仅为工具数据导出的参考,非已验证的支撑/阻力)</h5>
+<ul>
+<li><strong>多头延续情景</strong>:价格守在 10 EMA(1389.55)之上,并向布林上轨 1479.46 靠近。若放量突破上轨,趋势可能沿上轨运行(强趋势中价格常&quot;贴轨&quot;)。</li>
+<li><strong>回调情景</strong>:动能柱收窄、RSI 处于超买边缘、成交量萎缩,提示短期上行动力在减弱。回调的参考区间依次是 10 EMA(约 1390)、布林中轨(约 1338)。近期的收盘低点 11-06 的 1354.00 也可作为观察点。再下方是 50 SMA(1230.06),距离现价较远。</li>
+<li><strong>风险点</strong>:10-29 以来的大幅跳涨没有经过充分整理,价格偏离 50 SMA 较大,若出现消息面逆转,回补缺口的幅度可能较大。</li>
+</ul>
+<h5>七、策略要点</h5>
+<ol>
+<li>趋势层面偏多:三条均线多头排列且全部上行,不宜逆势做空。</li>
+<li>追高性价比下降:RSI 约 70、柱状图收窄、量能萎缩,新增仓位更适合等待回踩 10 EMA 附近或分批进入。</li>
+<li>已持仓者:可用 10 EMA 作为跟踪止损参考,并结合 1.5 到 2 倍 ATR 设定止损幅度。</li>
+<li>信号确认:关注 MACD 是否下穿信号线、RSI 是否跌破 60 以及价格是否收于 10 EMA 下方,这些将确认动能转弱。</li>
+<li>局限:以上均为技术面观察,未涉及基本面或消息面,10-29 的跳涨原因需要其他渠道核实。</li>
+</ol>
+<h5>八、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值/状态</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价(11-11)</td>
+<td>1437.29</td>
+<td>近期高位,日成交量 1,872,700 偏低</td>
+</tr>
+<tr>
+<td>10 EMA</td>
+<td>1389.55</td>
+<td>价格在其上方,短期多头</td>
+</tr>
+<tr>
+<td>50 SMA</td>
+<td>1230.06</td>
+<td>上行,价格高出约 207 点</td>
+</tr>
+<tr>
+<td>200 SMA</td>
+<td>1103.45</td>
+<td>上行,长期趋势向上</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>70.31</td>
+<td>超买边缘,10-30 峰值 77.89 高于当前,轻度背离雏形</td>
+</tr>
+<tr>
+<td>MACD / 信号线</td>
+<td>57.33 / 51.86</td>
+<td>多头,但低于 11-04 的 59.25 高点</td>
+</tr>
+<tr>
+<td>MACD 柱状图</td>
+<td>5.47</td>
+<td>较 11-02 的 16.56 明显收窄,动能放缓</td>
+</tr>
+<tr>
+<td>布林上轨 / 中轨 / 下轨</td>
+<td>1479.46 / 1338.14 / 1196.81</td>
+<td>距上轨约 42 点,带宽扩张</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>46.40</td>
+<td>波动率高于 10 月中旬(33.07)</td>
+</tr>
+<tr>
+<td>总体判断</td>
+<td>趋势偏多,短期动能放缓</td>
+<td>回踩分批或持有为主,避免追高</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bullish</strong> (Score: 6.0/10)
+<strong>Confidence:</strong> Medium</p>
+<p><strong>说明</strong>:本报告仅基于提示中提供的数据(新闻、StockTwits)。Reddit 数据获取失败(r/wallstreetbets、r/stocks、r/investing 均不可用),这不代表没有讨论,只是我们没有这部分证据。StockTwits 样本仅 27 条,其中 14 条无标签,因此结论的稳健性有限。</p>
+<h5>1. 分来源分析</h5>
+<p><strong>新闻(机构视角,偏积极)</strong></p>
+<ul>
+<li>基本面事件:Motley Fool 报道礼来(LLY)将 2026 年销售预期上调至最高 920 亿美元。Jefferies 将目标价上调至 1,700 美元,股价当时上涨 2.35% 至约 1,385 美元。</li>
+<li>渠道扩张:礼来与 Hims &amp; Hers(HIMS)合作,通过远程医疗平台提供 Zepbound 和口服 Foundayo。合作对礼来是正面事件。但 HIMS 在财报后一周内市值下跌约四分之一(订阅用户环比减少 10 万),说明该合作对 HIMS 自身的提振有限。这是 HIMS 的风险,对 LLY 影响较小。</li>
+<li>板块资金轮动:医疗板块领先科技板块 35.6 个百分点(25 年来最大差距),投资者在削减 AI 敞口。Zacks 和 TipRanks 的文章也把 LLY 列为受益者。</li>
+<li>竞争信号:Novo Nordisk 因 Wegovy 口服药的进展股价上涨 6%,说明口服减重药市场竞争在加剧。Motley Fool 也提到竞争加剧,同时认为礼来不只是减重药公司。</li>
+<li>资金流向:XLV 在 11 月 5 日减持约 2.126 亿美元,LLY 是其中的主要项目。这属于被动调仓,方向略偏负面,但可能只是机械性操作。</li>
+</ul>
+<p><strong>StockTwits(散户视角,多空接近均衡)</strong></p>
+<ul>
+<li>带标签消息中,看多 7 条(26%)、看空 6 条(22%),另有 14 条无标签。比例接近 50/50,说明散户分歧或没有强烈倾向,并非明显的看多一致性。</li>
+<li>价格与技术面:有帖子称 LLY 11 月 10 日收于 1,432(+1.44%),并在 11 月 11 日创收盘新高。11 月 11 日盘中报价约 1,422.45(-0.70%)。52 周高点为 1,453。多个帖子关注 1,450 突破位、1,440 看涨期权墙和 1,400 看跌支撑。</li>
+<li>期权:当日期权权利金约 1,520 万美元,看涨占 56%,偏中性略偏多。</li>
+<li>看空论据:同一用户(@HydrogenH2)贡献了 5 条看空帖里的大部分,引用晨星称医疗板块是美国第三大高估板块,以及 JNJ 财报不及预期。这是单一账号的重复,不应过度外推。</li>
+<li>轮动噪音:部分帖子称&quot;AI 板块走强时 LLY 成为当日最差表现者&quot;,反映资金从防御型转回 AI(CRWV 财报之后)。这是短期的风格轮动风险。</li>
+<li>基本面催化:Taltz 联合 Zepbound 的 3b 期数据(银屑病关节炎合并肥胖)被提及,属于管线正面。</li>
+</ul>
+<p><strong>Reddit</strong>:无数据。</p>
+<h5>2. 跨来源分歧与一致</h5>
+<ul>
+<li>新闻明显偏多(上调指引、目标价上调、板块轮动),散户情绪则接近均衡,偏多程度不及新闻。散户的犹豫主要来自估值和风格轮动,而不是公司基本面。</li>
+<li>双方一致认为:LLY 位于历史高位附近,&quot;医疗对科技&quot;的资金轮动是核心驱动,同时这也是最大的反转风险。</li>
+</ul>
+<h5>3. 主要叙事主题</h5>
+<ol>
+<li>指引上调与分析师目标价上调。</li>
+<li>从 AI/科技向医疗的防御型轮动。</li>
+<li>减重药市场扩张(远程医疗渠道、口服药)与竞争并存。</li>
+<li>估值担忧(晨星称板块高估)。</li>
+</ol>
+<h5>4. 催化剂与风险</h5>
+<ul>
+<li>催化剂:突破 1,450–1,453 的技术位;更多管线数据;分析师上调目标价;口服 Foundayo 的放量。</li>
+<li>风险:AI 板块反弹引发的资金回流;口服减重药竞争(Novo);板块估值偏高;医保/ACA 政策预期变化;被动基金减持;HIMS 渠道表现疲弱。</li>
+</ul>
+<h5>5. 汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>方向</th>
+<th>来源</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>销售预期上调至最高 920 亿美元</td>
+<td>看多</td>
+<td>新闻</td>
+<td>Motley Fool</td>
+</tr>
+<tr>
+<td>Jefferies 目标价 1,700 美元</td>
+<td>看多</td>
+<td>新闻</td>
+<td>股价涨 2.35% 至约 1,385 美元</td>
+</tr>
+<tr>
+<td>医疗板块领先科技创纪录</td>
+<td>看多(有反转风险)</td>
+<td>新闻</td>
+<td>领先 35.6 个百分点</td>
+</tr>
+<tr>
+<td>HIMS 合作</td>
+<td>小幅看多</td>
+<td>新闻/StockTwits</td>
+<td>Zepbound + Foundayo 上线</td>
+</tr>
+<tr>
+<td>Novo 口服药竞争</td>
+<td>看空</td>
+<td>新闻</td>
+<td>Novo 上涨 6%</td>
+</tr>
+<tr>
+<td>XLV 减持</td>
+<td>小幅看空</td>
+<td>新闻</td>
+<td>减持 2.126 亿美元</td>
+</tr>
+<tr>
+<td>多空比例</td>
+<td>中性</td>
+<td>StockTwits</td>
+<td>7 多 / 6 空 / 14 无标签</td>
+</tr>
+<tr>
+<td>创收盘新高、期权 56% 看涨</td>
+<td>小幅看多</td>
+<td>StockTwits</td>
+<td>收于 1,432;11 日创收盘新高</td>
+</tr>
+<tr>
+<td>估值/轮动担忧</td>
+<td>看空</td>
+<td>StockTwits</td>
+<td>晨星称高估;AI 资金回流</td>
+</tr>
+<tr>
+<td>Reddit</td>
+<td>无数据</td>
+<td>—</td>
+<td>获取失败</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>总结</strong>:整体为温和偏多。基本面新闻偏正面,散户情绪均衡,且样本小、Reddit 缺失,所以置信度为中等。这只是情绪信号,需结合基本面和技术面,不构成价格预测。</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>LLY(礼来)一周新闻与宏观研究报告(2026-11-04 至 2026-11-11)</h4>
+<h5>一、数据可得性说明</h5>
+<ul>
+<li><strong>宏观指标(FRED)</strong>:联邦基金利率、10年期美债收益率、CPI、失业率、VIX 均返回 DATA_UNAVAILABLE(未设置 FRED_API_KEY)。本报告<strong>不提供</strong>这些数值,也不做估算。</li>
+<li><strong>预测市场</strong>:Polymarket 对 2026-11-11 的赔率予以屏蔽(防止引入决策之后的信息)。因此降息概率、衰退概率和礼来相关事件概率均无数据。</li>
+<li>下文的宏观判断只依据新闻标题,属于定性观察,证据较弱。</li>
+</ul>
+<h5>二、公司层面要点(LLY)</h5>
+<ol>
+<li><strong>上调 2026 年销售指引</strong>:Motley Fool(11/11)报道,礼来将 2026 年销售预测上调至最高 920 亿美元。这是本周最重要的基本面信号,指引上调通常支撑盈利预期上修。具体的分项数据和 EPS 指引,本次工具未给出。</li>
+<li><strong>分析师目标价</strong>:Jefferies 将目标价上调至 <strong>1,700 美元</strong>,当日股价上涨 2.35%,报约 <strong>1,385 美元</strong>。隐含上行空间约 23%。这只是单一券商的观点。</li>
+<li><strong>与 Hims &amp; Hers(HIMS)合作</strong>:礼来将 Zepbound 和 Foundayo(口服肥胖药)放入 HIMS 远程医疗平台。
+<ul>
+<li>对礼来而言,这扩大了经过 FDA 批准的药品分销渠道,并减少复合药(compounded)的冲击。</li>
+<li>对 HIMS 而言,股价却在一周内下跌约四分之一。原因是财报不及预期,订阅用户环比减少 10 万,尽管收入同比增长 49%。合作利好没能抵消这些压力。</li>
+<li>对 LLY 的影响是渠道利好,但 HIMS 的疲弱说明该渠道的变现能力有不确定性。</li>
+</ul>
+</li>
+<li><strong>竞争格局</strong>:Novo Nordisk 股价上涨 6%。其口服 Wegovy 的某项指标达到 80%,同时药价在下降,竞争对手正在逼近。口服 GLP-1 的竞争和价格下行是礼来的主要风险。</li>
+<li><strong>资金与板块</strong>:
+<ul>
+<li>医疗板块六个月内领先科技 35.6 个百分点,为 25 年来最大差距,背景是投资者降低 AI 敞口。LLY 在这轮轮动中受益。</li>
+<li>但如果 AI 交易重新走强(例如 CoreWeave 财报推动科技股反弹),资金可能回流科技板块,这是板块层面的风险。</li>
+<li>XLV 在 11 月 5 日减持了 2.126 亿美元,每个持仓都被削减,其中 LLY 是最大的减持项。这更像是被动的资金流动,不一定代表对 LLY 的看法。</li>
+</ul>
+</li>
+<li><strong>其他</strong>:Zacks 称制药板块在 2026 年反弹,盈利预期上升。Moderna 财报超预期后创 52 周新高,说明医药板块情绪较好。</li>
+</ol>
+<h5>三、宏观与市场背景(定性,证据有限)</h5>
+<ul>
+<li>全球新闻中的主要主题是 AI 交易的波动。一边是&quot;AI 抛售&quot;的讨论,另一边是 CoreWeave 业绩带动科技股反弹。另有 Take-Two 与 GTA VI 发布的消息。</li>
+<li>本周工具没有返回任何关于央行政策、通胀或就业的新闻。我无法判断利率环境,需要其他来源来补充。</li>
+</ul>
+<h5>四、交易观察</h5>
+<ul>
+<li><strong>利好因素</strong>:指引上调、券商上调目标价、板块轮动资金流入、HIMS 渠道扩张。</li>
+<li><strong>风险因素</strong>:股价已处高位(约 1,385 美元),估值偏高。另外有口服药竞争和降价压力,科技股反弹导致的轮动逆转,以及 HIMS 的执行风险。</li>
+<li><strong>后续关注</strong>:指引的细分内容、Foundayo 的处方数据、Novo 的口服药份额、以及宏观数据(CPI、利率)。这些需要补充数据,才能做出完整判断。</li>
+</ul>
+<h5>五、要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>要点</th>
+<th>影响</th>
+<th>置信度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>指引</td>
+<td>2026 年销售预测上调至最高 920 亿美元</td>
+<td>利多</td>
+<td>中高(单一来源)</td>
+</tr>
+<tr>
+<td>分析师</td>
+<td>Jefferies 目标价 1,700 美元;股价约 1,385 美元,涨 2.35%</td>
+<td>利多</td>
+<td>中</td>
+</tr>
+<tr>
+<td>渠道</td>
+<td>与 HIMS 合作销售 Zepbound 和 Foundayo</td>
+<td>小幅利多</td>
+<td>中</td>
+</tr>
+<tr>
+<td>HIMS</td>
+<td>一周下跌约 25%,订阅用户减少 10 万</td>
+<td>渠道变现不确定</td>
+<td>中</td>
+</tr>
+<tr>
+<td>竞争</td>
+<td>Novo 口服 Wegovy 指标达 80%,价格下行</td>
+<td>利空</td>
+<td>中</td>
+</tr>
+<tr>
+<td>板块</td>
+<td>医疗领先科技 35.6 个百分点,创 25 年新高</td>
+<td>利多,但有反转风险</td>
+<td>中</td>
+</tr>
+<tr>
+<td>资金</td>
+<td>XLV 减持 LLY 等 60 个持仓共 2.126 亿美元</td>
+<td>中性</td>
+<td>低</td>
+</tr>
+<tr>
+<td>宏观</td>
+<td>FRED 数据缺失,预测市场被屏蔽</td>
+<td>无法评估</td>
+<td>无数据</td>
+</tr>
+</tbody>
+</table></div>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong>(仅基于新闻;缺少宏观数据与估值数据,最终决策交由下游分析师)</p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>LLY(礼来公司)基本面分析报告(截至 2026-11-11)</h4>
+<h5>一、数据说明与局限</h5>
+<ul>
+<li>get_fundamentals:该数据源不提供历史时点的公司概况,因此市值、估值倍数(P/E、P/S 等)、52 周区间和 TTM 指标均被屏蔽,无法引用。</li>
+<li>get_insider_transactions:内部人交易数据因无申报日期而被屏蔽,无法判断 2026-11-11 当日哪些交易已公开,所以本报告不对内部人买卖做任何结论。</li>
+<li>利润表、资产负债表、现金流量表来自 SEC EDGAR 已申报数据,可以使用。其中部分科目缺失:毛利和营业利润显示&quot;未标记&quot;,部分季度(如各年第四季度)在表中没有单独列示。</li>
+<li>下面的数字均直接取自工具返回结果。凡是需要推算的,我都已注明是推算。</li>
+</ul>
+<h5>二、利润表(季度,单位:百万美元)</h5>
+<p><strong>收入高速增长</strong></p>
+<ul>
+<li>2023-09-30:6,942(表中该列);2024-03-31:8,312;2024-06-30:9,499;2024-09-30:8,768。</li>
+<li>2025-03-31:11,303;2025-06-30:11,439;2025-09-30:12,729。</li>
+<li>2026-03-31:15,558;2026-06-30:17,601;2026-09-30:19,799。</li>
+<li>表中最后一列为 2026-09-30,收入 24,397。(注意:这些列的日期标签与数值排列在表中可能存在错位,最新一期应以最后一列为准。)</li>
+<li>最新一期收入 24,397 对比 2025 年同期区间的 12,729 是约 1.9 倍,同比增长约 92%(推算,基于列的对应关系,存在一定不确定性)。</li>
+</ul>
+<p><strong>成本与盈利</strong></p>
+<ul>
+<li>营业成本最新几期为 3,008、3,577、3,268、3,933(百万美元)。</li>
+<li>最新一期成本占收入约 16%(3,933 / 24,397,推算),说明毛利率约 84%,处于很高水平。这是推算值,不是数据源直接给出的毛利。</li>
+<li>净利润:最新几期为 5,661、5,583、7,396、7,095、6,451。最新一期净利润 6,451,净利率约 26%(推算)。</li>
+<li>摊薄 EPS:最新几期为 6.29、6.21、8.26、7.94、7.22。最新一期 7.22。</li>
+<li>观察:最新一期收入继续增长(24,397),但净利润(6,451)和 EPS(7.22)低于前一期(7,095;7.94),利润增速落后于收入增速。我们没有营业费用明细,原因可能是研发和销售投入增加、一次性项目或税费,无法从现有数据确认。</li>
+</ul>
+<h5>三、资产负债表(季度,单位:百万美元)</h5>
+<ul>
+<li>总资产:最新几期为 112,476、116,576、142,283、148,072。资产规模在最近几个季度大幅增加。</li>
+<li>流动资产:最新为 65,263(前一期 64,672)。</li>
+<li>现金及等价物:最新 4,885,前几期 9,792、7,268、5,282、8,950。</li>
+<li>流动负债:最新 46,996(前几期 40,141、35,228、36,634、47,741)。流动负债上升明显。</li>
+<li>股东权益:最新 40,271,前几期 26,535、31,198、33,879。权益稳步增加,与高盈利一致。</li>
+<li>总负债:数据源未标记,无法直接引用。可用&quot;总资产 − 股东权益&quot;粗略推算:148,072 − 40,271 ≈ 107,801(推算,未必含少数股东权益等项目)。该值意味着杠杆较高,权益占总资产约 27%。</li>
+<li>流动比率约 65,263 / 46,996 ≈ 1.39(推算),短期偿债能力尚可,但较过去有所下降。</li>
+</ul>
+<h5>四、现金流量表(累计口径,单位:百万美元)</h5>
+<p>注意:现金流量表是年内累计(3 个月、6 个月、9 个月),不能直接逐列相比。</p>
+<ul>
+<li>经营现金流:2025 年前 9 个月 16,023(表中对应列);2026 年累计列分别为 5,333(一季度)、16,023(6 个月)、27,420(9 个月)。(日期与数值对应存在不确定性,以最后一列 27,420 为最新 9 个月数据。)</li>
+<li>投资现金流:最新 9 个月累计 −27,611,与资产规模的大幅增长相吻合,可能涉及产能投资、收购或有价证券购买,具体用途工具未提供。</li>
+<li>融资现金流:最新 9 个月累计 −2,263。</li>
+<li>资本开支:近年数据缺失,无法计算自由现金流。</li>
+<li>观察:9 个月经营现金流 27,420,而同期净利润合计约 (5,583 + 7,396 + 7,095 + 6,451 之类的组合,我不确定具体季度组合,这里不做精确计算)。大致可以判断现金生成能力强,但大部分被投资活动消耗。</li>
+</ul>
+<h5>五、要点与对交易的意义</h5>
+<ol>
+<li><strong>增长极强</strong>:收入同比近翻倍,毛利率约 84%(推算),基本面动能强劲。</li>
+<li><strong>利润增速落后</strong>:最新一期 EPS 7.22 低于前期 7.94,需要关注费用和一次性项目,等待下一次财报电话会议的信息。</li>
+<li><strong>资产负债表扩张</strong>:总资产 1,481 亿美元,流动负债 470 亿美元,投资现金流流出 276 亿美元(9 个月),说明公司在大举投入。现金余额仅 48.85 亿美元,较前期下降。</li>
+<li><strong>估值与内部人信息缺失</strong>:没有 P/E、市值、52 周区间和内部人交易数据,无法判断估值是否合理。需要其他工具补充。</li>
+<li><strong>风险</strong>:高度依赖少数核心产品(此为行业常识,非本次工具数据)、定价和政策压力、竞争加剧、杠杆上升。</li>
+</ol>
+<h5>六、汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>最新数据</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>季度收入</td>
+<td>24,397 百万美元</td>
+<td>同比约 +92%(推算,存在不确定性)</td>
+</tr>
+<tr>
+<td>营业成本</td>
+<td>3,933 百万美元</td>
+<td>约占收入 16%,隐含毛利率约 84%(推算)</td>
+</tr>
+<tr>
+<td>净利润</td>
+<td>6,451 百万美元</td>
+<td>净利率约 26%(推算),低于前一期 7,095</td>
+</tr>
+<tr>
+<td>摊薄 EPS</td>
+<td>7.22 美元</td>
+<td>前一期 7.94</td>
+</tr>
+<tr>
+<td>总资产</td>
+<td>148,072 百万美元</td>
+<td>近几个季度大幅增加</td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>40,271 百万美元</td>
+<td>稳步上升</td>
+</tr>
+<tr>
+<td>现金及等价物</td>
+<td>4,885 百万美元</td>
+<td>较前期下降</td>
+</tr>
+<tr>
+<td>流动负债</td>
+<td>46,996 百万美元</td>
+<td>流动比率约 1.39(推算)</td>
+</tr>
+<tr>
+<td>9 个月经营现金流</td>
+<td>27,420 百万美元</td>
+<td>现金生成能力强</td>
+</tr>
+<tr>
+<td>9 个月投资现金流</td>
+<td>−27,611 百万美元</td>
+<td>投资规模大,用途未知</td>
+</tr>
+<tr>
+<td>9 个月融资现金流</td>
+<td>−2,263 百万美元</td>
+<td></td>
+</tr>
+<tr>
+<td>估值指标/市值</td>
+<td>不可用</td>
+<td>数据源屏蔽</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td>不可用</td>
+<td>数据源屏蔽</td>
+</tr>
+</tbody>
+</table></div>
+<p>数据局限提示:本报告基于 EDGAR 已申报的报表。表中的列日期和数值存在不确定的对应关系,且缺少估值和内部人数据,所以请其他分析师补充估值、新闻和技术面信息后再做交易决定。本报告不给出交易建议。</p>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: # LLY(礼来)看多论证:增长是真实的,趋势是确认的,回调是买点而不是卖点</p>
+<p>熊方还没发言,我先把多头的核心逻辑摆出来,并提前回应他们最可能的几个攻击点。</p>
+<h5>一、增长潜力:规模与速度同时具备</h5>
+<p><strong>1. 收入增速极少见于大型制药公司</strong></p>
+<ul>
+<li>基本面报告显示,最新一期季度收入为 24,397 百万美元,对比上年同期区间的 12,729 百万美元,同比增长约 92%(报告自己的推算,并注明列对应有不确定性)。即便按保守口径理解,收入从 2024 年一季度的 8,312 增长到现在的两千多万美元,也是一条清晰的陡峭曲线。</li>
+<li>管理层把 2026 年销售预期上调至最高 920 亿美元(Motley Fool 报道)。上调指引说明管理层对订单、产能和需求的可见度很高,而且通常带动盈利预期上修。</li>
+</ul>
+<p><strong>2. 渠道和产品线仍在扩张</strong></p>
+<ul>
+<li>与 Hims &amp; Hers 合作,把 Zepbound 和口服 Foundayo 放进远程医疗渠道。这扩大了获批药品的触达面,并挤压复合药的空间。</li>
+<li>Taltz 联合 Zepbound 的 3b 期数据(银屑病关节炎合并肥胖)被提及,说明管线并不只靠减重药。</li>
+<li>口服 Foundayo 刚进入放量阶段,是下一个增量来源。</li>
+</ul>
+<p><strong>3. 分析师在上调,而不是下调</strong></p>
+<ul>
+<li>Jefferies 目标价上调至 1,700 美元,较约 1,437 的现价仍有约 18% 的空间(按本次收盘价自行换算)。Zacks 也提到制药板块盈利预期在上升。</li>
+</ul>
+<h5>二、竞争优势:盈利质量是护城河的数字化表现</h5>
+<ul>
+<li>营业成本占收入约 16%,隐含毛利率约 84%(推算),净利率约 26%。这样的毛利结构给了公司足够的资金去投研发、产能和渠道,而且能承受一定的价格下行。</li>
+<li>9 个月经营现金流 27,420 百万美元,现金生成能力非常强。投资现金流 −27,611 百万美元,说明公司在把现金再投入产能和未来增长,而不是消耗在无效支出上。</li>
+<li>股东权益从 26,535 稳步升至 40,271 百万美元,利润在持续积累。</li>
+<li>在口服和注射两个形态上都有已获批的产品,并且打通了远程医疗渠道,这是产品、规模和分销的三重优势。</li>
+</ul>
+<h5>三、正面指标:趋势、资金、情绪三者同向</h5>
+<p><strong>技术面</strong></p>
+<ul>
+<li>收盘价 1,437.29 &gt; 10 EMA 1,389.55 &gt; 50 SMA 1,230.06 &gt; 200 SMA 1,103.45,四条线完美多头排列,且 50 日和 200 日均线持续上行。</li>
+<li>10-29、10-30 两天放量大涨(成交量 437 万、525 万股),这是增量资金进场的痕迹。11-05、11-06 回调到 1,354 后,三天内就收复并创收盘新高,说明回调有人接。</li>
+<li>MACD 仍在信号线上方(57.33 对 51.86)。</li>
+</ul>
+<p><strong>资金面</strong></p>
+<ul>
+<li>医疗板块领先科技 35.6 个百分点,为 25 年来最大差距,LLY 是这轮防御型配置的核心受益者。</li>
+<li>期权权利金中看涨占 56%,52 周高点 1,453 近在眼前。</li>
+</ul>
+<h5>四、回应熊方可能的攻击</h5>
+<p><strong>&quot;RSI 70、MACD 柱收窄、量能萎缩,有顶背离。&quot;</strong>
+技术报告自己也说,这是&quot;轻度&quot;、&quot;雏形&quot;、&quot;需要后续确认&quot;。强趋势中 RSI 可以长期停留在 70 附近。柱状图收窄本质上是上涨节奏放缓,而不是反转。价格仍站在 10 EMA 之上,且 11-11 的低量,更像是上冲前的整理,而不是出货。真正的转弱信号(MACD 下穿、RSI 跌破 60、收盘跌破 10 EMA)一个都没有出现。</p>
+<p><strong>&quot;最新一期净利润 6,451 和 EPS 7.22 低于前一期。&quot;</strong>
+我承认这是个值得跟踪的点。但看收入端:收入仍在继续上升,并且报告也明确说明原因无法从现有数据确认,可能是研发和销售投入的增加或一次性项目。对一个正在放量新产品、扩渠道、建产能的公司来说,为增长先投入是合理的。26% 的净利率依然极高。单季度的利润波动,不足以推翻&quot;收入翻倍、毛利率 84%&quot;的大格局。</p>
+<p><strong>&quot;估值太高,医疗板块被晨星称为高估。&quot;</strong>
+这是熊方最有力的论点,我不回避:本次工具屏蔽了 P/E 和市值,我无法声称估值便宜。但估值要和增长一起看。收入接近翻倍、指引上调、盈利预期上修,意味着分母(盈利)在快速变大。单一用户重复发布的晨星观点,也不应被过度放大。</p>
+<p><strong>&quot;Novo 的口服 Wegovy 在逼近,价格下行。&quot;</strong>
+竞争确实存在,是真实的风险。但这是一个需求远大于供给的扩张型市场。竞争者的进展,说明整个品类在被验证,而不一定意味着 LLY 份额会被拿走。LLY 在注射和口服两条线上都有产品,而且 84% 的毛利给了它应对价格压力的空间。</p>
+<p><strong>&quot;资产负债表扩张、杠杆变高、现金只剩 48.85 亿。&quot;</strong>
+流动比率约 1.39(推算),尚可。现金下降,是因为投资现金流 −27,611 百万美元,是主动再投资,而非经营困境。9 个月经营现金流 27,420 百万美元,足以覆盖这种扩张节奏。</p>
+<p><strong>&quot;XLV 减持、AI 资金可能回流。&quot;</strong>
+XLV 的减持是被动再平衡,报告自己也说置信度低。轮动风险是真实的,但它是市场层面的风险,不是公司层面的恶化。</p>
+<h5>五、我承认的边界</h5>
+<ul>
+<li>估值、内部人交易、宏观利率数据缺失,我不能假装这些信息有利。</li>
+<li>短线追高的性价比确实下降,技术报告也建议回踩 10 EMA(约 1,390)附近分批进入。</li>
+<li>财务表中列日期可能存在错位,推算值有不确定性。</li>
+</ul>
+<p>但这些是择时和仓位的问题,不是论点的问题。核心事实没有被推翻:收入高速增长、毛利率极高、现金流强劲、指引上调、分析师上调目标价、资金轮入、趋势完整。</p>
+<h5>六、结论</h5>
+<p>多头的判断是:LLY 正处于一条由真实需求驱动的盈利上升通道中,基本面、资金面和趋势三者共振。短期的超买和低量,是用来分批建仓的机会,而不是离场的理由。我邀请熊方回答一个问题:如果收入近翻倍、指引在上调,那么什么具体证据足以证明增长即将断档?</p>
+<p><strong>Rating</strong>: Buy</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>BUY</strong></p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: # LLY(礼来)看空论证:数据里的裂缝比标题大,现在不是追高的位置</p>
+<p>多头开场很流畅,但他的核心论据有几处站不住:一个靠不稳的数字撑起&quot;收入翻倍&quot;,一个靠缺失的估值回避最关键的问题,再加上一个正在变弱的技术形态。我逐条回应。</p>
+<h5>一、&quot;收入同比增长 92%&quot;并不牢靠</h5>
+<p>多头把 92% 当作整个论证的基石,但基本面报告本身就写明:这些列的日期标签与数值排列&quot;可能存在错位&quot;,92% 是&quot;推算,存在一定不确定性&quot;。</p>
+<ul>
+<li>表中的序列是 15,558、17,601、19,799,然后最后一列突然是 24,397。如果按相邻季度看,19,799 到 24,397 单季环比增长约 23%,这个跳升本身就需要解释,而数据没有解释。</li>
+<li>也就是说,多头把一个自己都无法确认列对应关系的数字,当成&quot;极少见于大型制药公司&quot;的证据。我不否认增长很强,但<strong>用来定价的是一个未经确认的数字</strong>。</li>
+<li>更重要的是:增长再快,股价已经把它计入。多头反复说&quot;分母在变大&quot;,但从未给出任何一个估值倍数。这不是细节,而是论证的缺口。</li>
+</ul>
+<h5>二、利润在掉头,这是最需要警惕的信号</h5>
+<p>多头把它称为&quot;值得跟踪的点&quot;然后一带而过。我认为它是本次数据中最重要的基本面信号:</p>
+<ul>
+<li>最新一期收入继续上升(24,397),但净利润从 7,095 降到 6,451,EPS 从 7.94 降到 7.22。<strong>收入增、利润降,意味着利润率在收缩。</strong></li>
+<li>净利率约 26%,而上一期按同样口径明显更高。多头说&quot;为增长投入是合理的&quot;,但他没有任何费用明细来支持这个解释。他的说法和&quot;价格战、折扣、费用失控、一次性项目&quot;一样,都是猜测。</li>
+<li>管理层刚刚上调了销售指引,而利润却在下滑。如果指引上调是因为销量扩张,代价就是单位盈利能力下降,这与&quot;84% 毛利率给了足够缓冲&quot;的叙事矛盾。注意 84% 是推算出的毛利率,而不是数据源给出的毛利,营业费用部分根本不可见。</li>
+</ul>
+<h5>三、现金流和资产负债表并不像多头说得那样安心</h5>
+<ul>
+<li>9 个月经营现金流 27,420,投资现金流 −27,611。<strong>经营现金流几乎被投资完全吞噬</strong>,融资现金流还有 −2,263 的净流出。现金余额降到 4,885,是近几期里偏低的水平。</li>
+<li>多头说&quot;这是主动再投资,不是无效支出&quot;。但工具明确表示&quot;用途未提供&quot;:可能是产能,可能是收购,也可能是购买有价证券。多头把一个未知用途直接定性为好事。</li>
+<li>总资产 1,481 亿,股东权益 403 亿,权益占总资产约 27%(推算)。流动负债 470 亿,是近几期的高位之一。流动比率 1.39 比过去下降。资产规模快速扩张的同时,杠杆在悄悄抬升。</li>
+<li>资本开支数据缺失,自由现金流无法计算。多头把&quot;现金生成能力强&quot;说成事实,但真正能分给股东的自由现金流,我们根本看不到。</li>
+</ul>
+<h5>四、技术面:价格创新高,动能却在退潮</h5>
+<p>多头说&quot;真正的转弱信号一个都没有出现&quot;。这是在等灾难确认后才承认风险,对已经承担高位成本的投资者没有意义。</p>
+<ul>
+<li><strong>RSI</strong>:10-30 峰值 77.89,现在 70.31;价格却从 1,417.54 走到 1,437.29。典型的顶背离雏形。</li>
+<li><strong>MACD</strong>:11-04 的 59.25 高点后回落到 57.33,价格反而更高。柱状图从 16.56 收窄到 5.47,收窄超过三分之二。</li>
+<li><strong>成交量</strong>:11-11 创收盘新高时只有 187 万股,而 10-30 是 525 万、11-05 是 488 万。**新高没有资金确认。**多头说是&quot;上冲前的整理&quot;,但这只是愿望。同样的数据也完全符合&quot;买盘衰竭&quot;。</li>
+<li><strong>乖离</strong>:价格高出 50 SMA 约 207 点(约 17%),高出 200 SMA 约 334 点(约 30%)。10-29、10-30 的跳涨没有整理,技术报告自己提示&quot;若消息面逆转,回补缺口幅度可能较大&quot;。</li>
+<li>距离布林上轨只有 42 点,约 0.9 个 ATR;而 ATR 约 46,日波动约 3.2%。向上的空间是一天的波动,向下回到 10 EMA 或布林中轨是 50 到 100 点。<strong>风险回报比不对称,方向偏向下行。</strong></li>
+</ul>
+<h5>五、估值:多头承认没有答案,却仍然给&quot;买入&quot;</h5>
+<p>多头说&quot;本次工具屏蔽了估值,我无法声称便宜&quot;。这句话本应让他停下来。一个无法证明估值合理的&quot;买入&quot;评级,逻辑上无法成立。</p>
+<ul>
+<li>价格已从 10-12 附近明显上涨(50 SMA 1,174 对应的区间),单月涨幅很大。这种涨幅通常反映的是预期的提前兑现。</li>
+<li>Jefferies 1,700 美元的目标价是<strong>单一券商</strong>观点,而且它是在股价约 1,385 时给出的。多头把&quot;约 18% 空间&quot;作为论据,但上调目标价的行为本身,往往滞后于股价上涨,而不是领先。</li>
+<li>Morningstar 认为医疗板块是美国第三大高估板块。多头以&quot;单一用户转发&quot;打发了它,但这个观点并不取决于转发者是谁。他自己也承认这是我&quot;最有力的论点&quot;。</li>
+</ul>
+<h5>六、竞争与定价:最大的结构性风险</h5>
+<ul>
+<li>Novo 口服 Wegovy 的进展使其股价上涨 6%,新闻报告明确写到&quot;药价在下降&quot;。多头说&quot;需求大于供给的市场&quot;,但<strong>供给约束消失后,市场就会从抢产能转向拼价格</strong>。</li>
+<li>LLY 与 HIMS 合作的逻辑也有反面:HIMS 一周下跌约 25%,订阅用户环比减少 10 万。这个渠道的变现能力有疑问。更值得想的是,一家药企需要借助低价远程渠道扩张,往往意味着价格和获客成本的压力在上升,这与利润下滑的现象相吻合。</li>
+<li>医保、ACA 政策预期变化被列为风险,而宏观数据(利率、CPI)工具全部缺失。多头在没有宏观证据的情况下,宣称&quot;基本面、资金面、趋势共振&quot;。</li>
+</ul>
+<h5>七、资金面:最大的推手也是最大的反转风险</h5>
+<ul>
+<li>医疗领先科技 35.6 个百分点,是 25 年来最大差距。**极端数值意味着均值回归的概率,不是继续线性延伸。**LLY 买入的一个主要理由是&quot;逃离 AI&quot;,一旦 AI 交易反弹(CoreWeave 财报已经带来一次),这个资金逻辑会反向。StockTwits 里已有帖子提到&quot;AI 走强时 LLY 当日最差&quot;。</li>
+<li>XLV 减持 2.126 亿美元,LLY 是最大的减持项。多头说这是被动操作,但被动减持恰恰说明<strong>价格涨幅已使其权重超标</strong>,需要被动卖出,这本身是高位的信号。</li>
+<li>期权看涨占 56%,散户多空 7 比 6,其余 14 条无标签,样本仅 27 条。这离&quot;情绪同向&quot;差得很远。多头把它描述成共振,有夸大。</li>
+</ul>
+<h5>八、回答多头的问题</h5>
+<p>多头问:&quot;什么具体证据足以证明增长即将断档?&quot;这是一个错误的提问方式。熊方不需要证明增长断档,只需要证明<strong>价格已经容不下任何失望</strong>。</p>
+<p>具体证据已经在表中:</p>
+<ol>
+<li>收入增长,但净利润与 EPS 环比下降;</li>
+<li>经营现金流被投资现金流全部吞噬,现金降至低位;</li>
+<li>新高伴随缩量,RSI 与 MACD 同时背离;</li>
+<li>价格高出 200 日均线约 30%,没有估值数据支撑;</li>
+<li>竞争者正在推出口服产品,价格在下降。</li>
+</ol>
+<h5>九、结论</h5>
+<p>多头的论点本质上是:增长很快,所以价格合理。但他的增长数字存在已承认的不确定性,他的估值答案是空白,他对利润下滑的解释是猜测,而他的&quot;买点&quot;建议也与技术报告提示的追高性价比下降相一致。我不认为公司是坏公司,但<strong>在此价位,不对称性不利于新进场者</strong>:上行空间被 52 周高点 1,453 和布林上轨 1,479 压缩到数十点,下行则有 10 EMA、布林中轨、1,354 乃至 50 SMA 一路等待。</p>
+<p>我的建议是不追高,不新建仓位。已有仓位应收紧跟踪止损,若收盘跌破 10 EMA(约 1,390)或 MACD 下穿信号线,应减仓。</p>
+<p><strong>Rating</strong>: Sell</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: <strong>多头最有力的论点</strong>:收入高速增长(最新一期 24,397 百万美元),管理层把 2026 年销售预期上调至最高 920 亿美元。9 个月经营现金流 27,420 百万美元,推算毛利率约 84%。价格站在 10 EMA、50 SMA 和 200 SMA 之上,均线呈多头排列,分析师在上调目标价(Jefferies 1,700 美元)。公司本身质量很高,这一点熊方没有真正反驳。</p>
+<p><strong>熊方最有力的论点</strong>:</p>
+<ol>
+<li>收入增、净利润降(7,095 降到 6,451),EPS 从 7.94 降到 7.22。这是利润率收缩的信号,多头用&quot;为增长投入&quot;来解释,但没有费用明细支持,只是猜测。</li>
+<li>估值数据缺失。多头自己承认无法证明估值合理,所以&quot;Buy&quot;缺少关键支撑。</li>
+<li>新高伴随缩量(11-11 成交量约 187 万股,10-30 为 525 万股),RSI 和 MACD 出现轻度背离。价格高出 200 SMA 约 30%。</li>
+<li>向上空间(52 周高点 1,453、布林上轨 1,479)只有数十点,向下有 10 EMA 约 1,390 和 1,354 支撑,风险回报对新进场者不对称。</li>
+<li>资金面有均值回归风险:医疗板块领先科技 35.6 个百分点,是 25 年来最大差距。</li>
+</ol>
+<p><strong>熊方的弱点</strong>:&quot;92% 同比增长不牢靠&quot;只说明数字有不确定性,不能证明增长不存在。即使按相邻季度算,环比也增长约 23%。熊方给出&quot;Sell&quot;所需的证据不足:没有任何趋势破位信号(MACD 未下穿,价格未跌破 10 EMA),没有基本面恶化的确认,只有一个季度的利润下滑。技术背离被技术报告本身描述为&quot;轻度、雏形、待确认&quot;。现金流和杠杆的担忧同样缺少用途数据,既不能证实也不能排除。</p>
+<p><strong>权衡结果</strong>:多头的基本面质量和趋势是真实的,熊方的估值、动能和利润率担忧也是真实的。两边都没有决定性胜出。估值、资本开支、费用明细和宏观数据都缺失,不足以支持强方向判断。结论是:已有仓位继续持有,不追高,新增暂缓,等待回踩或利润数据确认。</p>
+<p><strong>Strategic Actions</strong>: 1. <strong>仓位</strong>:已有仓位维持标准配置不变,不新增追高。若无持仓,今日不建仓,最多以标准仓位的 1/4 到 1/3 试探,仅在回踩时进行。
+2. <strong>加仓条件</strong>:价格回踩 10 EMA(约 1,390)附近且缩量企稳,可分两到三批加到标准仓位。或者下一期财报显示净利润和 EPS 恢复增长、利润率企稳,也可加仓。
+3. <strong>减仓条件</strong>:收盘跌破 10 EMA(约 1,390)且 MACD 下穿信号线,减仓三分之一到一半。若跌破 1,354 并放量,再减至标准仓位的一半以下。若 RSI 跌破 60,同样视为动能转弱信号。
+4. <strong>突破处理</strong>:若放量突破 52 周高点 1,453 并站稳,可恢复到标准仓位,不要在缩量冲高时追入。
+5. <strong>跟踪项</strong>:下一期利润率和费用明细、资本开支(用于判断自由现金流)、估值倍数(目前缺失,需补齐)、Novo 口服产品的定价动态、AI 与医疗板块的资金轮动。
+6. <strong>数据缺口</strong>:估值、内部人交易、宏观利率数据、财务表日期对应关系均未确认,不应据此做出重仓决策。</p>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: LLY 的趋势和基本面质量都是真实的:均线多头排列(收盘价 1437.29 高于 10 EMA 1389.55、50 SMA 1230.06 和 200 SMA 1103.45),收入增长强劲。但短期动能在放缓:RSI 为 70.31,MACD 柱状图从 16.56 收窄到 5.47,新高伴随缩量,净利润和 EPS 下降,估值数据缺失。现价距布林上轨 1479.46 只有约 42 点,向下回踩 10 EMA 约有 47 点,对新进场者的风险回报不占优。技术面没有出现破位信号,因此不宜卖出。结论是已有仓位继续持有,新增仓位等待回踩 10 EMA 附近再分批进入。组合信息未提供,以下仓位建议请按自身持仓换算。</p>
+<p><strong>Entry Price</strong>: 1392.0</p>
+<p><strong>Stop Loss</strong>: 1320.0</p>
+<p><strong>Position Sizing</strong>: 已有仓位维持标准配置不变。新建仓位仅在回踩 10 EMA(约 1390)附近缩量企稳时,按标准仓位的 1/4 到 1/3 分批试探。若放量突破并站稳 1453,可恢复到标准仓位。若收盘跌破 10 EMA 且 MACD 下穿信号线,减仓三分之一到一半。止损 1320 约为入场价下方 1.5 倍 ATR(约 70 点),位于 11-06 低点 1354 之下。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位,保守派和中立派还没发言,我先把话说在前面:我支持 LLY 的 Hold,但我想用进攻的方式来支持它。这个 Hold 不是怕,而是对一个强趋势股的纪律性持有,同时给加仓设定了高赔率的触发条件。</p>
+<p>先说为什么不该卖。收盘价 1437.29 站在 10 EMA 1389.55、50 SMA 1230.06、200 SMA 1103.45 之上,三条均线全部上行、多头排列。基本面更不用说:最新一期收入 24,397 百万美元,同比约翻倍(这是推算,列对应有不确定性),隐含毛利率约 84%,9 个月经营现金流 27,420 百万美元。2026 年销售指引上调到最高 920 亿美元,Jefferies 目标价 1,700,较当时约 1,385 的股价有约 23% 上行空间。医疗对科技领先 35.6 个百分点,是 25 年来最大差距,资金轮动还在进行。在这种环境下卖出,是拿自己的仓位去赌趋势反转,而技术面没有任何破位信号。</p>
+<p>我预判保守派会说:RSI 70、MACD 柱状图从 16.56 收窄到 5.47、缩量新高、背离雏形,所以应该减仓。我的回应是,强趋势里 RSI 在 70 上方停留是常态,而且 RSI 11-05 回落到 63.42 后又回到 70.31,说明回调买盘很快就接上了。MACD 仍在信号线上方(57.33 对 51.86),柱状图收窄是整理的正常现象,不是转空。背离的幅度很小,报告自己也说需要后续确认。缩量也有两面:10-30 的 524 万股是跳涨日的放量,今天 187 万股的缩量说明抛压很轻,没人愿意在这个位置卖。拿未确认的信号去砍掉一个正在加速的赢家,代价是错过上行,而这个代价比回撤更真实。</p>
+<p>中立派可能会说:利润落后于收入,EPS 7.22 低于前期 7.94,估值数据缺失,所以应该观望。但净利率约 26% 仍然极高,利润增速暂时落后于收入,很可能是研发、销售和产能投入的结果,这是在为增长付费。更重要的是,市场已经看到了这些:指引上调是前瞻信号,比一个季度的 EPS 波动重要。估值缺失是我们的盲点,不是利空证据,不能把没有数据当成高估。</p>
+<p>至于风险回报,我承认现价距布林上轨只有约 42 点,但这不是卖出理由。强趋势经常沿着上轨运行。交易计划的巧妙之处在于它给了两条路:回踩 10 EMA 约 1390 附近,用 1/4 到 1/3 仓位试探,止损 1320,约 1.5 倍 ATR,低于 11-06 低点 1354;如果放量突破并站稳 1453(52 周高点),就恢复标准仓位。这是在不追高的前提下,保证不踏空。1,450 的突破位、1,440 的看涨期权墙都在上方,一旦突破,可能引发 gamma 驱动的加速,这正是进攻型投资者想要的。</p>
+<p>我也不回避风险:口服减重药竞争(Novo 口服 Wegovy 上涨 6%)、AI 板块资金回流、XLV 减持、单一券商目标价、10-29 以来的跳涨未经整理。但这些风险都已经被计划里的硬性纪律覆盖:收盘跌破 10 EMA 且 MACD 下穿信号线就减仓三分之一到一半。风险是被定义和量化的,而不是被恐惧放大的。</p>
+<p>所以我的结论是:已有仓位继续持有,让利润奔跑;新增仓位要么在 1390 附近低吸,要么在 1453 放量确认后追。保守派的方案会让你错过这个周期里最强的趋势之一,中立派的等待会让你在突破时犹豫。持有加上有触发条件的进攻,才是在风险可控下获取超额收益的路径。组合信息未提供,仓位比例请按自己的持仓换算。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 各位,激进派说他支持 Hold,但我认为他的论证在风险这一块是松的。我同意不该清仓,但我认为交易员的方案对 LLY(礼来)仍然偏激进,需要在几个地方收紧。</p>
+<p>先说激进派的核心论点:&quot;没有任何破位信号,所以持有并等突破加仓&quot;。这个逻辑的问题在于,等到破位信号出现时,损失已经发生了。计划里的减仓触发是&quot;收盘跌破 10 EMA 且 MACD 下穿信号线&quot;,两个条件同时满足。10 EMA 在 1389.55,现价 1437.29,差约 48 点。10-29 到 10-30 的跳涨之后没有经过整理,如果回补,价格会直接穿过 10 EMA,穿过之后的收盘价可能已经在 1350 附近了。这时才减仓,等于先吃掉大半回撤。保守的做法是在收盘跌破 10 EMA 时就先行动,不必等 MACD 确认,因为 MACD 是滞后指标。</p>
+<p>第二,他把背离和缩量轻描淡写地解释掉了。他说缩量代表抛压轻,但这个解释只在一个方向上成立。新高伴随缩量,通常说明没有新增买盘愿意追价。11-11 成交量 187 万股,对比 10-30 的 525 万和 11-05 的 488 万,只有三分之一到五分之二。RSI 和 MACD 同时出现轻度背离,两个独立指标指向同一方向。他说幅度小需要确认,我同意,但&quot;需要确认&quot;恰好意味着我们不应该在此时加大风险暴露。</p>
+<p>第三,他用&quot;强趋势沿上轨运行&quot;来化解距上轨仅 42 点的问题。ATR 是 46.4,价格到上轨不到一个 ATR。ATR 从 33 升到 46,波动率在上升,而不是下降。波动率放大时,同样的仓位承担的风险也更大。他还提到 gamma 驱动加速,但看涨期权墙在 1440 同时也是阻力。散户帖子的期权信息来源不明,样本只有 27 条,不能拿来当加仓依据。</p>
+<p>第四,基本面。他说利润落后是&quot;为增长付费&quot;,这是猜测。数据里没有营业费用明细,我们并不知道原因。更关键的是,工具报告自己承认列日期和数值可能错位,同比 92% 是推算,&quot;约翻倍&quot;并不稳固。资产负债表这边的信号更值得重视:总资产 1,481 亿美元,股东权益 403 亿美元,权益占比约 27%;现金只有 48.85 亿美元,而流动负债 470 亿美元;流动比率约 1.39 且在下降;9 个月投资现金流流出 276 亿美元,用途未知。他说&quot;估值缺失是盲点不是利空&quot;,我反过来问:在价格偏离 50 SMA 207 点、偏离 200 SMA 334 点,又不知道估值的情况下,为什么要把盲点当成安全垫?对资产保护来说,看不见的东西应当按更差的情形来定价。</p>
+<p>第五,他说的催化剂都有反面。销售指引上调是好事,但市场在 10-29 到 10-30 已经大幅反应了。Jefferies 的 1,700 目标价是单一券商观点。医疗领先科技 35.6 个百分点,是 25 年来最大差距,这同时也是均值回归的风险:极端的相对强度之后,资金回流 AI 板块的反转可能很快。社交媒体里已经有&quot;AI 走强时 LLY 当日最差&quot;的例子。XLV 减持中 LLY 是最大的一项,虽然可能是被动操作,但它说明在这个价位有机械性的卖压。再加上 Novo 口服 Wegovy 的竞争和价格下行,这些都是对利润率的威胁,而 LLY 的利润率正好在被市场当作理所当然。最后,宏观数据全部缺失,利率、通胀、VIX 都不知道。在这种信息不全的条件下,不应该为了避免&quot;踏空&quot;而增加风险。</p>
+<p>所以我对交易方案提出具体的收紧建议。</p>
+<p>一,已有仓位继续持有,但不加仓,并且如果仓位因为上涨已经超过组合的目标权重,应当把超出的部分减回目标权重。这属于再平衡,不是看空。</p>
+<p>二,减仓触发提前:收盘跌破 10 EMA(约 1390)就减仓三分之一,不需要等 MACD 下穿。如果收盘跌破 1354(11-06 低点),再减一部分,不要等到 1320。</p>
+<p>三,新增仓位:不要在 1453 放量突破时追高。突破后很容易假突破,而且 RSI 和 MACD 都有背离。回踩试探仓位我建议从 1/4 到 1/3 降到 1/5 到 1/4,并且等待回踩时 RSI 回到 60 以下、成交量企稳再动手。止损 1320 距入场价约 72 点,约 1.5 倍 ATR,但在 ATR 上升、跳涨缺口未回补的环境里,我更担心隔夜跳空会直接穿越止损,所以仓位要按&quot;可能跳空到止损以下&quot;来计算,而不是按止损价的理想成交来计算。</p>
+<p>四,如果持仓集中度高,可以考虑用保护性看跌期权或领口来对冲,成本可控,同时保留上行。期权价格我没有数据,这只是方向性建议,要以实际报价为准。</p>
+<p>激进派说我们会错过趋势。我的回答是:持有已有仓位本来就保留了趋势的大部分收益,错过的只是追加仓位的那一部分。反过来,如果在缩量、背离、波动率上升、估值不明的条件下追加,下跌的代价是本金,上涨的代价只是少赚。对一个以保护资产为首要目标的组合,这个不对称性应当决定我们的做法。</p>
+<p>组合信息未提供,上面的比例请按自己的持仓换算。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 两位都说了不少有道理的话,但我觉得各自都有一块地方推过头了,我来一个一个说。</p>
+<p>先说激进派。你说强趋势里 RSI 在 70 以上是常态,这没错。但你把&quot;RSI 从 63 回到 70&quot;当成买盘接得快的证据,同时又把&quot;缩量新高&quot;解释成抛压轻,这两个解释都是只挑了有利的一面。缩量既可以是没人卖,也可以是没人追,单凭一天 187 万股分不出来。你还说止损、减仓这些风险都被&quot;量化&quot;了,可是减仓条件要求收盘跌破 10 EMA 且 MACD 下穿信号线同时满足。10-29 到 10-30 的跳涨没有整理过,如果回撤发生,两个条件凑齐的时候,价格大概率已经比 1390 低不少了。纪律是有的,但触发偏慢。另外你把&quot;估值缺失不是利空&quot;说得很干脆,逻辑上对,可它也不是利多,所以不能拿来支持&quot;突破就恢复标准仓位&quot;。还有,gamma 加速的依据是 27 条 StockTwits 帖子里的期权墙说法,来源很薄,不适合当加仓理由。你说保守方案会错过趋势,但已有仓位持有本身就拿到了趋势的大部分,所以真正的分歧只在新增仓位上,没你说的那么戏剧化。</p>
+<p>再说保守派。你的有些点我同意,比如触发条件不该等 MACD 这种滞后指标,以及隔夜跳空可能穿过 1320 止损,仓位要按跳空来算。但你有几处我觉得过了。第一,你要求回踩时 RSI 回到 60 以下再动手。11-05 和 11-06 的 RSI 是 63.42 和 61.14,价格已经在 1354 到 1365 了,也就是说等 RSI 跌破 60,价格很可能已经接近甚至跌破 10 EMA 下方一大截,这个条件几乎等于永远不进场。第二,你说&quot;看不见的东西按更差情形定价&quot;。信息缺失确实要留余量,但把缺失的估值直接当成负面,和激进派把它当成中性一样,都是替数据做了决定。我们能说的只是:不确定性高,所以仓位小一点、止损清楚一点,而不是假定它一定贵。第三,你对基本面的担忧部分站得住,但资产负债表的几个数字解读偏重。权益占比 27%、流动比率 1.39 对一家高毛利、经营现金流 274 亿的公司来说,不一定是危险信号,而且投资现金流流出可能是产能和投资,用途未知,既不能当利好也不能当利空。第四,把&quot;超出目标权重的部分减回去&quot;我认为是合理的,但前提是你知道目标权重。我们并不知道组合情况,所以这只能是条件句,不能当作一般性结论。另外,不在 1453 突破时追,是否过度,我觉得要看量能,而不是一刀切否定。</p>
+<p>那我的看法是什么?我觉得交易员的 Hold 基本方向对,但有三处可以微调。</p>
+<p>第一,已有仓位继续持有,不加不减,除非它已经明显超过你自己的目标权重,那就只削掉超出的部分。这点上我基本采纳保守派的再平衡思路,但表述为条件。</p>
+<p>第二,减仓触发折中。把&quot;收盘跌破 10 EMA 且 MACD 下穿&quot;改成分层:收盘跌破 10 EMA(约 1390)先减约五分之一到四分之一作为预警,再叠加 MACD 下穿信号线或收盘跌破 1354,继续减到原计划的三分之一到一半。这样既不像保守派那样一破就大幅减,也不像原计划那样等两个条件都满足才动。</p>
+<p>第三,新增仓位保持分批,但要收窄。回踩 1390 附近的试探仓位取 1/4 左右,而不是 1/3,条件是价格企稳且量能不再放大下杀,不要硬性要求 RSI 低于 60。放量突破 1453 之后,不要一次性恢复标准仓位,先加一半,等收盘站稳并且回测不破再补足,这样能避开假突破,同时不至于完全踏空。止损 1320 保留,但仓位按&quot;可能跳空穿过止损&quot;的情形来算,实际承担的风险要比 72 点更大。</p>
+<p>对冲方面,保守派的保护性看跌期权或领口只适合集中度高的持仓,没有报价数据,我只把它当可选项,而不是默认动作。</p>
+<p>总的来说,激进派低估了动能转弱和波动率上升的成本,保守派高估了信息缺失带来的下行,又把进场条件设得太苛刻。中间路线是:趋势仍然偏多,所以不卖;短期风险回报并不占优,所以不追;用分层的减仓和分批的加仓,让亏的时候亏得有限,赚的时候仍能参与。组合信息未提供,上面的比例请按自己的持仓换算。</p>
+<p><strong>Rating</strong>: Hold</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: LLY 维持 Hold:已有仓位继续持有,不追高。若仓位已明显超过自身目标权重,只削减超出部分。新增仓位等回踩 10 EMA(约 1390)附近企稳后,以标准仓位的约 1/4 分批试探。减仓分层执行:收盘跌破 10 EMA 先减约 1/5 到 1/4;再叠加 MACD 下穿或收盘跌破 1354,减至原计划的 1/3 到 1/2。放量突破并站稳 1453 后先加一半,回测不破再补足。止损 1320 保留,仓位要按可能跳空穿过止损来算。组合信息未提供,比例请按自己的持仓换算。</p>
+<p><strong>Investment Thesis</strong>: 三位分析师都给 Hold,真正的分歧在触发条件的松紧。</p>
+<p>**为什么不卖。**激进派指出收盘价 1437.29 高于 10 EMA 1389.55、50 SMA 1230.06、200 SMA 1103.45,均线多头排列。MACD 仍在信号线上方(57.33 对 51.86)。收入强劲,2026 年销售指引上调至最高 920 亿美元。目前没有趋势破位信号,这些都不是卖出的依据。保守派和中立派也都没有给出基本面恶化的确认。</p>
+<p><strong>为什么不买或加仓。</strong></p>
+<ul>
+<li>新高伴随缩量:11-11 成交量约 187 万股,10-30 为 525 万股。</li>
+<li>RSI 和 MACD 出现轻度背离,柱状图从 16.56 收窄到 5.47。</li>
+<li>ATR 从 33 升到 46,波动率在上升。</li>
+<li>现价距布林上轨约 42 点,向下回踩 10 EMA 约 47 点,风险回报对新进场者不占优。</li>
+<li>净利润从 7,095 降到 6,451,EPS 从 7.94 降到 7.22。</li>
+<li>估值、费用明细、资本开支和宏观数据全部缺失。</li>
+</ul>
+<p>激进派把缺失的估值当作中性,并拿 27 条 StockTwits 帖子里的期权墙当加仓依据,证据太薄。保守派把缺失的信息按更差情形定价,同样是替数据做了决定。</p>
+<p>**对触发条件的裁决。**中立派的折中更站得住。</p>
+<ul>
+<li>原计划要求跌破 10 EMA 且 MACD 下穿两个条件同时满足,而 10-29 到 10-30 的跳涨没有整理过,等两个条件凑齐时价格可能已经明显低于 1390。保守派和中立派对此的批评成立,所以改为分层减仓。</li>
+<li>保守派要求回踩时 RSI 低于 60 才进场,几乎等于永不进场,予以否决。11-05 和 11-06 的 RSI 分别为 63.42 和 61.14,价格已回到 1354 到 1365。</li>
+<li>保守派的资产负债表担忧(权益占比约 27%、流动比率约 1.39)被中立派合理地降权。公司经营现金流 274 亿美元,投资现金流流出的用途未知,不能当作确定的风险。</li>
+<li>隔夜跳空可能穿过止损,这一点三方基本一致。</li>
+</ul>
+<p><strong>什么会改变判断。</strong></p>
+<ul>
+<li>转向 Overweight 或 Buy:下一期财报显示净利润和 EPS 恢复增长、利润率企稳;或放量突破并站稳 1453 且回测不破;或回踩 1390 缩量企稳。</li>
+<li>转向 Underweight 或 Sell:收盘跌破 1390 后 MACD 下穿,继而放量跌破 1354。另一种情形是利润率继续收缩,或 Novo 口服减重药的价格竞争明显冲击利润。</li>
+</ul>
+<p>**数据缺口。**估值倍数、费用明细、资本开支、内部人交易和宏观利率数据均未提供,不宜据此重仓。</p>
+<p><strong>Price Target</strong>: 1500.0</p>
+<p><strong>Time Horizon</strong>: 1-3 个月,下一期财报前后复核</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>
