@@ -35,9 +35,9 @@ jobs:
           python3 - <<'PY'
           import json, os, pathlib
           s = json.load(open("agent/state.json"))
-          done = pathlib.Path(f"agent/decisions/{s['last_session']}.json").exists()
-          print("已经有决策" if done else f"{s['last_session']} 收盘后还没有决策")
-          open(os.environ["GITHUB_OUTPUT"], "a").write(f"need={'false' if done else 'true'}\n")
+          # 2026-11-12 用户决定停用 AI 策略、改用 VCP：AI 不再决策
+          print("AI 决策已停用（改用 VCP 策略）")
+          open(os.environ["GITHUB_OUTPUT"], "a").write("need=false\n")
           PY
 
       - uses: astral-sh/setup-uv@v5
