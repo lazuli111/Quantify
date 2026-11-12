@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-11-11T06:30+00:00",
- "as_of": "2026-11-10",
- "next_session": "2026-11-11",
- "next_open": "2026-11-11T09:30-05:00",
- "new_day": false,
+ "generated_at": "2026-11-12T04:10+00:00",
+ "as_of": "2026-11-11",
+ "next_session": "2026-11-12",
+ "next_open": "2026-11-12T09:30-05:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -19,10 +19,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1302.95,
+    "equity": 1304.63,
     "cash": 33.43,
-    "return_pct": 0.23,
-    "qqq_return_pct": -9.25,
+    "return_pct": 0.36,
+    "qqq_return_pct": -7.15,
     "fees_paid": 7.66,
     "quota_used_hkd": 37839,
     "quota_hkd": 250000,
@@ -34,13 +34,13 @@
     "entry_date": "2026-11-10",
     "entry_price": 45.66,
     "shares": 28.0,
-    "last": 45.34,
-    "held_days": 1,
+    "last": 45.4,
+    "held_days": 2,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -9.04,
-    "unrealized_pct": -0.71,
-    "rule": "下一个交易日收盘若高于 [[$45.95]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -7.36,
+    "unrealized_pct": -0.58,
+    "rule": "下一个交易日收盘若高于 [[$45.62]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Hold",
      "rating_zh": "持有",
@@ -61,20 +61,7 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [
-    {
-     "symbol": "WDAY",
-     "close": 188.89,
-     "chg3_pct": -5.64,
-     "above_sma200_pct": 21.2
-    },
-    {
-     "symbol": "MNST",
-     "close": 45.34,
-     "chg3_pct": -5.21,
-     "above_sma200_pct": 4.7
-    }
-   ],
+   "candidates": [],
    "watch_title": "观察名单",
    "watch_sub": "已连续 2 天收跌。下一个交易日收盘低于今天收盘价，就会出现信号。",
    "watch_cols": [
@@ -95,7 +82,62 @@
      "fmt": "pct1"
     }
    ],
-   "watchlist": [],
+   "watchlist": [
+    {
+     "symbol": "MRNA",
+     "close": 248.69,
+     "chg2_pct": -7.55,
+     "above_sma200_pct": 162.9
+    },
+    {
+     "symbol": "ABNB",
+     "close": 181.13,
+     "chg2_pct": -4.81,
+     "above_sma200_pct": 21.9
+    },
+    {
+     "symbol": "MSFT",
+     "close": 521.13,
+     "chg2_pct": -4.41,
+     "above_sma200_pct": 18.5
+    },
+    {
+     "symbol": "ISRG",
+     "close": 449.53,
+     "chg2_pct": -2.39,
+     "above_sma200_pct": 4.5
+    },
+    {
+     "symbol": "CDNS",
+     "close": 329.26,
+     "chg2_pct": -2.16,
+     "above_sma200_pct": 0.4
+    },
+    {
+     "symbol": "GEHC",
+     "close": 82.6,
+     "chg2_pct": -1.7,
+     "above_sma200_pct": 18.3
+    },
+    {
+     "symbol": "ADSK",
+     "close": 260.01,
+     "chg2_pct": -1.27,
+     "above_sma200_pct": 11.2
+    },
+    {
+     "symbol": "CPRT",
+     "close": 32.17,
+     "chg2_pct": -0.86,
+     "above_sma200_pct": 0.5
+    },
+    {
+     "symbol": "VRTX",
+     "close": 547.03,
+     "chg2_pct": -0.7,
+     "above_sma200_pct": 13.3
+    }
+   ],
    "trades": [
     {
      "symbol": "PLTR",
@@ -299,6 +341,11 @@
      "date": "2026-11-10",
      "equity": 1302.95,
      "qqq": 674.76
+    },
+    {
+     "date": "2026-11-11",
+     "equity": 1304.63,
+     "qqq": 690.38
     }
    ],
    "live_stats": {
@@ -345,10 +392,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1246.28,
+    "equity": 1249.96,
     "cash": 24.52,
-    "return_pct": -4.13,
-    "qqq_return_pct": -9.25,
+    "return_pct": -3.85,
+    "qqq_return_pct": -7.15,
     "fees_paid": 7.02,
     "quota_used_hkd": 9376,
     "quota_hkd": 250000,
@@ -360,13 +407,13 @@
     "entry_date": "2026-11-04",
     "entry_price": 300.5,
     "shares": 4.0,
-    "last": 305.44,
-    "held_days": 5,
+    "last": 306.36,
+    "held_days": 6,
     "max_hold": null,
     "stop": 292.29,
-    "unrealized": 19.76,
-    "unrealized_pct": 1.64,
-    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$293.97]]），下一个交易日开盘卖出。没有持有天数上限。",
+    "unrealized": 23.44,
+    "unrealized_pct": 1.95,
+    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$295.10]]），下一个交易日开盘卖出。没有持有天数上限。",
     "ai": null
    },
    "candidate_cols": [
@@ -388,32 +435,18 @@
    ],
    "candidates": [
     {
-     "symbol": "ROP",
-     "close": 474.47,
-     "stop": 462.54,
-     "stop_pct": -2.51,
-     "ret63_pct": 20.35
-    },
-    {
-     "symbol": "ADP",
-     "close": 305.44,
-     "stop": 296.65,
-     "stop_pct": -2.88,
-     "ret63_pct": 14.13
-    },
-    {
      "symbol": "AMGN",
-     "close": 465.23,
-     "stop": 459.45,
-     "stop_pct": -1.24,
-     "ret63_pct": 12.44
+     "close": 468.11,
+     "stop": 459.14,
+     "stop_pct": -1.92,
+     "ret63_pct": 12.69
     },
     {
-     "symbol": "CTAS",
-     "close": 225.28,
-     "stop": 221.12,
-     "stop_pct": -1.85,
-     "ret63_pct": 10.98
+     "symbol": "PYPL",
+     "close": 59.48,
+     "stop": 57.85,
+     "stop_pct": -2.74,
+     "ret63_pct": -1.59
     }
    ],
    "watch_title": "接近支撑的强势股",
@@ -442,46 +475,67 @@
    ],
    "watchlist": [
     {
+     "symbol": "ABNB",
+     "close": 181.13,
+     "support": 179.63,
+     "gap_pct": 0.83,
+     "ret63_pct": -2.16
+    },
+    {
      "symbol": "PYPL",
-     "close": 58.78,
-     "support": 58.68,
-     "gap_pct": 0.17,
-     "ret63_pct": -0.46
+     "close": 59.48,
+     "support": 58.84,
+     "gap_pct": 1.09,
+     "ret63_pct": -1.59
     },
     {
      "symbol": "AMGN",
-     "close": 465.23,
-     "support": 461.54,
-     "gap_pct": 0.8,
-     "ret63_pct": 12.44
+     "close": 468.11,
+     "support": 462.86,
+     "gap_pct": 1.13,
+     "ret63_pct": 12.69
+    },
+    {
+     "symbol": "GEHC",
+     "close": 82.6,
+     "support": 81.44,
+     "gap_pct": 1.43,
+     "ret63_pct": 12.0
     },
     {
      "symbol": "CTAS",
-     "close": 225.28,
-     "support": 223.21,
-     "gap_pct": 0.93,
-     "ret63_pct": 10.98
+     "close": 227.26,
+     "support": 224.02,
+     "gap_pct": 1.45,
+     "ret63_pct": 13.53
     },
     {
      "symbol": "ROP",
-     "close": 474.47,
-     "support": 469.19,
-     "gap_pct": 1.13,
-     "ret63_pct": 20.35
+     "close": 477.7,
+     "support": 470.89,
+     "gap_pct": 1.45,
+     "ret63_pct": 20.48
     },
     {
      "symbol": "ADP",
-     "close": 305.44,
-     "support": 300.75,
-     "gap_pct": 1.56,
-     "ret63_pct": 14.13
+     "close": 306.36,
+     "support": 301.87,
+     "gap_pct": 1.49,
+     "ret63_pct": 11.62
     },
     {
      "symbol": "MRNA",
-     "close": 250.83,
-     "support": 243.56,
-     "gap_pct": 2.99,
-     "ret63_pct": 293.95
+     "close": 248.69,
+     "support": 244.58,
+     "gap_pct": 1.68,
+     "ret63_pct": 290.71
+    },
+    {
+     "symbol": "CCEP",
+     "close": 117.87,
+     "support": 115.88,
+     "gap_pct": 1.71,
+     "ret63_pct": 9.67
     }
    ],
    "trades": [
@@ -656,6 +710,11 @@
      "date": "2026-11-10",
      "equity": 1246.28,
      "qqq": 674.76
+    },
+    {
+     "date": "2026-11-11",
+     "equity": 1249.96,
+     "qqq": 690.38
     }
    ],
    "live_stats": {
@@ -702,10 +761,10 @@
    "start_date": "2026-11-06",
    "account": {
     "capital": 1300.0,
-    "equity": 1325.69,
+    "equity": 1342.19,
     "cash": 196.89,
-    "return_pct": 1.98,
-    "qqq_return_pct": 2.84,
+    "return_pct": 3.25,
+    "qqq_return_pct": 5.22,
     "fees_paid": 3.32,
     "quota_used_hkd": 8578,
     "quota_hkd": 250000,
@@ -717,13 +776,13 @@
     "entry_date": "2026-11-09",
     "entry_price": 219.96,
     "shares": 5.0,
-    "last": 225.76,
-    "held_days": 2,
+    "last": 229.06,
+    "held_days": 3,
     "max_hold": 10,
     "stop": null,
-    "unrealized": 29.0,
-    "unrealized_pct": 2.64,
-    "rule": "下一个交易日收盘若高于 [[$230.42]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": 45.5,
+    "unrealized_pct": 4.14,
+    "rule": "下一个交易日收盘若高于 [[$238.50]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Hold",
      "rating_zh": "持有",
@@ -744,20 +803,7 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [
-    {
-     "symbol": "WDAY",
-     "close": 188.89,
-     "chg3_pct": -5.64,
-     "above_sma200_pct": 21.2
-    },
-    {
-     "symbol": "MNST",
-     "close": 45.34,
-     "chg3_pct": -5.21,
-     "above_sma200_pct": 4.7
-    }
-   ],
+   "candidates": [],
    "watch_title": "观察名单",
    "watch_sub": "已连续 2 天收跌，2 日跌幅 ≥3%。下一个交易日继续收跌、且 3 日累计跌幅 ≥5%，就会出现信号。",
    "watch_cols": [
@@ -778,7 +824,26 @@
      "fmt": "pct1"
     }
    ],
-   "watchlist": [],
+   "watchlist": [
+    {
+     "symbol": "MRNA",
+     "close": 248.69,
+     "chg2_pct": -7.55,
+     "above_sma200_pct": 162.9
+    },
+    {
+     "symbol": "ABNB",
+     "close": 181.13,
+     "chg2_pct": -4.81,
+     "above_sma200_pct": 21.9
+    },
+    {
+     "symbol": "MSFT",
+     "close": 521.13,
+     "chg2_pct": -4.41,
+     "above_sma200_pct": 18.5
+    }
+   ],
    "trades": [],
    "skipped": [],
    "equity_curve": [
@@ -796,6 +861,11 @@
      "date": "2026-11-10",
      "equity": 1325.69,
      "qqq": 674.76
+    },
+    {
+     "date": "2026-11-11",
+     "equity": 1342.19,
+     "qqq": 690.38
     }
    ],
    "live_stats": {
