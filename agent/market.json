@@ -1,144 +1,309 @@
 {
- "updated": "2026-11-13T04:10+00:00",
+ "updated": "2026-11-13T06:30+00:00",
  "marks": {
-  "NOKUSDT": {
-   "mark": 8.21659228,
+  "SKDDUSDT": {
+   "mark": 9.87958218,
+   "funding_rate": 3.593e-05,
+   "next_funding": 1794556800000
+  },
+  "ZMUSDT": {
+   "mark": 97.93,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "BBXUSDT": {
-   "mark": 9.07418437,
+  "BRKBUSDT": {
+   "mark": 591.92,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "UNHUSDT": {
-   "mark": 405.35,
+  "PANWUSDT": {
+   "mark": 330.31,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "PLTRUSDT": {
-   "mark": 171.81,
+  "PDDUSDT": {
+   "mark": 76.63,
+   "funding_rate": 0.00073847,
+   "next_funding": 1794556800000
+  },
+  "ASTSUSDT": {
+   "mark": 34.34,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "WENUSDT": {
-   "mark": 8.14209907,
-   "funding_rate": -0.00028718,
+  "QCOMUSDT": {
+   "mark": 176.29,
+   "funding_rate": 2.298e-05,
    "next_funding": 1794556800000
   },
-  "APLDUSDT": {
-   "mark": 16.73264126,
+  "CRDOUSDT": {
+   "mark": 138.58,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "TSMUSDT": {
-   "mark": 405.77,
-   "funding_rate": 6.694e-05,
+  "EWTUSDT": {
+   "mark": 98.07,
+   "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "BSPUSDT": {
-   "mark": 40.55779378,
-   "funding_rate": -0.00120332,
+  "CRWDUSDT": {
+   "mark": 232.12,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "HDUSDT": {
+   "mark": 349.03143785,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "QQQUSDT": {
+   "mark": 687.17,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "PFEUSDT": {
+   "mark": 29.03492216,
+   "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "OKLOUSDT": {
-   "mark": 24.29091481,
+   "mark": 24.25720042,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "ASMLUSDT": {
-   "mark": 1494.99409888,
+  "LLYUSDT": {
+   "mark": 1434.7,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "VRTUSDT": {
-   "mark": 209.55133956,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CEGUSDT": {
-   "mark": 281.83219734,
+  "KORUUSDT": {
+   "mark": 7.81098688,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "INTWUSDT": {
-   "mark": 6.18116473,
-   "funding_rate": 0.00012798,
+   "mark": 6.193,
+   "funding_rate": 0.00036199,
+   "next_funding": 1794556800000
+  },
+  "SNXXUSDT": {
+   "mark": 3.87620248,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NKEUSDT": {
+   "mark": 37.72764731,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "URNMUSDT": {
+   "mark": 40.25,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NBISUSDT": {
+   "mark": 125.97494947,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "LITEUSDT": {
+   "mark": 611.48863915,
+   "funding_rate": 0.00021768,
+   "next_funding": 1794556800000
+  },
+  "GSUSDT": {
+   "mark": 913.73384113,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SHAZUSDT": {
+   "mark": 23.94612526,
+   "funding_rate": -0.00017516,
+   "next_funding": 1794556800000
+  },
+  "SMRUSDT": {
+   "mark": 4.81,
+   "funding_rate": -1.042e-05,
+   "next_funding": 1794556800000
+  },
+  "QNTXUSDT": {
+   "mark": 37.62,
+   "funding_rate": 0.00216381,
+   "next_funding": 1794556800000
+  },
+  "KSTRUSDT": {
+   "mark": 18.4,
+   "funding_rate": -0.0002563,
+   "next_funding": 1794556800000
+  },
+  "SHOPUSDT": {
+   "mark": 146.85970295,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "KLACUSDT": {
+   "mark": 156.47,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NOKUSDT": {
+   "mark": 8.23,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MRNAUSDT": {
+   "mark": 231.35648969,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "XLEUSDT": {
+   "mark": 64.65,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ZSUSDT": {
+   "mark": 194.04,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NETUSDT": {
+   "mark": 318.10831693,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "WMTUSDT": {
+   "mark": 126.56959124,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "IBMUSDT": {
+   "mark": 244.81,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "COINUSDT": {
+   "mark": 127.72497524,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MRVLUSDT": {
+   "mark": 162.71507294,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "APPUSDT": {
+   "mark": 395.51,
+   "funding_rate": 0.00024524,
+   "next_funding": 1794556800000
+  },
+  "RKLBUSDT": {
+   "mark": 63.98,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "HPEUSDT": {
+   "mark": 49.71,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CRCLUSDT": {
+   "mark": 62.60073824,
+   "funding_rate": 0.00011799,
+   "next_funding": 1794556800000
+  },
+  "JPMUSDT": {
+   "mark": 344.54697583,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "WDCUSDT": {
+   "mark": 306.62411632,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NVDAUSDT": {
+   "mark": 163.9667746,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "DELLUSDT": {
+   "mark": 367.44,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "COHRUSDT": {
+   "mark": 230.36,
+   "funding_rate": 6.679e-05,
+   "next_funding": 1794556800000
+  },
+  "EWZSUSDT": {
+   "mark": 10.88505462,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "FWDIUSDT": {
+   "mark": 4.967,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "DISUSDT": {
+   "mark": 118.61,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "USARUSDT": {
+   "mark": 8.05481158,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CRMLUSDT": {
+   "mark": 5.376,
+   "funding_rate": -0.00074412,
+   "next_funding": 1794556800000
+  },
+  "CYPHUSDT": {
+   "mark": 1.9,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MVLLUSDT": {
+   "mark": 11.3,
+   "funding_rate": 8.74e-06,
+   "next_funding": 1794556800000
+  },
+  "MDTUSDT": {
+   "mark": 100.91,
+   "funding_rate": -0.00267056,
+   "next_funding": 1794556800000
+  },
+  "CIENUSDT": {
+   "mark": 291.70855627,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TTWOUSDT": {
+   "mark": 228.56,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BBXUSDT": {
+   "mark": 9.12291035,
+   "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "SONYUSDT": {
-   "mark": 27.19115337,
+   "mark": 27.21,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "GLWUSDT": {
-   "mark": 118.41482107,
-   "funding_rate": 0.0,
+  "AAOIUSDT": {
+   "mark": 52.67,
+   "funding_rate": 2.652e-05,
    "next_funding": 1794556800000
   },
-  "PAYPUSDT": {
-   "mark": 14.24529433,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "GOOGLUSDT": {
-   "mark": 300.12471754,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CRMUSDT": {
-   "mark": 218.19539356,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "RIVNUSDT": {
-   "mark": 12.85,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CRDOUSDT": {
-   "mark": 139.03769895,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SOXLUSDT": {
-   "mark": 63.84455899,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ACNUSDT": {
-   "mark": 250.18994826,
-   "funding_rate": -0.00255298,
-   "next_funding": 1794556800000
-  },
-  "LLYUSDT": {
-   "mark": 1433.99421174,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "COSTUSDT": {
-   "mark": 1096.36,
-   "funding_rate": -0.00021408,
-   "next_funding": 1794556800000
-  },
-  "CRWVUSDT": {
-   "mark": 55.56,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TSLLUSDT": {
-   "mark": 10.77,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SNOWUSDT": {
-   "mark": 298.4,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MARAUSDT": {
-   "mark": 7.05776809,
-   "funding_rate": 0.0,
+  "EQTUSDT": {
+   "mark": 52.48602937,
+   "funding_rate": -0.00038487,
    "next_funding": 1794556800000
   },
   "ONDSUSDT": {
@@ -146,843 +311,678 @@
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "EWYUSDT": {
-   "mark": 144.55163402,
-   "funding_rate": 5.26e-05,
-   "next_funding": 1794556800000
-  },
-  "MSTUUSDT": {
-   "mark": 18.95232328,
+  "EWJUSDT": {
+   "mark": 91.49431263,
    "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "RKLBUSDT": {
-   "mark": 64.03762482,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "APPUSDT": {
-   "mark": 395.89763562,
-   "funding_rate": 7.867e-05,
-   "next_funding": 1794556800000
-  },
-  "ZCSHUSDT": {
-   "mark": 24.78,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "VKTXUSDT": {
-   "mark": 27.65742897,
-   "funding_rate": -0.00026682,
-   "next_funding": 1794556800000
-  },
-  "EWZSUSDT": {
-   "mark": 10.83,
-   "funding_rate": 0.00125227,
-   "next_funding": 1794556800000
-  },
-  "EQTUSDT": {
-   "mark": 52.42,
-   "funding_rate": -0.00099889,
-   "next_funding": 1794556800000
-  },
-  "ASTSUSDT": {
-   "mark": 34.33308689,
-   "funding_rate": 5.385e-05,
-   "next_funding": 1794556800000
-  },
-  "RAMUSDT": {
-   "mark": 6.109,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "EWTUSDT": {
-   "mark": 98.29637986,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AMGNUSDT": {
-   "mark": 468.9,
-   "funding_rate": -0.00059496,
-   "next_funding": 1794556800000
-  },
-  "ZSUSDT": {
-   "mark": 193.98976772,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SKHYUSDT": {
-   "mark": 134.79507761,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "GMEUSDT": {
-   "mark": 25.58330746,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SPCXUSDT": {
-   "mark": 140.1539948,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "DELLUSDT": {
-   "mark": 367.49442585,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "PDDUSDT": {
-   "mark": 77.62285003,
-   "funding_rate": 0.00052814,
-   "next_funding": 1794556800000
-  },
-  "SKUUUSDT": {
-   "mark": 13.43,
-   "funding_rate": -0.00026203,
-   "next_funding": 1794556800000
-  },
-  "GEVUSDT": {
-   "mark": 814.81653644,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "FLNCUSDT": {
-   "mark": 4.68888828,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MRVLUSDT": {
-   "mark": 163.2626337,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CYPHUSDT": {
-   "mark": 1.888,
-   "funding_rate": 0.00057134,
-   "next_funding": 1794556800000
-  },
-  "MRKUSDT": {
-   "mark": 147.65692429,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TBTUSDT": {
-   "mark": 40.14,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "UVXYUSDT": {
-   "mark": 17.51,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "RDWUSDT": {
-   "mark": 8.02639936,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SPYUSDT": {
-   "mark": 758.77,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "RDDTUSDT": {
-   "mark": 99.79046099,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "METAUSDT": {
-   "mark": 625.0,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "QCOMUSDT": {
-   "mark": 175.96090531,
-   "funding_rate": 0.00015328,
-   "next_funding": 1794556800000
-  },
-  "UBERUSDT": {
-   "mark": 69.32547463,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BEUSDT": {
-   "mark": 201.18285119,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "KSTRUSDT": {
-   "mark": 18.74785521,
-   "funding_rate": -0.0005692,
-   "next_funding": 1794556800000
-  },
-  "ABBVUSDT": {
-   "mark": 296.32613739,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "FRHCUSDT": {
-   "mark": 159.37,
-   "funding_rate": -0.00246036,
-   "next_funding": 1794556800000
-  },
-  "XLEUSDT": {
-   "mark": 64.60611548,
-   "funding_rate": 0.00017035,
-   "next_funding": 1794556800000
-  },
-  "URNMUSDT": {
-   "mark": 40.11131481,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AMDUSDT": {
-   "mark": 573.21224094,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "PANWUSDT": {
-   "mark": 329.82390937,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "EBAYUSDT": {
-   "mark": 120.35589804,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CRWDUSDT": {
-   "mark": 232.18377265,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "GPROUSDT": {
-   "mark": 0.67751663,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "STMUSDT": {
-   "mark": 46.26,
-   "funding_rate": -0.0005695,
-   "next_funding": 1794556800000
-  },
-  "WMTUSDT": {
-   "mark": 126.53630491,
-   "funding_rate": -0.00031472,
-   "next_funding": 1794556800000
-  },
-  "DKNGUSDT": {
-   "mark": 19.15905219,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "DRAMUSDT": {
-   "mark": 43.15245527,
-   "funding_rate": 8.396e-05,
-   "next_funding": 1794556800000
-  },
-  "BABAUSDT": {
-   "mark": 95.08,
-   "funding_rate": 2.1e-07,
-   "next_funding": 1794556800000
-  },
-  "IONQUSDT": {
-   "mark": 30.60961465,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "LYTEUSDT": {
-   "mark": 15.9,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "DDOGUSDT": {
-   "mark": 185.22796908,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CVNAUSDT": {
-   "mark": 70.99,
-   "funding_rate": -0.00173208,
-   "next_funding": 1794556800000
-  },
-  "ZMUSDT": {
-   "mark": 97.99281577,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TMFUSDT": {
-   "mark": 27.77128078,
-   "funding_rate": 0.00017268,
-   "next_funding": 1794556800000
-  },
-  "SOXSUSDT": {
-   "mark": 47.06314479,
-   "funding_rate": 0.00021433,
-   "next_funding": 1794556800000
-  },
-  "TEMUSDT": {
-   "mark": 75.75586723,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "JPMUSDT": {
-   "mark": 344.22068423,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "EIDOUSDT": {
-   "mark": 10.45075308,
-   "funding_rate": -1.66e-05,
-   "next_funding": 1794556800000
-  },
-  "KOUSDT": {
-   "mark": 97.92913106,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TEAMUSDT": {
-   "mark": 153.05012323,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "DJTUSDT": {
-   "mark": 4.96,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "DISUSDT": {
-   "mark": 118.91497495,
-   "funding_rate": -0.00023785,
-   "next_funding": 1794556800000
-  },
-  "MUUSDT": {
-   "mark": 790.68799772,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AAOIUSDT": {
-   "mark": 52.44792235,
-   "funding_rate": 0.00023552,
-   "next_funding": 1794556800000
-  },
-  "MDBUSDT": {
-   "mark": 339.72667216,
-   "funding_rate": 2.157e-05,
-   "next_funding": 1794556800000
-  },
-  "OXYUSDT": {
-   "mark": 58.50201841,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NUUSDT": {
-   "mark": 12.06781549,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "XOMUSDT": {
-   "mark": 169.89280095,
-   "funding_rate": -0.00074011,
-   "next_funding": 1794556800000
-  },
-  "SHOPUSDT": {
-   "mark": 147.29,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BNCUSDT": {
-   "mark": 4.168,
-   "funding_rate": -0.00276157,
-   "next_funding": 1794556800000
-  },
-  "MSTRUSDT": {
-   "mark": 111.13170546,
-   "funding_rate": 6.952e-05,
-   "next_funding": 1794556800000
-  },
-  "CBRSUSDT": {
-   "mark": 114.93835805,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SMRUSDT": {
-   "mark": 4.81535455,
-   "funding_rate": -0.0002423,
-   "next_funding": 1794556800000
-  },
-  "XBIUSDT": {
-   "mark": 151.42,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CRMLUSDT": {
-   "mark": 5.36562762,
-   "funding_rate": -0.00138538,
-   "next_funding": 1794556800000
-  },
-  "AAPLUSDT": {
-   "mark": 356.71763522,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MDTUSDT": {
-   "mark": 100.8,
-   "funding_rate": -0.00083578,
-   "next_funding": 1794556800000
-  },
-  "AMATUSDT": {
-   "mark": 379.14573063,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AKAMUSDT": {
-   "mark": 86.53103006,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ORCLUSDT": {
-   "mark": 126.44842336,
-   "funding_rate": 0.00015159,
-   "next_funding": 1794556800000
-  },
-  "WDCUSDT": {
-   "mark": 306.82743357,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "COINUSDT": {
-   "mark": 127.82732123,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CIENUSDT": {
-   "mark": 292.25127097,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "INTCUSDT": {
-   "mark": 60.76093094,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SNXXUSDT": {
-   "mark": 3.879,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ARMUSDT": {
-   "mark": 197.95837669,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TXNUSDT": {
-   "mark": 311.65190684,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SQQQUSDT": {
-   "mark": 41.23,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SHAZUSDT": {
-   "mark": 23.90401505,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "USDEXUSDT": {
-   "mark": 6.01,
-   "funding_rate": 0.00021797,
    "next_funding": 1794556800000
   },
   "IWMUSDT": {
-   "mark": 278.83,
+   "mark": 278.51041424,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "TWSTUSDT": {
-   "mark": 113.39,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ANETUSDT": {
-   "mark": 205.12126095,
-   "funding_rate": -0.00043031,
-   "next_funding": 1794556800000
-  },
-  "TERUSDT": {
-   "mark": 261.64413107,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SECZUSDT": {
-   "mark": 8.31,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BRKBUSDT": {
-   "mark": 592.37,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "QNTXUSDT": {
-   "mark": 37.47592793,
-   "funding_rate": 0.00052479,
-   "next_funding": 1794556800000
-  },
-  "EWZUSDT": {
-   "mark": 31.75645579,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SNPSUSDT": {
-   "mark": 462.53646212,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "GTLBUSDT": {
-   "mark": 47.06905667,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SKDDUSDT": {
-   "mark": 9.90050196,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "KORUUSDT": {
-   "mark": 7.96468668,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "VUSDT": {
-   "mark": 422.31,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "IRENUSDT": {
-   "mark": 19.16677494,
-   "funding_rate": 4.905e-05,
-   "next_funding": 1794556800000
-  },
-  "QQQUSDT": {
-   "mark": 687.92146291,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "FWDIUSDT": {
-   "mark": 4.945,
-   "funding_rate": 3.637e-05,
-   "next_funding": 1794556800000
-  },
-  "TSLAUSDT": {
-   "mark": 397.76146676,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BOTUSDT": {
-   "mark": 19.62305097,
-   "funding_rate": -0.00189258,
-   "next_funding": 1794556800000
-  },
-  "HOODUSDT": {
-   "mark": 80.24137205,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NKEUSDT": {
-   "mark": 37.7769318,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NVDLUSDT": {
-   "mark": 17.97,
-   "funding_rate": 0.00016547,
-   "next_funding": 1794556800000
-  },
-  "HDUSDT": {
-   "mark": 349.33386161,
-   "funding_rate": -0.00011279,
-   "next_funding": 1794556800000
-  },
-  "KLACUSDT": {
-   "mark": 156.18443719,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MVLLUSDT": {
-   "mark": 11.38581705,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AMCUSDT": {
-   "mark": 3.3168915,
-   "funding_rate": -0.00067966,
-   "next_funding": 1794556800000
-  },
-  "MELIUSDT": {
-   "mark": 1485.29987189,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "VSTUSDT": {
-   "mark": 133.94421267,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CRCLUSDT": {
-   "mark": 62.4224009,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BMNRUSDT": {
-   "mark": 17.79917996,
-   "funding_rate": 1.503e-05,
-   "next_funding": 1794556800000
-  },
-  "AGPUUSDT": {
-   "mark": 8.04,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "PENGUSDT": {
-   "mark": 49.48613803,
-   "funding_rate": 0.00015404,
-   "next_funding": 1794556800000
-  },
-  "MPUSDT": {
-   "mark": 37.71987162,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "LITEUSDT": {
-   "mark": 614.79313467,
-   "funding_rate": 0.00023391,
-   "next_funding": 1794556800000
-  },
-  "NFLXUSDT": {
-   "mark": 63.06836985,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AXTIUSDT": {
-   "mark": 43.43106099,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AMZNUSDT": {
-   "mark": 268.18488816,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "PFEUSDT": {
-   "mark": 28.96840751,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "FLEXUSDT": {
-   "mark": 78.01111573,
-   "funding_rate": -0.00015613,
-   "next_funding": 1794556800000
-  },
-  "PATHUSDT": {
-   "mark": 13.13,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ALABUSDT": {
-   "mark": 225.46662111,
+  "DKNGUSDT": {
+   "mark": 19.16,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "IBKRUSDT": {
-   "mark": 81.44693945,
-   "funding_rate": -0.0004463,
+   "mark": 81.10660055,
+   "funding_rate": -8.252e-05,
    "next_funding": 1794556800000
   },
-  "RUMUSDT": {
-   "mark": 5.712,
+  "ORCLUSDT": {
+   "mark": 126.3,
+   "funding_rate": 3.35e-06,
+   "next_funding": 1794556800000
+  },
+  "MDBUSDT": {
+   "mark": 338.92,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "GSUSDT": {
-   "mark": 915.29963243,
+  "VRTUSDT": {
+   "mark": 208.12,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "COHRUSDT": {
-   "mark": 231.28886323,
-   "funding_rate": 6.546e-05,
+  "NVDLUSDT": {
+   "mark": 18.05227647,
+   "funding_rate": 0.0002212,
    "next_funding": 1794556800000
   },
-  "MUUUSDT": {
-   "mark": 17.70885324,
+  "GEVUSDT": {
+   "mark": 814.39,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "USARUSDT": {
-   "mark": 8.03564698,
+  "ALABUSDT": {
+   "mark": 225.18311887,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "NETUSDT": {
-   "mark": 319.12717654,
-   "funding_rate": 1.347e-05,
+  "IRENUSDT": {
+   "mark": 19.25,
+   "funding_rate": 0.00012378,
    "next_funding": 1794556800000
   },
-  "EWJUSDT": {
-   "mark": 91.62,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "TZAUSDT": {
-   "mark": 46.37287011,
-   "funding_rate": -0.00012081,
-   "next_funding": 1794556800000
-  },
-  "HUTUSDT": {
-   "mark": 61.07042793,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "AVGOUSDT": {
-   "mark": 362.27840401,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NBISUSDT": {
-   "mark": 126.06315517,
-   "funding_rate": 4.905e-05,
-   "next_funding": 1794556800000
-  },
-  "TQQQUSDT": {
-   "mark": 59.64,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NVOUSDT": {
-   "mark": 40.78275597,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "HPEUSDT": {
-   "mark": 49.92002396,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "CATUSDT": {
-   "mark": 605.45717905,
-   "funding_rate": 0.00036527,
-   "next_funding": 1794556800000
-  },
-  "MRNAUSDT": {
-   "mark": 230.68999634,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "STRCUSDT": {
-   "mark": 99.72142002,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "ADBEUSDT": {
-   "mark": 240.39036619,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "NOWUSDT": {
-   "mark": 101.35374935,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "PYPLUSDT": {
-   "mark": 58.48,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SMHUSDT": {
-   "mark": 498.49700842,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BXUSDT": {
-   "mark": 118.97419056,
-   "funding_rate": -6.673e-05,
-   "next_funding": 1794556800000
-  },
-  "BACUSDT": {
-   "mark": 50.72488292,
-   "funding_rate": 5.735e-05,
-   "next_funding": 1794556800000
-  },
-  "NVDAUSDT": {
-   "mark": 163.53,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MSFTUSDT": {
-   "mark": 520.8754802,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "SMCIUSDT": {
-   "mark": 26.97178927,
-   "funding_rate": 6.199e-05,
-   "next_funding": 1794556800000
-  },
-  "CSCOUSDT": {
-   "mark": 101.43,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "GDXUSDT": {
-   "mark": 83.36,
-   "funding_rate": 8.515e-05,
-   "next_funding": 1794556800000
-  },
-  "HIMSUSDT": {
-   "mark": 19.68,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BITOUSDT": {
-   "mark": 9.16,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "BWETUSDT": {
-   "mark": 589.88,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "LRCXUSDT": {
-   "mark": 231.84594322,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "IBMUSDT": {
-   "mark": 245.48,
-   "funding_rate": 0.0,
-   "next_funding": 1794556800000
-  },
-  "MCDUSDT": {
-   "mark": 274.03,
+  "SOXLUSDT": {
+   "mark": 64.06,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "SOFIUSDT": {
-   "mark": 15.6463987,
+   "mark": 15.58,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "HUTUSDT": {
+   "mark": 60.77,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
   "SNDKUSDT": {
-   "mark": 920.23775831,
+   "mark": 920.64,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   },
-  "TTWOUSDT": {
-   "mark": 229.38654346,
+  "KOUSDT": {
+   "mark": 97.9,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BSPUSDT": {
+   "mark": 41.00727093,
+   "funding_rate": -0.00158275,
+   "next_funding": 1794556800000
+  },
+  "BACUSDT": {
+   "mark": 50.66589712,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GPROUSDT": {
+   "mark": 0.673,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "STRCUSDT": {
+   "mark": 99.74,
+   "funding_rate": 0.00017131,
+   "next_funding": 1794556800000
+  },
+  "AMGNUSDT": {
+   "mark": 469.14901198,
+   "funding_rate": -5.742e-05,
+   "next_funding": 1794556800000
+  },
+  "ARMUSDT": {
+   "mark": 197.77,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "LRCXUSDT": {
+   "mark": 231.96,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AVGOUSDT": {
+   "mark": 361.82,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CVNAUSDT": {
+   "mark": 70.97,
+   "funding_rate": -0.0011999,
+   "next_funding": 1794556800000
+  },
+  "MCDUSDT": {
+   "mark": 273.69,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ZCSHUSDT": {
+   "mark": 25.04,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TQQQUSDT": {
+   "mark": 59.45,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ASMLUSDT": {
+   "mark": 1495.68517532,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BWETUSDT": {
+   "mark": 584.34,
+   "funding_rate": 0.00111514,
+   "next_funding": 1794556800000
+  },
+  "RAMUSDT": {
+   "mark": 6.05895081,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MELIUSDT": {
+   "mark": 1487.70310115,
+   "funding_rate": 0.00082333,
+   "next_funding": 1794556800000
+  },
+  "SMCIUSDT": {
+   "mark": 26.99,
+   "funding_rate": 0.00011205,
+   "next_funding": 1794556800000
+  },
+  "BABAUSDT": {
+   "mark": 92.52,
+   "funding_rate": 3.032e-05,
+   "next_funding": 1794556800000
+  },
+  "RDDTUSDT": {
+   "mark": 99.42,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NFLXUSDT": {
+   "mark": 62.96040727,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "UBERUSDT": {
+   "mark": 69.23753139,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SNPSUSDT": {
+   "mark": 462.46527226,
+   "funding_rate": -0.00045749,
+   "next_funding": 1794556800000
+  },
+  "RIVNUSDT": {
+   "mark": 12.84526531,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "PATHUSDT": {
+   "mark": 13.12,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CRMUSDT": {
+   "mark": 218.45089862,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AKAMUSDT": {
+   "mark": 86.42152634,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "HIMSUSDT": {
+   "mark": 19.68704956,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "PENGUSDT": {
+   "mark": 49.69,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "VKTXUSDT": {
+   "mark": 27.62128993,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TXNUSDT": {
+   "mark": 311.90264308,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ANETUSDT": {
+   "mark": 205.33,
+   "funding_rate": -0.00040593,
+   "next_funding": 1794556800000
+  },
+  "EBAYUSDT": {
+   "mark": 120.44737429,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GTLBUSDT": {
+   "mark": 47.29108733,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TEAMUSDT": {
+   "mark": 153.49078247,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "METAUSDT": {
+   "mark": 624.17,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SKHYUSDT": {
+   "mark": 134.75877558,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BXUSDT": {
+   "mark": 118.54217115,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BNCUSDT": {
+   "mark": 4.1924324,
+   "funding_rate": -0.00126491,
+   "next_funding": 1794556800000
+  },
+  "MSTUUSDT": {
+   "mark": 19.1,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "PYPLUSDT": {
+   "mark": 58.35443497,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AMCUSDT": {
+   "mark": 3.31100544,
+   "funding_rate": -0.00038607,
+   "next_funding": 1794556800000
+  },
+  "DRAMUSDT": {
+   "mark": 42.98316418,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GLWUSDT": {
+   "mark": 118.5161008,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "EIDOUSDT": {
+   "mark": 10.49,
+   "funding_rate": -0.00010033,
+   "next_funding": 1794556800000
+  },
+  "TEMUSDT": {
+   "mark": 75.54618322,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TERUSDT": {
+   "mark": 260.70147349,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MUUSDT": {
+   "mark": 789.15,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TSLAUSDT": {
+   "mark": 397.64272773,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "COSTUSDT": {
+   "mark": 1095.08613254,
+   "funding_rate": -0.00016048,
+   "next_funding": 1794556800000
+  },
+  "MPUSDT": {
+   "mark": 37.62,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "IONQUSDT": {
+   "mark": 30.81,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SOXSUSDT": {
+   "mark": 46.99348073,
+   "funding_rate": 1.679e-05,
+   "next_funding": 1794556800000
+  },
+  "XBIUSDT": {
+   "mark": 151.37,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SQQQUSDT": {
+   "mark": 41.36696095,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MARAUSDT": {
+   "mark": 7.04,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "DDOGUSDT": {
+   "mark": 185.03,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MSTRUSDT": {
+   "mark": 111.54605971,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TSMUSDT": {
+   "mark": 405.15,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MUUUSDT": {
+   "mark": 17.64,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AMZNUSDT": {
+   "mark": 267.99,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AMATUSDT": {
+   "mark": 382.8,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NVOUSDT": {
+   "mark": 40.67,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "PAYPUSDT": {
+   "mark": 14.26,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "RUMUSDT": {
+   "mark": 5.707,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CEGUSDT": {
+   "mark": 281.53524731,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MRKUSDT": {
+   "mark": 147.68,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "UNHUSDT": {
+   "mark": 405.6,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CRWVUSDT": {
+   "mark": 55.56943577,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CATUSDT": {
+   "mark": 605.37381472,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "FRHCUSDT": {
+   "mark": 159.77,
+   "funding_rate": 0.00047967,
+   "next_funding": 1794556800000
+  },
+  "DJTUSDT": {
+   "mark": 4.97177236,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AXTIUSDT": {
+   "mark": 43.11,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "INTCUSDT": {
+   "mark": 60.81553694,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SMHUSDT": {
+   "mark": 498.54,
+   "funding_rate": 1.919e-05,
+   "next_funding": 1794556800000
+  },
+  "TBTUSDT": {
+   "mark": 40.28,
+   "funding_rate": -0.00364152,
+   "next_funding": 1794556800000
+  },
+  "BITOUSDT": {
+   "mark": 9.15359852,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NOWUSDT": {
+   "mark": 101.01,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BEUSDT": {
+   "mark": 200.67,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SPCXUSDT": {
+   "mark": 141.26,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TZAUSDT": {
+   "mark": 46.59,
+   "funding_rate": -9.513e-05,
+   "next_funding": 1794556800000
+  },
+  "ADBEUSDT": {
+   "mark": 240.42869804,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CSCOUSDT": {
+   "mark": 101.07826642,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "STMUSDT": {
+   "mark": 46.22,
+   "funding_rate": -0.00013969,
+   "next_funding": 1794556800000
+  },
+  "TMFUSDT": {
+   "mark": 27.73,
+   "funding_rate": 8.672e-05,
+   "next_funding": 1794556800000
+  },
+  "APLDUSDT": {
+   "mark": 16.76874041,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ACNUSDT": {
+   "mark": 250.33,
+   "funding_rate": -0.00131778,
+   "next_funding": 1794556800000
+  },
+  "VUSDT": {
+   "mark": 422.22684579,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AMDUSDT": {
+   "mark": 574.98216913,
+   "funding_rate": -3.4e-06,
+   "next_funding": 1794556800000
+  },
+  "AAPLUSDT": {
+   "mark": 356.38,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "UVXYUSDT": {
+   "mark": 17.63498869,
+   "funding_rate": 3.778e-05,
+   "next_funding": 1794556800000
+  },
+  "PLTRUSDT": {
+   "mark": 171.48858713,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "VSTUSDT": {
+   "mark": 133.11,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "CBRSUSDT": {
+   "mark": 115.52,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "EWYUSDT": {
+   "mark": 143.82413881,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "MSFTUSDT": {
+   "mark": 518.54,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SKUUUSDT": {
+   "mark": 13.43,
+   "funding_rate": -0.00028733,
+   "next_funding": 1794556800000
+  },
+  "SPYUSDT": {
+   "mark": 757.68,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "RDWUSDT": {
+   "mark": 8.0,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "AGPUUSDT": {
+   "mark": 8.12,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GDXUSDT": {
+   "mark": 82.58236676,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "BMNRUSDT": {
+   "mark": 17.87229722,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SECZUSDT": {
+   "mark": 8.34383692,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "USDEXUSDT": {
+   "mark": 6.03864314,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TWSTUSDT": {
+   "mark": 113.93173583,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "SNOWUSDT": {
+   "mark": 298.87802076,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GMEUSDT": {
+   "mark": 25.53,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "ABBVUSDT": {
+   "mark": 296.41,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "OXYUSDT": {
+   "mark": 58.47825614,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "FLNCUSDT": {
+   "mark": 4.71461121,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "NUUSDT": {
+   "mark": 12.1237224,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "TSLLUSDT": {
+   "mark": 10.76716957,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "LYTEUSDT": {
+   "mark": 15.69,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "XOMUSDT": {
+   "mark": 170.18,
+   "funding_rate": -0.00089508,
+   "next_funding": 1794556800000
+  },
+  "WENUSDT": {
+   "mark": 8.1867693,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "GOOGLUSDT": {
+   "mark": 300.03,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "FLEXUSDT": {
+   "mark": 77.75118413,
+   "funding_rate": -0.00022217,
+   "next_funding": 1794556800000
+  },
+  "BOTUSDT": {
+   "mark": 19.67,
+   "funding_rate": -0.00098952,
+   "next_funding": 1794556800000
+  },
+  "EWZUSDT": {
+   "mark": 31.59,
+   "funding_rate": 0.0,
+   "next_funding": 1794556800000
+  },
+  "HOODUSDT": {
+   "mark": 80.1394474,
    "funding_rate": 0.0,
    "next_funding": 1794556800000
   }
