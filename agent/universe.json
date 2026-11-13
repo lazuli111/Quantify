@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-12T06:30+00:00",
+ "updated": "2026-11-13T04:10+00:00",
  "symbols": [
   {
    "symbol": "AAOIUSDT",
@@ -392,6 +392,12 @@
    "min_qty": 0.01
   },
   {
+   "symbol": "FRHCUSDT",
+   "ticker": "FRHC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
    "symbol": "FWDIUSDT",
    "ticker": "FWDI",
    "step": 0.01,
@@ -700,6 +706,12 @@
   {
    "symbol": "NOWUSDT",
    "ticker": "NOW",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NUUSDT",
+   "ticker": "NU",
    "step": 0.01,
    "min_qty": 0.01
   },
