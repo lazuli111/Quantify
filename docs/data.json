@@ -42,7 +42,12 @@
      "reason": "三连跌回调信号",
      "ref_price": 223.37,
      "est_shares": 5,
-     "ai": null
+     "ai": {
+      "rating": "Sell",
+      "rating_zh": "卖出",
+      "agrees": false,
+      "report": "ai/2026-11-13_MRNA.html"
+     }
     }
    ],
    "position": {
@@ -961,9 +966,9 @@
   }
  ],
  "ai": {
-  "model": "Claude sonnet/opus（订阅）",
-  "runs": 14,
-  "total_cost": 2.23,
+  "model": "deepseek-flash",
+  "runs": 15,
+  "total_cost": 2.57,
   "currency": "CNY"
  }
 }

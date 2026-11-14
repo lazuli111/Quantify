@@ -287,7 +287,7 @@ The Hold call was directionally right: CRWD fell 16.8% in 5 days, underperformin
 
 <!-- ENTRY_END -->
 
-[2026-11-04 | PLTR | Overweight | pending]
+[2026-11-04 | PLTR | Overweight | +0.4% | +1.3% | 5d | resolved:2026-11-11]
 
 DECISION:
 **Rating**: Overweight
@@ -310,9 +310,12 @@ DECISION:
 
 **Time Horizon**: 3-6 个月
 
+REFLECTION:
+The +1.3% five-day alpha versus SPY is directionally right but too small and too short a window to validate a 3–6 month Overweight thesis built on a 205 target. It supports the "event risk has passed, don't sell" leg and the decision to start only a 15–20% probe rather than a full position, but says nothing about the 185–187 breakout trigger or the 153.61 stop, which remain untested. Lesson: when the prior 5-day loss (-10.3%) was the reason for shrinking the first tranche, log the alpha achieved on the probe separately from the thesis, so a flat window isn't later read as confirmation.
+
 <!-- ENTRY_END -->
 
-[2026-11-06 | CRWD | Hold | pending]
+[2026-11-06 | CRWD | Hold | +4.5% | +1.9% | 5d | resolved:2026-11-13]
 
 DECISION:
 **Rating**: Hold
@@ -335,6 +338,9 @@ DECISION:
 
 **Time Horizon**: 1-3个月
 
+REFLECTION:
+The +1.9% five-day alpha versus SPY (raw +4.5%) shows the Hold was directionally too cautious, though five days is too short to judge a 1–3 month thesis. This window supports the refusal to sell into the lower Bollinger band near 213 and the skepticism toward the 11/5 gap-down, but undercuts the weight placed on MACD deterioration and the absence of any add trigger at 216.90. Lesson: when a Hold rests on missing valuation/SBC data while an oversold bounce is plausible, include a small mechanical add-on-confirmation trigger instead of letting data gaps default to inaction.
+
 <!-- ENTRY_END -->
 
 [2026-11-09 | MNST | Hold | pending]
@@ -355,6 +361,31 @@ DECISION:
 **Price Target**: not provided
 
 **Time Horizon**: 3-6 个月(以 Q4 财报验证毛利率与现金流)
+
+<!-- ENTRY_END -->
+
+[2026-11-13 | MRNA | Sell | pending]
+
+DECISION:
+**Rating**: Sell
+
+**Executive Summary**: 对 MRNA 给出 Sell：不是只砍"超额敞口"，而是把仓位本身退出，只允许在风险预算允许时留一枚很小的催化剂代币仓（不超过标准配置 10%–15%；若按最坏跳空到 175–180.80 测算损失超过组合 0.5%，则清零）。执行分批且不可拖：221.70–225 先卖出超额的全部并继续下砍，反弹到 230.48 但无法放量收复 237.83 就卖完剩余部分，直接跌破 221.70 则加速执行，不等 183.7。ATR 19.84（占价格 8.88%）、8/19 单日跳空约 50 点、10/22 日内振幅 30% 的事实说明裸止损不可依赖，只能用降低名义敞口替代止损；重新参与必须等确认信号（放量收复 237.83 且 MACD 柱由 −2.22 转正，或 Q4 经营现金流显著收窄且无股权融资），期限 1–3 个月。
+
+**Investment Thesis**: 三位分析师在方向上高度收敛（激进派 Sell、保守派 Sell、中性派提案也是 SELL，只是把评级写作 Underweight），分歧只在"减到多少"。我判断保守派与激进派的"卖得更多、更早"这一侧赢，理由是空方证据是硬数，而多方赖以保留仓位的两条腿——现金流确认与已触发技术修复——目前都不存在。
+
+决定性的空方证据：1）价格与价值脱钩：223.37 相对模型公允价值 145.42 溢价约 54%，市值约 950 亿美元对 2026 指引中值约 23 亿美元收入即约 40 倍市销率，等于把"递交成功+审批成功+更多癌种成功+Q4 回款改善"全部预付。2）现金表未改善：Q3 净利 +1.62 亿，但同季经营现金流 −15.59 亿，9M 自由现金流 −30.22 亿弱于 2025 同期，现金仅 11.95 亿为历史最低，总负债单季 +58% 至 66.31 亿，Q3 单季融资净流入约 27.45 亿——多方用流动比率 3.6x 与 61.49 亿非现金流动资产只能证明"短期不违约"，不能排除跳跃式的股权摊薄；激进派那句反问未被回答：若拐点这么硬，为何单季现金还减少 5.28 亿、还要融资 27.45 亿。3）Q4 算术：9M 18.47 亿、指引 22.36–24.30 亿倒推 Q4 仅 3.89–5.83 亿，同比 −14% 至 −28%，且 Q3 单季占 9M 收入 71%，"首次经营利润转正"是季节性单季现象而非趋势。4）赔率不对称且止损不可执行：2 ATR 止损 183.7 距现价 −17.8%，第一目标 248–258 仅 +11%~+15.5%，而 ATR 占价 8.88%、8/19 曾单日 +177%、10/22 振幅 30%，止损很可能成交在 175 甚至更低。5）技术与资金确认下行：跌破布林中轨 230.48、低于 10EMA 237.83 约 6.08% 与 VWMA 234.92 约 4.91%，11/12 MACD 看跌交叉、柱状 −2.22，RSI 49.72 未超卖，四连阴 −16.96% 收在日低；54% 期权为 put，最大单笔 2027-03 新开 1500 张远月 put 并有 235 put 扫单；11/11 RSP 净卖出 9310 万且 MRNA 为减持首位；10Y 逼近 5%、12 月加息仍在讨论，MRNA 是典型长久期负自由现金流资产。6）多方自身计划自相矛盾：223 建 1/3、202–208 再加 1/3、跌破 221.70 又减仓，实质承认当前结构脆弱；其"修复情景 40%"的触发条件（站回 230.48、收复 237.83）一个都没发生，等于用未触发情景为现价买入找安全边际。
+
+为什么不做 Buy/Overweight/Hold：Q3 营收 13.13 亿同比 +29.2%、营业利润 +1.30 亿、毛利率 75.8%、费用同比约 −19%、指引上调至 15%–25%、200SMA 96.41 仍每日约 0.9 点上翘、intismeran 黑色素瘤复发或死亡风险降 42%（预设敏感性 6 个月 58%）、ESMO 2026 公布并被 NEJM 接受、年内递交且 2/2 报告未发生——这些都是真的，但它们解释的是"故事没死"，不是"223 应该持有"。在 40 倍市销率、现金历史低位、Q4 隐含同比下滑、赔率 1 赔 0.7 同时成立时，持有等于为一个已被定价的催化剂承担不对称左尾。
+
+为什么评级是 Sell 而不是 Underweight：中性派"按风险预算保留 1/3 核心"的逻辑我接受其形式（用最大损失倒推仓位），但不接受其幅度——1/3 标准仓位在 8.88% 日波动、跳空史明确的标的上很难满足"最坏跳到 175–180.80 只亏组合 0.5%"，一旦不满足，中性派自己的规则就要求降到 20% 或更低；而 10/20 与 10/26 两次 MRNA 决策的教训正是：在二元事件前应预先减到位、设硬期限，不要等反弹再减（AMAT 教训），也不要让单一方向判断替代按跳空风险定仓位（10/26 教训）。因此我把"降到多少"交给风险预算检验，而不是给一个舒服的 1/3；同时保留不超过 10%–15% 标准仓的代币仓以承认跳空是双向的（8/19 也曾 +177%），这是唯一为多方保留的部分。
+
+改变判断的条件：A）价格站回 230.48 并放量收复 237.83、MACD 柱转正、重回 VWMA 234.92 上方——回补至标准配置 2/3；B）Q4 报告显示经营现金流自 Q3 的 −15.59 亿显著收窄、应收账款回款落地且无新增股权融资/可转债——回补至标准配置。反向则降至零：Q4 隐含下滑兑现且现金流继续大额流出、宣布股权融资、或放量跌破 216.65/217.02 后击穿 202.63/201.67 的 50SMA 带。
+
+证据缺口（明示）：缺 Q4 实际回款数据、非现金流动资产 61.49 亿的明细科目、intismeran 递交的确切日期与 Merck 分成比例、当前持仓与成本、期权链与隐含波动率；情绪数据样本极小（StockTwits 23 条、Reddit 缺失），不作为决策依据。
+
+**Price Target**: 185.0
+
+**Time Horizon**: 1-3 个月
 
 <!-- ENTRY_END -->
 

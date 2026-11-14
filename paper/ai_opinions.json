@@ -208,5 +208,20 @@
   "minutes": 3.6,
   "cost": null,
   "currency": null
+ },
+ {
+  "date": "2026-11-13",
+  "symbol": "MRNA",
+  "strategies": [
+   "三连跌回调"
+  ],
+  "rating": "Sell",
+  "rating_zh": "卖出",
+  "agrees": false,
+  "report": "ai/2026-11-13_MRNA.html",
+  "model": "deepseek-flash",
+  "minutes": 6.3,
+  "cost": 0.34,
+  "currency": "CNY"
  }
 ]
