@@ -1,14 +1,14 @@
 {
- "generated_at": "2026-11-13T06:30+00:00",
- "as_of": "2026-11-12",
- "next_session": "2026-11-13",
+ "generated_at": "2026-11-14T04:10+00:00",
+ "as_of": "2026-11-13",
+ "next_session": "2026-11-16",
  "start": "2026-11-09",
  "account": {
   "capital": 5000.0,
   "equity": 5000.0,
   "cash": 5000.0,
   "return_pct": 0.0,
-  "bench_return_pct": 3.27,
+  "bench_return_pct": 2.01,
   "drawdown_pct": 0.0,
   "gross_pct": 0.0,
   "fees": 0.0,
@@ -45,6 +45,11 @@
    "date": "2026-11-12",
    "equity": 5000.0,
    "bench": 5163.34
+  },
+  {
+   "date": "2026-11-13",
+   "equity": 5000.0,
+   "bench": 5100.26
   }
  ],
  "events": [],

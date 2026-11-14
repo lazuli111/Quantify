@@ -7,7 +7,7 @@
   "entry_date": "2026-11-09",
   "entry_price": 219.9599,
   "shares": 5,
-  "held_days": 4,
+  "held_days": 5,
   "entry_fees": 0.10997996555328368,
   "stop": null
  },
@@ -39,6 +39,11 @@
    "date": "2026-11-12",
    "equity": 1346.24,
    "qqq": 688.17
+  },
+  {
+   "date": "2026-11-13",
+   "equity": 1329.94,
+   "qqq": 679.89
   }
  ],
  "quota_used_hkd": {
@@ -48,5 +53,5 @@
   "2026-11"
  ],
  "fees_paid": 3.315108170681489,
- "last_processed": "2026-11-12"
+ "last_processed": "2026-11-13"
 }
