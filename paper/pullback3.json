@@ -1,31 +1,17 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 33.42965960637298,
+ "cash": 48.53911708099804,
  "position": {
-  "symbol": "MNST",
-  "entry_date": "2026-11-10",
-  "entry_price": 45.6628,
-  "shares": 28,
-  "held_days": 4,
-  "entry_fees": 0.12785589429016114,
+  "symbol": "MRNA",
+  "entry_date": "2026-11-16",
+  "entry_price": 216.8484,
+  "shares": 6,
+  "held_days": 1,
+  "entry_fees": 0.13010902529754637,
   "stop": null
  },
- "pending": [
-  {
-   "action": "sell",
-   "symbol": "MNST",
-   "reason": "收盘高于前一天最高价",
-   "ref_price": 46.46
-  },
-  {
-   "action": "buy",
-   "symbol": "MRNA",
-   "reason": "三连跌回调信号",
-   "ref_price": 223.37,
-   "est_shares": 5
-  }
- ],
+ "pending": [],
  "trades": [
   {
    "symbol": "AMAT",
@@ -91,6 +77,19 @@
    "fees": 0.23,
    "pnl": 9.06,
    "ret_pct": 0.776
+  },
+  {
+   "symbol": "MNST",
+   "entry_date": "2026-11-10",
+   "entry_price": 45.66,
+   "exit_date": "2026-11-16",
+   "exit_price": 47.02,
+   "shares": 28.0,
+   "held_days": 4,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.26,
+   "pnl": 37.64,
+   "ret_pct": 2.944
   }
  ],
  "skipped": [],
@@ -214,16 +213,21 @@
    "date": "2026-11-13",
    "equity": 1334.31,
    "qqq": 679.89
+  },
+  {
+   "date": "2026-11-16",
+   "equity": 1340.16,
+   "qqq": 661.75
   }
  ],
  "quota_used_hkd": {
   "2026-10": 59992.19397083817,
-  "2026-11": 37838.53619837494
+  "2026-11": 58255.43960343475
  },
  "months_charged": [
   "2026-10",
   "2026-11"
  ],
- "fees_paid": 7.664496540630938,
- "last_processed": "2026-11-13"
+ "fees_paid": 7.9262517124906795,
+ "last_processed": "2026-11-16"
 }
