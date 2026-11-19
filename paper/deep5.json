@@ -7,11 +7,25 @@
   "entry_date": "2026-11-09",
   "entry_price": 219.9599,
   "shares": 5,
-  "held_days": 7,
+  "held_days": 8,
   "entry_fees": 0.10997996555328368,
   "stop": null
  },
- "pending": [],
+ "pending": [
+  {
+   "action": "sell",
+   "symbol": "CRWD",
+   "reason": "收盘高于前一天最高价",
+   "ref_price": 237.03
+  },
+  {
+   "action": "buy",
+   "symbol": "MRNA",
+   "reason": "三连跌深回调信号",
+   "ref_price": 196.79,
+   "est_shares": 7
+  }
+ ],
  "trades": [],
  "skipped": [],
  "equity_curve": [
@@ -54,6 +68,11 @@
    "date": "2026-11-17",
    "equity": 1294.79,
    "qqq": 656.95
+  },
+  {
+   "date": "2026-11-18",
+   "equity": 1382.04,
+   "qqq": 659.51
   }
  ],
  "quota_used_hkd": {
@@ -63,5 +82,5 @@
   "2026-11"
  ],
  "fees_paid": 3.315108170681489,
- "last_processed": "2026-11-17"
+ "last_processed": "2026-11-18"
 }

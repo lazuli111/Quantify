@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T06:30+00:00",
+ "updated": "2026-11-19T04:10+00:00",
  "symbols": [
   {
    "symbol": "AAOIUSDT",
@@ -100,6 +100,12 @@
   {
    "symbol": "ARMUSDT",
    "ticker": "ARM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ARTYUSDT",
+   "ticker": "ARTY",
    "step": 0.01,
    "min_qty": 0.01
   },
@@ -208,6 +214,12 @@
   {
    "symbol": "CBRSUSDT",
    "ticker": "CBRS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "CCJUSDT",
+   "ticker": "CCJ",
    "step": 0.01,
    "min_qty": 0.01
   },
@@ -350,6 +362,12 @@
    "min_qty": 0.01
   },
   {
+   "symbol": "ETNUSDT",
+   "ticker": "ETN",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
    "symbol": "EWJUSDT",
    "ticker": "EWJ",
    "step": 0.01,
@@ -482,6 +500,12 @@
    "min_qty": 0.01
   },
   {
+   "symbol": "IBITUSDT",
+   "ticker": "IBIT",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
    "symbol": "IBKRUSDT",
    "ticker": "IBKR",
    "step": 0.01,
@@ -490,6 +514,12 @@
   {
    "symbol": "IBMUSDT",
    "ticker": "IBM",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "IGVUSDT",
+   "ticker": "IGV",
    "step": 0.01,
    "min_qty": 0.01
   },
@@ -958,6 +988,12 @@
   {
    "symbol": "SOXSUSDT",
    "ticker": "SOXS",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "SOXXUSDT",
+   "ticker": "SOXX",
    "step": 0.01,
    "min_qty": 0.01
   },
