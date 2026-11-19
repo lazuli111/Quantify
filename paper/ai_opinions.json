@@ -223,5 +223,20 @@
   "minutes": 6.3,
   "cost": 0.34,
   "currency": "CNY"
+ },
+ {
+  "date": "2026-11-18",
+  "symbol": "MRNA",
+  "strategies": [
+   "三连跌深回调"
+  ],
+  "rating": "Underweight",
+  "rating_zh": "减持",
+  "agrees": false,
+  "report": "ai/2026-11-18_MRNA.html",
+  "model": "deepseek-flash",
+  "minutes": 7.5,
+  "cost": 0.32,
+  "currency": "CNY"
  }
 ]

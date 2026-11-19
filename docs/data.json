@@ -872,7 +872,12 @@
      "reason": "三连跌深回调信号",
      "ref_price": 196.79,
      "est_shares": 7,
-     "ai": null
+     "ai": {
+      "rating": "Underweight",
+      "rating_zh": "减持",
+      "agrees": false,
+      "report": "ai/2026-11-18_MRNA.html"
+     }
     }
    ],
    "position": {
@@ -1039,8 +1044,8 @@
  ],
  "ai": {
   "model": "deepseek-flash",
-  "runs": 15,
-  "total_cost": 2.57,
+  "runs": 16,
+  "total_cost": 2.89,
   "currency": "CNY"
  }
 }
