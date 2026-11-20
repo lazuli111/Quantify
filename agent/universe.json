@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-19T06:30+00:00",
+ "updated": "2026-11-20T06:30+00:00",
  "symbols": [
   {
    "symbol": "AAOIUSDT",
@@ -82,6 +82,12 @@
   {
    "symbol": "ANETUSDT",
    "ticker": "ANET",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "ANTUSDT",
+   "ticker": "ANT",
    "step": 0.01,
    "min_qty": 0.01
   },
