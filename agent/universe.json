@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20T06:30+00:00",
+ "updated": "2026-11-21T04:10+00:00",
  "symbols": [
   {
    "symbol": "AAOIUSDT",
@@ -58,6 +58,12 @@
   {
    "symbol": "AMCUSDT",
    "ticker": "AMC",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "AMDLUSDT",
+   "ticker": "AMDL",
    "step": 0.01,
    "min_qty": 0.01
   },
@@ -560,6 +566,12 @@
    "min_qty": 0.01
   },
   {
+   "symbol": "JNJUSDT",
+   "ticker": "JNJ",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
    "symbol": "JPMUSDT",
    "ticker": "JPM",
    "step": 0.01,
@@ -724,6 +736,12 @@
   {
    "symbol": "NFLXUSDT",
    "ticker": "NFLX",
+   "step": 0.01,
+   "min_qty": 0.01
+  },
+  {
+   "symbol": "NIOUSDT",
+   "ticker": "NIO",
    "step": 0.01,
    "min_qty": 0.01
   },

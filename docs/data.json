@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-11-20T06:30+00:00",
- "as_of": "2026-11-19",
- "next_session": "2026-11-20",
- "next_open": "2026-11-20T09:30-05:00",
+ "generated_at": "2026-11-21T04:10+00:00",
+ "as_of": "2026-11-20",
+ "next_session": "2026-11-23",
+ "next_open": "2026-11-23T09:30-05:00",
  "new_day": true,
  "strategies": [
   {
@@ -19,14 +19,14 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1244.52,
+    "equity": 1218.54,
     "cash": 48.54,
-    "return_pct": -4.27,
-    "qqq_return_pct": -13.25,
+    "return_pct": -6.27,
+    "qqq_return_pct": -18.17,
     "fees_paid": 7.93,
     "quota_used_hkd": 58255,
     "quota_hkd": 250000,
-    "round_trips_left": 9
+    "round_trips_left": 10
    },
    "tonight": [],
    "position": {
@@ -34,13 +34,13 @@
     "entry_date": "2026-11-16",
     "entry_price": 216.85,
     "shares": 6.0,
-    "last": 199.33,
-    "held_days": 4,
+    "last": 195.0,
+    "held_days": 5,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -105.11,
-    "unrealized_pct": -8.08,
-    "rule": "下一个交易日收盘若高于 [[$205.22]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -131.09,
+    "unrealized_pct": -10.08,
+    "rule": "下一个交易日收盘若高于 [[$210.00]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Sell",
      "rating_zh": "卖出",
@@ -63,64 +63,58 @@
    ],
    "candidates": [
     {
-     "symbol": "SHOP",
-     "close": 131.97,
-     "chg3_pct": -10.72,
-     "above_sma200_pct": 1.1
-    },
-    {
-     "symbol": "WDAY",
-     "close": 173.36,
-     "chg3_pct": -10.67,
-     "above_sma200_pct": 10.9
-    },
-    {
-     "symbol": "ADSK",
-     "close": 243.45,
-     "chg3_pct": -8.32,
-     "above_sma200_pct": 4.1
-    },
-    {
-     "symbol": "ABNB",
-     "close": 172.79,
-     "chg3_pct": -7.2,
-     "above_sma200_pct": 15.1
-    },
-    {
-     "symbol": "PAYX",
-     "close": 111.4,
-     "chg3_pct": -5.41,
-     "above_sma200_pct": 8.9
-    },
-    {
-     "symbol": "AMGN",
-     "close": 438.82,
-     "chg3_pct": -5.08,
-     "above_sma200_pct": 15.3
+     "symbol": "PYPL",
+     "close": 53.29,
+     "chg3_pct": -8.29,
+     "above_sma200_pct": 6.0
     },
     {
      "symbol": "FAST",
-     "close": 52.68,
-     "chg3_pct": -4.41,
-     "above_sma200_pct": 11.0
+     "close": 50.61,
+     "chg3_pct": -6.88,
+     "above_sma200_pct": 6.6
+    },
+    {
+     "symbol": "ABNB",
+     "close": 170.36,
+     "chg3_pct": -5.85,
+     "above_sma200_pct": 13.3
+    },
+    {
+     "symbol": "AMGN",
+     "close": 435.64,
+     "chg3_pct": -4.32,
+     "above_sma200_pct": 15.0
+    },
+    {
+     "symbol": "REGN",
+     "close": 920.69,
+     "chg3_pct": -3.77,
+     "above_sma200_pct": 22.8
     },
     {
      "symbol": "ROP",
-     "close": 462.96,
-     "chg3_pct": -4.29,
-     "above_sma200_pct": 25.2
+     "close": 459.83,
+     "chg3_pct": -2.56,
+     "above_sma200_pct": 24.1
     },
     {
-     "symbol": "PYPL",
-     "close": 56.37,
-     "chg3_pct": -4.18,
-     "above_sma200_pct": 12.3
+     "symbol": "LIN",
+     "close": 502.83,
+     "chg3_pct": -2.38,
+     "above_sma200_pct": 1.4
     },
     {
-     "symbol": "ADP",
-     "close": 301.19,
-     "chg3_pct": -3.91,
-     "above_sma200_pct": 24.4
+     "symbol": "GILD",
+     "close": 166.43,
+     "chg3_pct": -2.25,
+     "above_sma200_pct": 17.8
+    },
+    {
+     "symbol": "XEL",
+     "close": 79.3,
+     "chg3_pct": -1.76,
+     "above_sma200_pct": 2.0
     }
    ],
    "watch_title": "观察名单",
@@ -145,28 +139,64 @@
    ],
    "watchlist": [
     {
-     "symbol": "REGN",
-     "close": 923.34,
-     "chg2_pct": -3.59,
-     "above_sma200_pct": 23.2
+     "symbol": "AMZN",
+     "close": 246.82,
+     "chg2_pct": -7.81,
+     "above_sma200_pct": 0.7
     },
     {
-     "symbol": "TXN",
-     "close": 285.75,
-     "chg2_pct": -3.42,
-     "above_sma200_pct": 8.3
+     "symbol": "SBUX",
+     "close": 103.13,
+     "chg2_pct": -5.48,
+     "above_sma200_pct": 3.5
     },
     {
-     "symbol": "GILD",
-     "close": 166.53,
-     "chg2_pct": -2.19,
-     "above_sma200_pct": 18.0
+     "symbol": "MSFT",
+     "close": 484.52,
+     "chg2_pct": -4.49,
+     "above_sma200_pct": 9.6
     },
     {
-     "symbol": "ADI",
-     "close": 377.44,
-     "chg2_pct": -1.62,
-     "above_sma200_pct": 0.2
+     "symbol": "MAR",
+     "close": 406.64,
+     "chg2_pct": -4.36,
+     "above_sma200_pct": 12.3
+    },
+    {
+     "symbol": "CSX",
+     "close": 49.1,
+     "chg2_pct": -4.34,
+     "above_sma200_pct": 5.7
+    },
+    {
+     "symbol": "VRTX",
+     "close": 515.02,
+     "chg2_pct": -3.99,
+     "above_sma200_pct": 6.2
+    },
+    {
+     "symbol": "DXCM",
+     "close": 79.32,
+     "chg2_pct": -3.88,
+     "above_sma200_pct": 5.3
+    },
+    {
+     "symbol": "GEHC",
+     "close": 80.64,
+     "chg2_pct": -3.61,
+     "above_sma200_pct": 15.3
+    },
+    {
+     "symbol": "IDXX",
+     "close": 676.21,
+     "chg2_pct": -3.19,
+     "above_sma200_pct": 17.9
+    },
+    {
+     "symbol": "AAPL",
+     "close": 342.56,
+     "chg2_pct": -2.81,
+     "above_sma200_pct": 13.1
     }
    ],
    "trades": [
@@ -426,6 +456,11 @@
      "date": "2026-11-19",
      "equity": 1244.52,
      "qqq": 645.04
+    },
+    {
+     "date": "2026-11-20",
+     "equity": 1218.54,
+     "qqq": 608.45
     }
    ],
    "live_stats": {
@@ -472,10 +507,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1229.28,
+    "equity": 1231.36,
     "cash": 24.52,
-    "return_pct": -5.44,
-    "qqq_return_pct": -13.25,
+    "return_pct": -5.28,
+    "qqq_return_pct": -18.17,
     "fees_paid": 7.02,
     "quota_used_hkd": 9376,
     "quota_hkd": 250000,
@@ -487,13 +522,13 @@
     "entry_date": "2026-11-04",
     "entry_price": 300.5,
     "shares": 4.0,
-    "last": 301.19,
-    "held_days": 12,
+    "last": 301.71,
+    "held_days": 13,
     "max_hold": null,
     "stop": 292.29,
-    "unrealized": 2.76,
-    "unrealized_pct": 0.23,
-    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$300.40]]），下一个交易日开盘卖出。没有持有天数上限。",
+    "unrealized": 4.84,
+    "unrealized_pct": 0.4,
+    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$300.52]]），下一个交易日开盘卖出。没有持有天数上限。",
     "ai": null
    },
    "candidate_cols": [
@@ -746,6 +781,11 @@
      "date": "2026-11-19",
      "equity": 1229.28,
      "qqq": 645.04
+    },
+    {
+     "date": "2026-11-20",
+     "equity": 1231.36,
+     "qqq": 608.45
     }
    ],
    "live_stats": {
@@ -792,10 +832,10 @@
    "start_date": "2026-11-06",
    "account": {
     "capital": 1300.0,
-    "equity": 1452.87,
+    "equity": 1422.56,
     "cash": 57.56,
-    "return_pct": 11.76,
-    "qqq_return_pct": -1.69,
+    "return_pct": 9.43,
+    "qqq_return_pct": -7.26,
     "fees_paid": 3.58,
     "quota_used_hkd": 28911,
     "quota_hkd": 250000,
@@ -807,13 +847,13 @@
     "entry_date": "2026-11-19",
     "entry_price": 196.13,
     "shares": 7.0,
-    "last": 199.33,
-    "held_days": 1,
+    "last": 195.0,
+    "held_days": 2,
     "max_hold": 10,
     "stop": null,
-    "unrealized": 22.41,
-    "unrealized_pct": 1.63,
-    "rule": "下一个交易日收盘若高于 [[$205.22]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": -7.9,
+    "unrealized_pct": -0.58,
+    "rule": "下一个交易日收盘若高于 [[$210.00]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
      "rating": "Underweight",
      "rating_zh": "减持",
@@ -836,40 +876,22 @@
    ],
    "candidates": [
     {
-     "symbol": "SHOP",
-     "close": 131.97,
-     "chg3_pct": -10.72,
-     "above_sma200_pct": 1.1
+     "symbol": "PYPL",
+     "close": 53.29,
+     "chg3_pct": -8.29,
+     "above_sma200_pct": 6.0
     },
     {
-     "symbol": "WDAY",
-     "close": 173.36,
-     "chg3_pct": -10.67,
-     "above_sma200_pct": 10.9
-    },
-    {
-     "symbol": "ADSK",
-     "close": 243.45,
-     "chg3_pct": -8.32,
-     "above_sma200_pct": 4.1
+     "symbol": "FAST",
+     "close": 50.61,
+     "chg3_pct": -6.88,
+     "above_sma200_pct": 6.6
     },
     {
      "symbol": "ABNB",
-     "close": 172.79,
-     "chg3_pct": -7.2,
-     "above_sma200_pct": 15.1
-    },
-    {
-     "symbol": "PAYX",
-     "close": 111.4,
-     "chg3_pct": -5.41,
-     "above_sma200_pct": 8.9
-    },
-    {
-     "symbol": "AMGN",
-     "close": 438.82,
-     "chg3_pct": -5.08,
-     "above_sma200_pct": 15.3
+     "close": 170.36,
+     "chg3_pct": -5.85,
+     "above_sma200_pct": 13.3
     }
    ],
    "watch_title": "观察名单",
@@ -894,16 +916,58 @@
    ],
    "watchlist": [
     {
-     "symbol": "REGN",
-     "close": 923.34,
-     "chg2_pct": -3.59,
-     "above_sma200_pct": 23.2
+     "symbol": "AMZN",
+     "close": 246.82,
+     "chg2_pct": -7.81,
+     "above_sma200_pct": 0.7
     },
     {
-     "symbol": "TXN",
-     "close": 285.75,
-     "chg2_pct": -3.42,
-     "above_sma200_pct": 8.3
+     "symbol": "SBUX",
+     "close": 103.13,
+     "chg2_pct": -5.48,
+     "above_sma200_pct": 3.5
+    },
+    {
+     "symbol": "MSFT",
+     "close": 484.52,
+     "chg2_pct": -4.49,
+     "above_sma200_pct": 9.6
+    },
+    {
+     "symbol": "MAR",
+     "close": 406.64,
+     "chg2_pct": -4.36,
+     "above_sma200_pct": 12.3
+    },
+    {
+     "symbol": "CSX",
+     "close": 49.1,
+     "chg2_pct": -4.34,
+     "above_sma200_pct": 5.7
+    },
+    {
+     "symbol": "VRTX",
+     "close": 515.02,
+     "chg2_pct": -3.99,
+     "above_sma200_pct": 6.2
+    },
+    {
+     "symbol": "DXCM",
+     "close": 79.32,
+     "chg2_pct": -3.88,
+     "above_sma200_pct": 5.3
+    },
+    {
+     "symbol": "GEHC",
+     "close": 80.64,
+     "chg2_pct": -3.61,
+     "above_sma200_pct": 15.3
+    },
+    {
+     "symbol": "IDXX",
+     "close": 676.21,
+     "chg2_pct": -3.19,
+     "above_sma200_pct": 17.9
     }
    ],
    "trades": [
@@ -978,6 +1042,11 @@
      "date": "2026-11-19",
      "equity": 1452.87,
      "qqq": 645.04
+    },
+    {
+     "date": "2026-11-20",
+     "equity": 1422.56,
+     "qqq": 608.45
     }
    ],
    "live_stats": {
