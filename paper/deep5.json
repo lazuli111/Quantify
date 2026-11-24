@@ -7,11 +7,18 @@
   "entry_date": "2026-11-19",
   "entry_price": 196.128,
   "shares": 7,
-  "held_days": 2,
+  "held_days": 3,
   "entry_fees": 0.13728960964508055,
   "stop": null
  },
- "pending": [],
+ "pending": [
+  {
+   "action": "sell",
+   "symbol": "MRNA",
+   "reason": "收盘高于前一天最高价",
+   "ref_price": 212.08
+  }
+ ],
  "trades": [
   {
    "symbol": "CRWD",
@@ -83,6 +90,11 @@
    "date": "2026-11-20",
    "equity": 1422.56,
    "qqq": 608.45
+  },
+  {
+   "date": "2026-11-23",
+   "equity": 1542.12,
+   "qqq": 651.03
   }
  ],
  "quota_used_hkd": {
@@ -92,5 +104,5 @@
   "2026-11"
  ],
  "fees_paid": 3.5757810575215463,
- "last_processed": "2026-11-20"
+ "last_processed": "2026-11-23"
 }
