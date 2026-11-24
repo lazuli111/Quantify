@@ -238,5 +238,20 @@
   "minutes": 7.5,
   "cost": 0.32,
   "currency": "CNY"
+ },
+ {
+  "date": "2026-11-23",
+  "symbol": "ROP",
+  "strategies": [
+   "三连跌回调"
+  ],
+  "rating": "Underweight",
+  "rating_zh": "减持",
+  "agrees": false,
+  "report": "ai/2026-11-23_ROP.html",
+  "model": "deepseek-flash",
+  "minutes": 6.2,
+  "cost": 0.35,
+  "currency": "CNY"
  }
 ]

@@ -1,0 +1,1758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>ROP 2026-11-23 Underweight: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">ROP</span> <span class="rating down">Underweight</span></h1>
+<p class="date">Analysis of 2026-11-23</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-24 04:17</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">deepseek</span> <span class="field">deepseek-flash</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">deepseek</span> <span class="field">deepseek-flash</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents 0.6.0</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">Analyst Team Reports</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">Market Analyst</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">Sentiment Analyst</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">News Analyst</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">Fundamentals Analyst</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">Research Team Decision</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">Bull Researcher</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">Bear Researcher</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">Research Manager</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">Trading Team Plan</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">Trader</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">Risk Management Team Decision</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">Aggressive Analyst</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">Conservative Analyst</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">Neutral Analyst</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">Portfolio Manager Decision</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">Portfolio Manager</span></a></li></ul></li></ul></nav>
+<main>
+<section id="s1"><h2>I. Analyst Team Reports</h2><h3 id="s1-1">Market Analyst</h3>
+<h4>ROP（Roper Technologies, Inc.）技术分析报告</h4>
+<p><strong>分析日期：2026-11-23　最新收盘：$458.13（成交量 1,027,300 股）</strong></p>
+<hr />
+<h5>一、数据与验证说明</h5>
+<p>本报告所有精确价格与指标数值均以 <code>get_verified_market_snapshot</code>（请求日 2026-11-23，最新交易日 2026-11-23）为准，历史K线来自 <code>get_stock_data</code>（2025-11-01 至 2026-11-23，共 266 条）。两者在最新一日数据上完全一致（开 453.72 / 高 460.22 / 低 453.72 / 收 458.13 / 量 1,027,300），<strong>未发现需要标注的数据冲突</strong>。</p>
+<p>补充事项：数据中 2026-01-02、2026-04-06、2026-07-08、2026-10-02 各出现一次 $0.91 的股息记录（共 $3.64/年，按 458.13 计约 0.8% 的股息率），全区间无拆股，故价格序列可比。</p>
+<hr />
+<h5>二、指标选择逻辑（共 8 个，互补不冗余）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>选取理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>close_10_ema</td>
+<td>捕捉当前回调的短线动量拐点，是判断“回踩是否结束”的第一道闸门</td>
+</tr>
+<tr>
+<td>close_50_sma</td>
+<td>中期趋势与动态支撑基准，本轮上涨的成本中枢</td>
+</tr>
+<tr>
+<td>close_200_sma</td>
+<td>判断 2026 年 2 月崩跌后的长期结构是否真正修复（是否转向上行）</td>
+</tr>
+<tr>
+<td>macd</td>
+<td>确认 10 月爆发式上涨的动量来源，并监测其衰减速度</td>
+</tr>
+<tr>
+<td>macdh</td>
+<td>判断动量衰减的“斜率”是否在收敛，比单纯 MACD 数值更早给出拐点信号</td>
+</tr>
+<tr>
+<td>rsi</td>
+<td>量化 11 月初的极度超买（84 附近）及其消化程度，避免在强趋势中误判</td>
+</tr>
+<tr>
+<td>atr</td>
+<td>近一个月波动率翻倍，必须用 ATR 而非固定百分比设定止损与仓位</td>
+</tr>
+<tr>
+<td>vwma</td>
+<td>用量价加权成本判断“最近谁在买、谁在卖”，本轮回调的量价证据核心</td>
+</tr>
+</tbody>
+</table></div>
+<p>不使用布林带上下轨作为独立指标调用，但其数值（中轨 469.67 / 上轨 499.95 / 下轨 439.38）来自已验证快照，将在价位分析中引用。</p>
+<hr />
+<h5>三、趋势结构：三级周期出现明显分化</h5>
+<h6>1. 长期（200 SMA）——由破坏走向修复</h6>
+<ul>
+<li>200 SMA 现值 <strong>370.92</strong>，收盘价高出 <strong>23.5%</strong>。</li>
+<li>更重要的是方向：200 SMA 在 10 月中旬曾低位走平/微降（2026-10-22 为 362.79），此后连续抬升至 370.92，一个月内上升约 8 点。这意味着 2026 年 1–2 月那波暴跌（1 月 26 日收 405.59 → 1 月 27 日收 366.49，单日跌幅逾 9%，成交量放大至 5,077,700 股；随后 2 月 17 日收 313.15 见底）正在被逐步“滚出”均线窗口，长期均线开始向上承接。</li>
+<li>结论：长期结构已从“破位”转为“修复中”，但尚未恢复到 2025 年 11 月约 440–450 的价格平台。</li>
+</ul>
+<h6>2. 中期（50 SMA）——明确上行，且斜率在加速</h6>
+<ul>
+<li>50 SMA 现值 <strong>413.16</strong>，收盘价高出 <strong>10.9%</strong>。</li>
+<li>路径：2026-10-02 为 389.90 → 10-21 微降至 385.36（横盘末端的下压）→ 11-23 升至 413.16，最近一个月上升约 28 点。这正是 10 月下旬突破后的典型“均线追赶”。</li>
+<li>50 SMA 对 200 SMA 的价差为 <strong>+42.24（约 +11.4%）</strong>，多头排列成立并继续张开，中期趋势无可争议地向上。</li>
+</ul>
+<h6>3. 短期（10 EMA）——已经破位，进入回调</h6>
+<ul>
+<li>10 EMA 现值 <strong>467.31</strong>，收盘价 <strong>458.13 低于 10 EMA 约 2.0%</strong>。</li>
+<li>10 EMA 自 2026-11-16 的 474.36 连续下滑至 467.31，已由上行转为下弯。</li>
+<li>这构成“长多、中多、短空”的三级分化结构：<strong>趋势未坏，但短期动量的主动权已交给卖方。</strong></li>
+</ul>
+<hr />
+<h5>四、动量：从极度超买到中性化，MACD 已死叉</h5>
+<ul>
+<li><strong>RSI：现值 54.10。</strong> 关键路径：10-02 为 35.42（近超卖）→ 11-02 峰值 <strong>84.47</strong> → 11-05 为 82.03 → 11-16 为 72.55 → 11-23 回落至 54.10。这意味着 11 月初的超买已被彻底消化，RSI 回到中性区（50 附近），<strong>既没有超买压力，也尚未进入超卖的安全买区（&lt;35）</strong>。历史上该股 9 月 28–30 日的 RSI 25.6–27.5 是真正的低吸区，目前离那种极端还很远。</li>
+<li><strong>MACD：现值 13.86，信号线 19.38，柱状图 -5.52。</strong> MACD 线自 11-05 的 28.72 一路下滑至 13.86，柱状图在 <strong>11-12（+0.39）→ 11-13（-0.32）</strong> 之间翻负，即 <strong>11 月 13 日确认死叉</strong>；此后柱状图从 -0.73（11-16）扩大到 -4.91（11-20）、-5.52（11-23），<strong>负柱仍在放大，没有收敛迹象</strong>。这是“回调尚未结束”的最直接证据。</li>
+<li>但需注意：MACD 线仍为正值（13.86），说明这是“高位动量降温”，而非“趋势转空”。以 9 月 30 日 MACD 曾低至 -12.24 作为对比，当前仍处强势区的回撤。</li>
+</ul>
+<hr />
+<h5>五、量价关系：VWMA 给出明确的短期出货证据</h5>
+<ul>
+<li><strong>VWMA 现值 477.72，收盘价 458.13 低于 VWMA 约 4.1%。</strong> 交叉发生在 <strong>2026-11-17</strong>：当日收 471.92，而 VWMA 为 476.44，价格首次跌破成交量加权成本线，此后 11-18（470.87）、11-19（462.96）、11-20（459.83）、11-23（458.13）持续位于 VWMA 之下。<strong>近一个月买入者的加权平均成本高于现价，短线处于浮亏状态，构成上方抛压。</strong></li>
+<li>更值得警惕的是量能结构的不对称：
+<ul>
+<li>顶部放量：<strong>2026-11-05 成交 2,220,500 股</strong>，当日开 500.00、高 <strong>507.24</strong>、低 490.89、收 490.96——长上影线 + 区间最大成交量的“冲高回落”形态，是典型的动能衰竭/派发蜡烛。</li>
+<li>上涨缩量：11-10 至 11-16 的上行段成交量仅 524,700–755,100 股，明显低于前期。</li>
+<li>回调放量：11-20 下跌日成交 <strong>1,292,800 股</strong>，11-23 成交 1,027,300 股；以 10-26 至 11-23 的 21 个交易日估算，日均量约 108 万股，即回调日量能高于阶段均值。</li>
+<li>结论：<strong>涨时缩量、跌时放量 + 价格跌破 VWMA，属于短线派发而非健康换手。</strong></li>
+</ul>
+</li>
+<li>唯一的正面细节：<strong>11-23 当日开 453.72、最低 453.72（低点即开盘）、收 458.13</strong>，收盘位于当日振幅的约 68% 位置，说明 453–455 一带有承接，且没有收在最低。这是一个“止跌未确认但出现抵抗”的信号，需要后续验证。</li>
+</ul>
+<hr />
+<h5>六、波动率与风险标尺（ATR）</h5>
+<ul>
+<li><strong>ATR 现值 11.81，约占股价的 2.58%。</strong> 一个月前（2026-10-21）仅 9.18，10 月 22 日跳空后升至 11.55，11-06 峰值 14.23，此后缓慢回落至 11.81。</li>
+<li>含义：单日正常波动幅度约 $12。任何“精确到 1–2 美元”的入场假设都无意义，止损必须给出至少 1.0–1.5 倍 ATR（约 $12–18）的缓冲；仓位应相对于 10 月之前（ATR≈9）下调约 20–25%，以保持相同金额风险敞口。</li>
+<li>布林带宽度：(499.95 − 439.38) / 469.67 ≈ 12.9%，属扩张状态；收盘 458.13 位于中轨 469.67 之下、<strong>下轨 439.38 之上</strong>，即价格处于布林带下半区——偏弱但未触极端。</li>
+</ul>
+<hr />
+<h5>七、关键价位（全部来自已验证数据）</h5>
+<p><strong>上方阻力（由近及远）</strong></p>
+<ol>
+<li><strong>467.31</strong> — 10 EMA，短线多空分界，必须收复才算回调结束。</li>
+<li><strong>471.92–474.47</strong> — 11-17 收盘 471.92、11-10 收盘 474.47 构成的密集区。</li>
+<li><strong>477.72–479.98</strong> — VWMA（477.72）与 11-13 收盘（479.98）；同时 11-12 收 477.87、11-11 收 477.70，形成 477–480 的强供应带。</li>
+<li><strong>483.72</strong> — 11-16 收盘，本轮反弹的最后高点。</li>
+<li><strong>492.22 / 499.95</strong> — 11-04 收盘与布林上轨。</li>
+<li><strong>507.24</strong> — 11-05 盘中高点，区间最高价。</li>
+</ol>
+<p><strong>下方支撑（由近及远）</strong></p>
+<ol>
+<li><strong>453.72–449.65</strong> — 11-23 开盘/最低，以及 10-29 收盘 449.65；也是 <strong>10-30 向上跳空缺口区</strong>（10-29 最高 450.21 → 10-30 开盘 462.31），当前价格（458.13）正位于缺口内部，属于典型的“缺口回补”区域。</li>
+<li><strong>439.38</strong> — 布林下轨，距现价约 4.1%。</li>
+<li><strong>434.48–436.23</strong> — 10-27 收盘与 10-22 大阳线收盘（当日 397.56 → 436.23，成交 1,976,300 股，涨幅约 9.7%，为突破日）；一旦回补至此处，10 月突破的多头结构就退化。</li>
+<li><strong>428.52 / 427.06</strong> — 9 月 3 日与 8 月 28 日的高点，即 2–9 月长达 7 个月箱体的上沿（约 425–428），是“牛熊分界”级别的支撑。</li>
+<li><strong>413.16</strong> — 50 SMA，中期趋势的最后防线；距现价约 10.9%，目前不属于近端风险。</li>
+</ol>
+<hr />
+<h5>八、情景推演与可执行策略</h5>
+<h6>情景 A（概率偏高，约 50%）：缺口回补 + 高位震荡</h6>
+<p>价格在 <strong>449.65–467.31</strong> 区间反复消化，MACD 负柱先扩后缩，RSI 在 45–55 徘徊。策略：<strong>持仓者继续持有，不加仓</strong>；短线交易者可在 449–453 承接区做区间低吸、以 467 附近为第一目标，止损置于 <strong>439 下方（跌破布林下轨）</strong>。</p>
+<h6>情景 B（约 30%）：回调加深至突破区</h6>
+<p>若日收盘失守 <strong>449.65</strong> 且成交量继续高于 108 万股均值，则下一步目标为 <strong>439.38（布林下轨）→ 434.48–436.23（10 月突破日收盘区）</strong>。策略：<strong>在 436–440 区间分批建立/加仓，止损参考 1.5×ATR（约 $18）下方即 418–422，即跌破 50 SMA 上方缓冲带</strong>。这是风险收益比最佳的位置，但需要一个前提：回调过程中成交量萎缩。</p>
+<h6>情景 C（约 20%）：直接转弱，趋势级别下移</h6>
+<p>若价格在放量下有效跌破 <strong>434</strong>，并进一步测试 <strong>425–428</strong> 的 7 个月箱体上沿，则 10 月以来的多头冲动被证伪，需将评级下调为减仓。此情景的触发信号：MACD 线跌破零轴（目前 13.86，距零轴尚有余量）+ VWMA 与 10 EMA 同时下压 + RSI 跌破 40。<strong>当前尚未出现这些信号中的任何一个</strong>（RSI 54.10、MACD 仍为正）。</p>
+<h6>情景 D（反转确认，需等待）：收复 467–480 供应带</h6>
+<p>只有当价格<strong>站上 10 EMA 467.31 并有效突破 477.72 的 VWMA</strong>，同时 MACD 柱状图重新转正，才可确认回调结束、恢复上行。届时上方看 492.22 → 507.24，若创出新高则打开新一段趋势空间。<strong>在出现这一确认之前，任何“抄底追多”都是在逆短期动量交易。</strong></p>
+<h6>风控参数</h6>
+<ul>
+<li>单笔止损幅度按 <strong>1.0–1.5×ATR = $12–18</strong> 设定，不做小于 $10 的窄止损（当日 ATR 已达 11.81）。</li>
+<li>仓位：以 11 月前 ATR≈9.2 为基准，波动率上升约 28%，同金额风险下的头寸应下调约 20–25%。</li>
+<li>事件风险：2026 年 1 月 27 日（-9.6%，成交量 5,077,700 股，为区间最大）显示该股对单一消息面极为敏感。三季报窗口（10 月 22 日跳空 +9.7%）已过，但下一财报季前若跳空风险重现，ATR 会迅速上抬，届时需再次下调仓位。</li>
+</ul>
+<hr />
+<h5>九、综合判断</h5>
+<p>ROP 的<strong>大方向仍是多头</strong>：价格高于 50 SMA 10.9%、高于 200 SMA 23.5%，两条均线同时上行，MACD 线仍处正区，9 月 30 日（收 348.53，RSI 25.6）以来的底部反转结构完好——按收盘价计，10 月 30 日 466.60 至 11 月 4 日 492.22 的加速段已经完成了从 9 月 30 日 348.53 起算约 +41% 的主升。但<strong>短期明确处于调整中</strong>，且有四条独立证据互相印证：① 价格跌破 10 EMA（467.31）；② 11 月 13 日 MACD 死叉且负柱持续扩大（-5.52）；③ 11 月 17 日跌破 VWMA（477.72）后再未收复；④ 11 月 5 日 507.24 长上影配 2,220,500 股区间最大量的顶部派发形态，随后回调伴随高于均值的成交量。</p>
+<p>因此最优操作是<strong>持有核心多头仓位、用明确的价位纪律管理回调风险，并把新增买入留给 439–453 或“收复 467–480”两个确认点</strong>，而不是在 458 的位置猜底或恐慌离场。若必须给出方向性立场：短期内<strong>中性偏防守</strong>，中期<strong>偏多</strong>。</p>
+<p><strong>Rating</strong>: HOLD</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<hr />
+<h5>十、关键要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>指标 / 价位</th>
+<th>当前值</th>
+<th>状态判读</th>
+<th>交易含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收盘价</td>
+<td>Close (2026-11-23)</td>
+<td>458.13</td>
+<td>自 11-04 收盘 492.22 回落约 6.9%；自 11-05 高点 507.24 回落约 9.7%</td>
+<td>高位回调中，尚未破位</td>
+</tr>
+<tr>
+<td>长期趋势</td>
+<td>close_200_sma</td>
+<td>370.92</td>
+<td>价格高出 23.5%，且均线自 10-22 的 362.79 起转向上升</td>
+<td>长期结构修复，看多基础成立</td>
+</tr>
+<tr>
+<td>中期趋势</td>
+<td>close_50_sma</td>
+<td>413.16</td>
+<td>价格高出 10.9%，均线一个月上行约 28 点；50–200 价差 +42.24</td>
+<td>中期多头排列，趋势未坏</td>
+</tr>
+<tr>
+<td>短期动量</td>
+<td>close_10_ema</td>
+<td>467.31</td>
+<td>价格低于均线约 2.0%，均线自 11-16 的 474.36 下弯</td>
+<td>短线转弱，需收复 467.31 才转中性</td>
+</tr>
+<tr>
+<td>动量强度</td>
+<td>macd / macds / macdh</td>
+<td>13.86 / 19.38 / -5.52</td>
+<td>11-13 死叉，负柱由 -0.73 扩大至 -5.52</td>
+<td>回调未见收敛，等待柱状图转正</td>
+</tr>
+<tr>
+<td>超买超卖</td>
+<td>rsi</td>
+<td>54.10</td>
+<td>由 11-02 的 84.47 回落至中性；9 月末曾低至 25.6</td>
+<td>超买已消化，但未到超卖买点</td>
+</tr>
+<tr>
+<td>波动率</td>
+<td>atr</td>
+<td>11.81（约 2.58%）</td>
+<td>10-21 仅 9.18，11-06 峰值 14.23</td>
+<td>止损至少 $12–18；仓位下调 20–25%</td>
+</tr>
+<tr>
+<td>量价成本</td>
+<td>vwma</td>
+<td>477.72</td>
+<td>11-17 跌破（收 471.92）后持续位于其下</td>
+<td>短线派发，477–480 为强供应带</td>
+</tr>
+<tr>
+<td>布林带</td>
+<td>boll / boll_ub / boll_lb</td>
+<td>469.67 / 499.95 / 439.38</td>
+<td>价格 458.13 位于中轨之下、下半区</td>
+<td>439.38 为量化下行参考</td>
+</tr>
+<tr>
+<td>近端支撑</td>
+<td>—</td>
+<td>453.72–449.65；439.38；434.48–436.23</td>
+<td>10-30 缺口区 + 布林下轨 + 10 月突破日收盘</td>
+<td>分批低吸区间，止损置于 434 下方</td>
+</tr>
+<tr>
+<td>近端阻力</td>
+<td>—</td>
+<td>467.31；477.72–479.98；492.22；507.24</td>
+<td>10 EMA / VWMA / 前高</td>
+<td>收复 467→480 才确认调整结束</td>
+</tr>
+<tr>
+<td>量能特征</td>
+<td>11-05 / 11-20</td>
+<td>2,220,500 / 1,292,800 股</td>
+<td>顶部放量长上影，回调日量高于 21 日均量约 108 万股</td>
+<td>涨缩量、跌放量，短线偏派发</td>
+</tr>
+<tr>
+<td>结论</td>
+<td>—</td>
+<td>—</td>
+<td>长期与中期多头完好，短期调整未结束</td>
+<td>持有，等确认后加仓</td>
+</tr>
+<tr>
+<td><strong>Rating</strong></td>
+<td>—</td>
+<td><strong>HOLD</strong></td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">Sentiment Analyst</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bullish</strong> (Score: 6.1/10)
+<strong>Confidence:</strong> Low</p>
+<h5>一、分信源拆解</h5>
+<h6>1. 新闻/机构口径（Yahoo Finance，2026-11-16 至 2026-11-23）</h6>
+<p>本窗口共 11 条标题，但<strong>必须先做一次信源清洗</strong>，否则会严重误读：</p>
+<ul>
+<li><strong>真正的 ROP（Roper Technologies, NASDAQ:ROP）相关，共 5 条，整体偏正面：</strong>
+<ul>
+<li>Zacks《Can ROP Benefit From Strength in Its Application Software Segment?》——明确指出 Application Software 分部受 SaaS 渗透率提升、AI 创新和核心业务强势推动，维持增长动能。这是本周最具&quot;基本面含量&quot;的正面叙事。</li>
+<li>Barchart《Are Wall Street Analysts Bullish on Roper Technologies Stock?》——口径为&quot;moderately optimistic&quot;，但同时点明 ROP 过去一年<strong>跑输大盘</strong>。即：机构评级偏多，但价格表现已经落后，属于&quot;看好但已被验证为滞涨&quot;的分歧状态，而非纯多头确认。</li>
+<li>Investing.com 两条 Citi 相关报道——《Citi's software stock picks: AI upside and a new contender enters the spotlight》与《Citi Names Top Application Software Stocks After Q3 Results》——Citi 在 Q3 业绩后更新美股后台应用软件板块排序，<strong>将 ROP 从榜外上调至第三位</strong>（前两位为 BOX、NAVN）。Citi 的选股逻辑是&quot;偏好具基础设施属性或监管驱动价值的公司，同时对 SMB 敞口较大的厂商保持谨慎&quot;。ROP 被归入前一类，这是本周<strong>唯一一条真正意义上的增量机构动作（评级/排序上调）</strong>，且被两家媒体重复报道，说明传播强度不低。</li>
+</ul>
+</li>
+<li><strong>纯噪声、与 ROP 无关，共 6 条，需剔除：</strong>
+<ul>
+<li>Simply Wall St. 的三条 Roche Holding (SWX:ROP) 报道（Wilserdly 获 FDA 批准、Gazyva 狼疮/肾病进展）——这是<strong>瑞士罗氏在 SWX 的代码 ROP</strong>，与 Roper Technologies 完全是两家公司。任何把这批头条读成 Roper 利好的结论都是错的。</li>
+<li>First Trust NASDAQ-100 Tech (QTEC) 三条调仓报道（卖出 AppLovin、德州仪器）——ETF 层面动作，未提及 ROP。</li>
+<li>Trefis 的 Itron (ITRI) 毛利率分析——完全无关。</li>
+</ul>
+</li>
+<li><strong>结论</strong>：机构新闻面<strong>净偏正面但强度有限</strong>——正面来自卖方（Citi 排序上调 + Zacks 分部基本面 + Barchart 分析师&quot;温和看多&quot;），负面来自&quot;过去一年跑输大盘&quot;这一已实现事实。没有出现盈利预警、监管风险或下调评级的空头事件。</li>
+</ul>
+<h6>2. StockTwits 零售情绪（4 条最新消息）</h6>
+<ul>
+<li>官方计数：<strong>Bullish 2（50%）/ Bearish 0（0%）/ Unlabeled 2</strong>。</li>
+<li>但<strong>必须按内容二次甄别</strong>：两条 unlabeled 消息均来自同一用户 @AdamBrennan2（2026-11-18、2026-11-20），正文分别在讨论 $GPUS 的超大规模数据中心资本开支和 $BKSY 的卫星资产投入，<strong>与 ROP 毫无关系</strong>，属于蹭 cashtag 的离题贴。</li>
+<li>因此<strong>真正涉及 ROP 的帖子只有 2 条，且均为 Bullish</strong>：
+<ul>
+<li>2026-11-21 @romanhayes（Bullish）：&quot;$ROP 高管应加大营销投入。我们有一只很好的股票，但几乎没人知道。&quot; → 典型的&quot;低关注度价值股&quot;论点，多头的理由不是催化事件，而是<strong>市场认知不足</strong>。</li>
+<li>2026-11-19 @SilverEagle（Bullish）：&quot;$ROP buy pullbacks into the grey.&quot; → 回调买入，技术面倾向性表述，无基本面内容。</li>
+</ul>
+</li>
+<li>解读：0 条看空、2/2 有效样本看多，方向明确偏多，但<strong>有效样本仅 2 条，统计意义极弱</strong>；同时多头的论据是&quot;没人知道这只股票&quot;而非新催化，说明零售端的热情处于<strong>低热度、慢积累</strong>阶段，远未到拥挤（既无 ≥90/10 的过度延伸风险，也无 FOMO 特征）。</li>
+</ul>
+<h6>3. Reddit（r/wallstreetbets、r/stocks、r/investing）</h6>
+<ul>
+<li>返回 <strong>&lt;Reddit unavailable: fetch failed&gt;</strong>，即抓取失败。<strong>这是数据缺失，不是&quot;无人讨论&quot;</strong>。因此本报告无法评估散户社区层面的讨论深度、多空比例或是否出现&quot;抱团&quot;迹象。这是本次评估最大的盲区。</li>
+</ul>
+<h5>二、跨信源分歧与一致性</h5>
+<ul>
+<li><strong>一致性</strong>：机构（Citi 上调至第三、Zacks 分部正面、Barchart&quot;温和看多&quot;）与零售（2/2 有效贴看多）在<strong>方向上完全一致</strong>，没有出现&quot;机构谨慎 / 零售狂热&quot;或&quot;机构看多 / 零售冷淡&quot;的典型背离。这是一致但<strong>低强度</strong>的温和看多格局。</li>
+<li><strong>值得留意的隐含张力</strong>：Barchart 明确写出 ROP &quot;过去一年跑输大盘&quot;，而 Citi 刚刚把它升到板块第三。这构成&quot;<strong>基本面/卖方叙事改善 vs. 实际价格动能落后</strong>&quot;的错位——零售那条&quot;好公司但没人知道&quot;的帖子与这一错位高度呼应。这通常意味着<strong>叙事正在修复、但资金尚未确认</strong>。</li>
+<li><strong>需要警惕的伪信号</strong>：新闻源中 Roche (SWX:ROP) 与 QTEC、ITRI 的三类头条占了标题量的一半以上。若仅按&quot;标题多空计数&quot;做情绪打分，本周 ROP 的情绪会被系统性污染（罗氏的 FDA 利好容易被误计为 Roper 利好）。本报告已按公司身份逐条剔除。</li>
+</ul>
+<h5>三、主导叙事主题</h5>
+<ol>
+<li><strong>&quot;应用软件分部的 SaaS + AI 叙事&quot;</strong>（Zacks、Citi 同源共振）：这是本周唯一贯穿机构信源的实质主题——ROP 被重新归类为&quot;具基础设施属性/监管壁垒的软件资产&quot;，而非单纯工业多元控股。Citi 把它放进 BOX、NAVN 同一张榜单，本身就是一次<strong>叙事标签的切换</strong>。</li>
+<li><strong>&quot;被低估 / 低关注度&quot;</strong>（StockTwits @romanhayes + Barchart 的&quot;跑输大盘&quot;）：多头论据建立在&quot;认知差&quot;而非&quot;业绩超预期&quot;之上，属于慢变量。</li>
+<li><strong>&quot;回调即买点&quot;</strong>（@SilverEagle）：唯一的交易层面表述，说明零售视角把它当作<strong>低波动、可逢跌吸纳</strong>的品种，而非动量标的。</li>
+<li><strong>噪音主题</strong>：罗氏医药管线（FDA/CHMP）、ETF 调仓、Itron 毛利率——<strong>与 ROP 无关，不应计入叙事</strong>。</li>
+</ol>
+<h5>四、催化剂与风险</h5>
+<p><strong>潜在催化剂（来自数据）</strong></p>
+<ul>
+<li>Citi 排序上调（升至第三）后续可能带动的卖方评级/目标价调整与资金被动关注，是本周最清晰的短中期催化。</li>
+<li>Application Software 分部的 SaaS 转化与 AI 产品化进展，若在下一份财报中体现为加速，将强化&quot;基础设施型软件&quot;叙事。</li>
+<li>&quot;认知度低&quot;这一特征本身：若出现指数/ETF 增配或首次覆盖，低关注度股票的边际买盘弹性通常较大。</li>
+</ul>
+<p><strong>风险（来自数据）</strong></p>
+<ul>
+<li><strong>已实现的价格弱势</strong>：过去一年跑输大盘（Barchart），说明&quot;看多但不涨&quot;的状态已持续较久，卖方叙事改善并不自动等于价格修复。</li>
+<li><strong>叙事依赖单一卖方</strong>：正面机构观点高度集中于 Citi 一家（两条报道实为同一动作的两次报道），一旦其他机构不跟进，热度会快速衰减。</li>
+<li><strong>Citi 自身逻辑的反面</strong>：其选股框架对&quot;SMB 敞口大、漏斗顶部承压&quot;的软件厂商持谨慎态度——若市场后续把 ROP 归入受宏观/中小企业支出影响的类别，标签可能反向切换。</li>
+<li><strong>数据风险</strong>：Reddit 完全缺失、StockTwits 有效样本仅 2 条且无一条包含量化或事件信息，本报告无法排除社区层面存在未被捕捉的负面讨论。</li>
+</ul>
+<h5>五、关键情绪信号汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>方向</th>
+<th>信源</th>
+<th>具体证据</th>
+<th>信号强度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看多（机构，增量动作）</td>
+<td>Investing.com ×2（Citi）</td>
+<td>Q3 业绩后将 ROP 由榜外上调至后台应用软件板块<strong>第三位</strong>，仅次于 BOX、NAVN；偏好基础设施/监管驱动型标的</td>
+<td>中高（唯一实质增量评级动作）</td>
+</tr>
+<tr>
+<td>看多（基本面）</td>
+<td>Zacks</td>
+<td>Application Software 分部受 SaaS 采用、AI 创新与核心业务强势推动，支撑继续增长</td>
+<td>中</td>
+</tr>
+<tr>
+<td>温和看多（但含警示）</td>
+<td>Barchart</td>
+<td>华尔街分析师&quot;moderately optimistic&quot;，但明确 ROP <strong>过去一年跑输大盘</strong></td>
+<td>中低（多空混合表述）</td>
+</tr>
+<tr>
+<td>看多（零售，极薄样本）</td>
+<td>StockTwits @romanhayes</td>
+<td>&quot;高管应加大营销；好股票但几乎无人知晓&quot;——低关注度论点</td>
+<td>低（有效样本 2 条）</td>
+</tr>
+<tr>
+<td>看多（零售，技术面）</td>
+<td>StockTwits @SilverEagle</td>
+<td>&quot;buy pullbacks into the grey&quot;，回调买入</td>
+<td>低（无基本面内容）</td>
+</tr>
+<tr>
+<td>中性/剔除</td>
+<td>StockTwits @AdamBrennan2 ×2</td>
+<td>讨论 $GPUS 数据中心资本开支、$BKSY 卫星投入，与 ROP 无关</td>
+<td>无（离题噪音）</td>
+</tr>
+<tr>
+<td>看空</td>
+<td>—</td>
+<td><strong>本周无任何看空评级、预警或负面事件</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>不可用</td>
+<td>Reddit（WSB/stocks/investing）</td>
+<td>抓取失败占位符，非&quot;无讨论&quot;</td>
+<td>缺失（最大盲区）</td>
+</tr>
+<tr>
+<td>已剔除噪音</td>
+<td>Simply Wall St. ×3、GuruFocus ×3、Trefis ×1</td>
+<td>Roche Holding (SWX:ROP)、QTEC 调仓、ITRI 毛利率，均与 Roper Technologies 无关</td>
+<td>无</td>
+</tr>
+</tbody>
+</table></div>
+<h5>六、结论与置信度说明</h5>
+<p><strong>结论</strong>：本周 ROP 情绪<strong>温和偏多（Mildly Bullish，6.1/10）</strong>。多头信号来自三条相互独立的线索且方向一致：Citi 的板块排序上调（唯一机构增量动作）、Zacks 对应用软件分部的正面基本面描述、以及零售端 2/2 有效贴的看多（理由集中在&quot;低关注度&quot;与&quot;逢跌买入&quot;）。空头一侧在本周数据中<strong>完全沉默</strong>，但 Barchart 点出的&quot;过去一年跑输大盘&quot;提示多头叙事尚未被价格验证。</p>
+<p><strong>置信度：low</strong>。三条理由：(1) Reddit 返回占位符、抓取失败，三大社区讨论完全缺失，这是结构性盲区；(2) StockTwits 仅 4 条，剔除 2 条离题后有效样本仅 2 条，不足 5 条阈值，无法据此判断零售情绪分布；(3) 新闻 11 条中 6 条与 ROP 无关（含罗氏 SWX:ROP 的代码撞车），实际有效信息密度低，正面机构观点实质集中于 Citi 一家。</p>
+<p><strong>给交易者的落地提示</strong>：本周信号更像是&quot;叙事修复的早期迹象&quot;而非&quot;情绪拐点&quot;。可关注的验证点是——Citi 之后是否有第二家机构跟进上调、Application Software 分部增速是否在下一份财报中确认加速、以及价格是否结束相对大盘的落后。需注意，本报告为情绪面信号，不构成价格判断，应与基本面与技术面并行权衡。</p>
+<p><strong>Rating</strong>: Mildly Bullish
+FINAL TRANSACTION PROPOSAL: HOLD</p>
+<h3 id="s1-3">News Analyst</h3>
+<h4>ROP（Roper Technologies, Inc.，NASDAQ: ROP）新闻与宏观研究报告</h4>
+<p><strong>研究窗口：2026-11-16 至 2026-11-23（辅以 2026-10-23 起的一个月回溯）｜报告日：2026-11-23</strong></p>
+<hr />
+<h5>一、执行摘要</h5>
+<ol>
+<li><strong>基本面：Q3 财报（10 月下旬发布）延续&quot;软件化＋并购复利&quot;叙事，并叠加 10% 股息上调与第 34 年连续增派（Dividend Aristocrat 资格延续）</strong>，这是本周最具确定性、可交易的正面催化。</li>
+<li><strong>卖方态度转暖</strong>：Citi 在 Q3 后更新后台应用软件（back-office application software）排序，将 <strong>ROP 从候选名单提升至第三位</strong>（仅次于 BOX、NAVN），核心理由是&quot;具备基础设施属性/监管驱动型价值主张＋差异化 AI 战略&quot;，并明确对 SMB 敞口较大的中小型厂商保持谨慎——这是<strong>相对配置（relative allocation）资金的正面信号</strong>。</li>
+<li><strong>估值与动量矛盾</strong>：该股过去一个月上涨约 <strong>35.5%</strong>，第三方估值评论已开始提示&quot;现金流能否支撑当前价格（fully valued）&quot;，同时 Barchart 指出其<strong>过去一年跑输大盘</strong>。即&quot;一年维度弱、一个月维度极强&quot;，短线存在获利了结压力。</li>
+<li><strong>宏观工具箱受限（须明确披露）</strong>：本次 FRED 宏观序列（CPI、核心 PCE、失业率、联邦基金利率、10Y、收益率曲线、VIX）与 Polymarket 隐含概率<strong>均返回不可用</strong>（FRED_API_KEY 未配置；预测市场对 2026-11-23 时点数据被屏蔽）。因此本报告<strong>不提供任何宏观数值</strong>，宏观判断仅基于新闻文本证据，请勿将下列定性描述当作数据引用。</li>
+<li><strong>宏观/市场背景（新闻层面）</strong>：本周风险资产处于&quot;受创后寻找底部&quot;状态，随后出现<strong>自去年 4 月以来最佳单日表现</strong>（由 NVDA/Jensen Huang 相关消息带动）；同时新闻中明确提到&quot;higher interest rates&quot;仍是估值约束。对 ROP 这类<strong>长久期现金流＋高倍数并购平台</strong>而言，利率是核心估值变量。</li>
+</ol>
+<p><strong>结论：维持中性（Hold）。</strong> 基本面向好且机构资金流开始转向，但一个月 +35% 的涨幅与利率环境使风险回报不对称；建议<strong>回调加仓、而非追高</strong>。</p>
+<hr />
+<h5>二、公司特定新闻与解读（ROP）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>来源</th>
+<th>交易含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q3 2026：营收 <strong>$21.718 亿</strong>，净利 <strong>$4.847 亿</strong>，持续经营 GAAP 摊薄 EPS <strong>$4.88</strong>；Q4 GAAP DEPS 指引 <strong>$4.27–4.32</strong>；全年指引 <strong>$25.60–25.65</strong>；前三季营收 <strong>$63.76 亿</strong>、净利 <strong>$21.621 亿</strong></td>
+<td>Simply Wall St</td>
+<td>盈利超预期后叙事&quot;从增长转向现金流质量&quot;。<strong>注意：全年指引与单季 EPS 之间存在数值口径不一致，建议以公司原始 8-K/10-Q 核对</strong>，不要直接用于建模</td>
+</tr>
+<tr>
+<td>季度股息上调 <strong>10% 至 $1.00/股</strong>，<strong>连续 34 年</strong>增派</td>
+<td>Zacks</td>
+<td>现金流与资产负债表健康的确证信号；对收益型/质量型资金具吸引力，历史上增派后 1–2 周有正漂移</td>
+</tr>
+<tr>
+<td><strong>Citi 将 ROP 提至后台应用软件第三优选</strong>（BOX、NAVN、ROP），偏好&quot;基础设施型/监管驱动型&quot;标的，规避 SMB 敞口</td>
+<td>Investing.com（两篇）</td>
+<td>本周最强资金面催化。<strong>&quot;监管驱动&quot;正是 ROP（Deltek、Vertafore、Medidata、PowerPlan 等垂类合规软件）的核心护城河</strong>，与市场担心的&quot;AI 颠覆按席位收费 SaaS&quot;形成对冲</td>
+</tr>
+<tr>
+<td>应用软件分部受 SaaS 渗透、AI 创新与关键业务走强推动</td>
+<td>Zacks</td>
+<td>有机增长叙事仍在；但需注意 AI 既是收入助力，也是<strong>定价模式风险</strong>（席位制被 agent 化侵蚀）</td>
+</tr>
+<tr>
+<td><strong>$60 亿可部署资金（deployment capacity）、软件留存率中高 90%</strong>，靠纪律化 M&amp;A 复利</td>
+<td>Motley Fool</td>
+<td>并购管线是长期 EPS 复利引擎，但<strong>高利率＋高估值环境下并购的资本成本上升</strong>，是双刃剑</td>
+</tr>
+<tr>
+<td>ETF 于 10/30 净卖出 <strong>$6,370 万</strong></td>
+<td>GuruFocus</td>
+<td>规模不大，属指数/量化再平衡噪音，非基本面信号</td>
+</tr>
+<tr>
+<td>分析师整体&quot;温和乐观&quot;，但股价过去一年跑输大盘</td>
+<td>Barchart</td>
+<td>一致预期偏多但缺乏强上行催化；<strong>评级上修空间大于下调空间</strong></td>
+</tr>
+<tr>
+<td>被列为&quot;未来十年跑赢 10 年期美债&quot;的 12 只股息贵族之一</td>
+<td>MarketWatch</td>
+<td>相对债券的吸引力叙事；反向说明<strong>若长端利率再上行，该论点最脆弱</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>数据噪音警示（重要）</strong>：本周新闻流中大量以 &quot;Roche Holding (SWX:ROP)&quot; 为标题的医药类文章（Wilserdly FDA 获批、Gazyva 狼疮/肾病、cobas 质谱平台等）<strong>与 Roper Technologies 完全无关</strong>，系数据供应商在 &quot;ROP&quot; 上的代码串号（Roche 在瑞士交易所代码亦为 ROP）。另有 &quot;Jefferies 命名某建筑软件公司为垂类软件首选&quot;一条未具名，<strong>不应归属于 ROP</strong>。请勿据此类文章交易 ROP。</p>
+<hr />
+<h5>三、行业与竞争格局</h5>
+<ul>
+<li><strong>垂类/后台软件的资金偏好在分化</strong>：Citi 的排序逻辑显示，市场正把&quot;流程嵌入深、合规/监管驱动、切换成本高&quot;的软件（如 ROP 的 Deltek、Vertafore、PowerPlan、Medidata）与&quot;依赖 SMB 新增客户漏斗&quot;的软件区分定价。前者在当前环境下获得<strong>防御性溢价</strong>。</li>
+<li><strong>可比公司动态</strong>：Fortive、Ingersoll Rand 等工业/多元科技平台被讨论为&quot;持有工业需求的替代方式&quot;；Itron 的营业利润率被单独拆解——说明<strong>买方正在逐季审视&quot;并购型平台&quot;的有机增长与利润率质量</strong>，这将同样适用于 ROP。</li>
+<li><strong>AI 的双向影响</strong>：AI 创新带动 ROP 应用软件分部需求（正面）；但同时压低传统按席位/按用户定价的长期 ARPU 想象空间（负面）。Citi 之所以把 ROP 与 BOX/NAVN 并列，本质是押注**&quot;数据与合规壁垒 &gt; 界面层 AI 替代&quot;**。</li>
+<li><strong>并购市场</strong>：ROP 的 $60 亿弹药是行业整合的定价锚。若信用利差走阔、融资成本抬升，同规模并购的 EPS 增厚会被稀释——<strong>这是 ROP 估值对利率高度敏感的结构性原因</strong>。</li>
+</ul>
+<hr />
+<h5>四、宏观与市场环境（定性，数据不可用）</h5>
+<p><strong>必须披露的数据缺口</strong>：<code>get_macro_indicators</code> 对 <code>fed_funds_rate</code>、<code>10y_treasury</code>、<code>core_pce</code>、<code>cpi</code>、<code>unemployment</code>、<code>yield_curve</code>、<code>vix</code> 全部返回 <code>DATA_UNAVAILABLE</code>（FRED_API_KEY 未配置）；<code>get_prediction_markets</code> 对 &quot;Fed rate cut&quot;、&quot;recession 2026&quot; 返回<strong>数据被屏蔽</strong>（无历史版本，避免前视偏差）。因此<strong>本报告不给出任何利率、通胀、失业率或衰退概率的数字</strong>，任何此类数字若出现即为编造。</p>
+<p>基于新闻文本可确认的宏观事实：</p>
+<ol>
+<li><strong>风险偏好刚经历一轮&quot;急跌—急反弹&quot;</strong>：Yahoo Finance 标题直言&quot;a battered stock market looks for the bottom&quot;；随后 S&amp;P 500 与 Nasdaq 创下<strong>自去年 4 月以来最佳单日表现</strong>，由 NVDA 相关消息驱动。→ 市场处于<strong>高波动、方向未定</strong>的状态，个股 alpha 更依赖自身催化而非 beta。</li>
+<li><strong>利率仍是估值的显性约束</strong>：卖方研报措辞（&quot;despite higher interest rates&quot;）表明融资成本处于偏紧水平。对 ROP（长久期现金流、依赖杠杆并购、倍数高）而言，这是<strong>最重要的外部变量</strong>。</li>
+<li><strong>消费/科技支出呈现&quot;事件驱动型&quot;集中爆发</strong>：GTA VI 首日 $37.9 亿、拉动主机与宽带流量创纪录。这提示<strong>可选消费与数字娱乐需求并未崩塌</strong>，但预算向头部 IP 集中，对中小企业软件预算（SMB 软件支出）反而是挤压——与 Citi 看空 SMB 敞口标的的判断互相印证，<strong>利好 ROP 的 enterprise/合规型定位</strong>。</li>
+<li><strong>半导体/AI 资本开支情绪回温</strong>（NVDA 相关），对软件板块的&quot;AI 溢价&quot;有溢出效应，短期利多高倍数软件股，但也提高了对&quot;AI 变现证据&quot;的审查强度。</li>
+</ol>
+<hr />
+<h5>五、风险清单</h5>
+<ol>
+<li><strong>动量反转风险</strong>：一个月 +35.5% 后，任何指引瑕疵或卖方获利了结都可能触发 8–12% 的回撤；ETF 已在净卖出。</li>
+<li><strong>利率/久期风险</strong>：长端利率再上行 → 贴现率上升＋并购融资成本上升，双重压制。</li>
+<li><strong>AI 定价通缩</strong>：应用软件分部若出现席位流失或续约降价，将直接打击&quot;中高 90% 留存率&quot;这一核心估值支撑。</li>
+<li><strong>并购执行风险</strong>：$60 亿弹药若以高倍数出手，可能造成 ROIC 稀释与商誉减值隐忧。</li>
+<li><strong>数据/信息风险</strong>：本周新闻流存在严重的 ROP 代码串号（Roche），<strong>任何自动化情绪因子都可能被污染</strong>，人工复核必需。</li>
+<li><strong>财报口径不一致</strong>：全年 DEPS 指引 $25.60–25.65 与单季 EPS 量级不匹配，建模前必须核对原始文件。</li>
+</ol>
+<hr />
+<h5>六、可操作建议</h5>
+<ul>
+<li><strong>仓位</strong>：维持现有仓位（Hold），不追涨。若已获利丰厚，可考虑卖出 10–15% 做再平衡，锁定一个月 +35% 的部分收益。</li>
+<li><strong>加仓触发条件</strong>（任一即可）：① 股价自近期高点回撤 ≥10% 且未伴随指引下修；② 长端利率明确回落（需以实际 FRED 数据确认，本环境不可用，请自行核验）；③ 公司宣布符合&quot;低倍数、高留存&quot;标准的并购。</li>
+<li><strong>减仓触发条件</strong>：① 应用软件分部有机增长降至个位数中段以下；② 10Y 利率突破前高；③ 出现大额高倍数并购（交易倍数 &gt; 20x EBITDA）。</li>
+<li><strong>对冲思路</strong>：以软件板块 ETF 或等权重软件篮子做空对冲 beta，保留 ROP 的个股 alpha（Citi 排序上修 + 股息上调）。</li>
+<li><strong>事件日历</strong>：Q4 财报（通常 1 月下旬）、12 月派息、下一次并购公告窗口。</li>
+</ul>
+<hr />
+<h5>七、关键要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>关键事实/证据</th>
+<th>方向</th>
+<th>对 ROP 的含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q3 2026 业绩</td>
+<td>营收 $21.718 亿；净利 $4.847 亿；GAAP DEPS $4.88；前三季营收 $63.76 亿</td>
+<td>正面</td>
+<td>盈利质量延续，超预期后叙事转向现金流</td>
+</tr>
+<tr>
+<td>前瞻指引</td>
+<td>Q4 GAAP DEPS $4.27–4.32；FY $25.60–25.65（口径待核）</td>
+<td>中性/待核</td>
+<td>数值内部不一致，建模前须查原始披露</td>
+</tr>
+<tr>
+<td>股东回报</td>
+<td>股息 +10% 至 $1.00/季，连续 34 年增派</td>
+<td>正面</td>
+<td>质量型/收益型资金支撑，历史上有正漂移</td>
+</tr>
+<tr>
+<td>卖方评级</td>
+<td>Citi 提升至后台软件第三优选（BOX、NAVN 之后）</td>
+<td>正面</td>
+<td>相对配置资金流入的最强短期催化</td>
+</tr>
+<tr>
+<td>分部动能</td>
+<td>应用软件受 SaaS 渗透、AI 创新推动</td>
+<td>正面（有保留）</td>
+<td>AI 既增收也威胁席位定价</td>
+</tr>
+<tr>
+<td>资本部署</td>
+<td>$60 亿可部署资金；留存率中高 90%</td>
+<td>正面（依赖利率）</td>
+<td>并购复利引擎，但高利率下资本成本上升</td>
+</tr>
+<tr>
+<td>股价动量</td>
+<td>近 1 个月 +35.5%；过去 1 年跑输大盘</td>
+<td>负面（短期）</td>
+<td>风险回报不对称，追高风险大</td>
+</tr>
+<tr>
+<td>资金流</td>
+<td>ETF 10/30 净卖出 $6,370 万</td>
+<td>轻微负面</td>
+<td>属再平衡噪音，非基本面信号</td>
+</tr>
+<tr>
+<td>市场环境</td>
+<td>&quot;受创市场寻底&quot; 后出现去年 4 月以来最佳单日（NVDA 带动）</td>
+<td>中性</td>
+<td>高波动、beta 不稳，alpha 依赖自身催化</td>
+</tr>
+<tr>
+<td>利率环境</td>
+<td>新闻明确提及 &quot;higher interest rates&quot;</td>
+<td>负面</td>
+<td>长久期＋杠杆并购模式的核心估值压制</td>
+</tr>
+<tr>
+<td>消费/科技支出</td>
+<td>GTA VI 首日 $37.9 亿，预算向头部集中</td>
+<td>混合</td>
+<td>挤压 SMB 软件预算 → 反衬 ROP 企业级定位</td>
+</tr>
+<tr>
+<td>数据完整性</td>
+<td>FRED 宏观序列与 Polymarket 概率均不可用；新闻存在 Roche(SWX:ROP) 串号</td>
+<td>风险</td>
+<td>禁止使用任何未取得的宏观数字；情绪因子需人工复核</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><strong>Rating</strong>: Hold
+FINAL TRANSACTION PROPOSAL: HOLD</p>
+<h3 id="s1-4">Fundamentals Analyst</h3>
+<h4>ROP（Roper Technologies, Inc.）基本面研究报告</h4>
+<p><strong>数据截止日：2026-11-23｜最新已披露报告期：2026财年第三季度（2026-09-30）</strong></p>
+<hr />
+<h5>一、核心结论摘要</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>增长</td>
+<td>2026年前三季营收 6,376 百万美元，同比 +9.1%；单季增速由 Q1 的 +11.3% 放缓至 Q3 的 +7.6%，增速呈逐季减速</td>
+</tr>
+<tr>
+<td>盈利质量</td>
+<td>毛利率约 69–70%，营业利润率约 28%；Q3 2026 毛利率 70.1%、营业利润率 28.7%，同比双升</td>
+</tr>
+<tr>
+<td>现金流</td>
+<td>前三季经营性现金流 1,882 百万美元（同比 +4.4%），OCF/营收约 29.5%；资本开支极低（历史约营收的 1%），自由现金流转化率极高</td>
+</tr>
+<tr>
+<td>资产负债表</td>
+<td>2026Q3 总资产 34,338 / 总负债 15,166 / 股东权益 19,173 百万美元，权益比率 55.8%；流动比率仅 0.43（负数运营资本模式，需关注）</td>
+</tr>
+<tr>
+<td>资本配置</td>
+<td>2026年出现明显转向：由「并购驱动」转为「剥离 + 大额回购」，稀释股数由 FY2025 约 1.082 亿股降至 2026Q3 约 9,940 万股（-8.1%）</td>
+</tr>
+<tr>
+<td>主要瑕疵</td>
+<td>GAAP 净利润被一次性收益严重扭曲（Q2 2026 净利 1,168 vs 营业利润仅 585），不可直接年化</td>
+</tr>
+<tr>
+<td>数据缺口</td>
+<td>供应商未提供市值、估值倍数、52周区间及内部人交易数据（因无法保证时点一致性而withheld），故<strong>无法给出估值判断</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h5>二、重要数据可得性说明（请务必阅读）</h5>
+<p>本次调用中，供应商明确对以下内容做了<strong>时点隔离</strong>处理：</p>
+<ol>
+<li><strong>公司概况/估值数据被扣留</strong>：市值、PE/EV-EBITDA 等估值倍数、52周区间、TTM 盈利、当前名称/行业分类均不提供，理由是这些字段只反映「今天」而非 2026-11-23，会引入未来信息。因此本报告**只能基于 SEC EDGAR 已归档的财务报表事实（filed on or before 2026-11-23）**做基本面分析，<strong>不含任何估值结论</strong>。</li>
+<li><strong>内部人交易被扣留</strong>：供应商无法确定哪些交易在 2026-11-23 已公开，故本次<strong>没有内部人买卖数据</strong>可供参考。这是本次分析的一个明确盲点，不能据此推断&quot;无内部人交易&quot;。</li>
+<li>现金流量表与资产负债表为 SEC 原始归档数据，未做重分类；2025Q4 单季损益需由年报减前三季<strong>倒算</strong>（下文已标注）。</li>
+</ol>
+<hr />
+<h5>三、公司概况与商业模式（背景信息，非供应商数据）</h5>
+<p>Roper Technologies 是一家以<strong>利基市场（niche market）软件与科技型产品</strong>为核心的多元化工业科技集团，长期以&quot;高毛利、高留存、低资本开支&quot;的商业模式著称：</p>
+<ul>
+<li><strong>应用软件（Application Software）</strong>：面向垂直行业的任务关键型软件（如法律、保险、医疗、教育、建筑、公共安全等），以订阅/维护收入为主，客户粘性高、续约率高。</li>
+<li><strong>网络软件（Network Software）</strong>：数据/信息平台型业务，经常性收入占比高。</li>
+<li><strong>技术型产品（Technology Enabled Products）</strong>：医疗、水务计量、材料检测等专业化硬件，现金流稳定但周期性略强。</li>
+</ul>
+<p><strong>商业模式的财务指纹</strong>（与报表完全吻合）：</p>
+<ul>
+<li>毛利率 69–70%（软件占比提升后的结构性水平）；</li>
+<li>营业利润率约 28%，其中包含大额无形资产摊销（对 Roper 是&quot;账面费用&quot;而非现金支出）；</li>
+<li>资本开支极低（历史年度约 3,000–4,900 万美元，占营收 &lt;1%），因此 OCF ≈ FCF；</li>
+<li>通过持续并购（每年 20–35 亿美元）把自由现金流再投入，形成&quot;现金流 → 并购 → 更高现金流&quot;的复利机器；</li>
+<li>负运营资本（递延收入 + 应付款 &gt; 存货与应收），流动比率长期低于 1，是其正常运作形态而非常规意义上的流动性危机。</li>
+</ul>
+<blockquote>
+<p>说明：供应商未提供当前分部构成与最新分类，上述业务描述为一般性背景，2026 年实际分部划分可能已调整，请以最新 10-Q/10-K 披露为准。</p>
+</blockquote>
+<hr />
+<h5>四、最新季度表现（Q1–Q3 2026）</h5>
+<h6>4.1 单季损益（百万美元）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>2025Q1</th>
+<th>2025Q2</th>
+<th>2025Q3</th>
+<th>2025Q4(倒算)</th>
+<th>2026Q1</th>
+<th>2026Q2</th>
+<th>2026Q3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营业收入</td>
+<td>1,883</td>
+<td>1,944</td>
+<td>2,018</td>
+<td>2,057</td>
+<td>2,095</td>
+<td>2,109</td>
+<td>2,172</td>
+</tr>
+<tr>
+<td>营业成本</td>
+<td>589</td>
+<td>598</td>
+<td>614</td>
+<td>629</td>
+<td>642</td>
+<td>639</td>
+<td>649</td>
+</tr>
+<tr>
+<td>毛利</td>
+<td>1,294</td>
+<td>1,345</td>
+<td>1,403</td>
+<td>1,430</td>
+<td>1,454</td>
+<td>1,470</td>
+<td>1,523</td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>68.7%</td>
+<td>69.2%</td>
+<td>69.5%</td>
+<td>69.5%</td>
+<td>69.4%</td>
+<td>69.7%</td>
+<td>70.1%</td>
+</tr>
+<tr>
+<td>营业利润</td>
+<td>526</td>
+<td>548</td>
+<td>573</td>
+<td>588</td>
+<td>570</td>
+<td>585</td>
+<td>623</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>27.9%</td>
+<td>28.2%</td>
+<td>28.4%</td>
+<td>28.6%</td>
+<td>27.2%</td>
+<td>27.7%</td>
+<td>28.7%</td>
+</tr>
+<tr>
+<td>净利润</td>
+<td>331</td>
+<td>378</td>
+<td>398</td>
+<td>429</td>
+<td>509</td>
+<td><strong>1,168</strong></td>
+<td>485</td>
+</tr>
+<tr>
+<td>净利率</td>
+<td>17.6%</td>
+<td>19.4%</td>
+<td>19.7%</td>
+<td>20.9%</td>
+<td>24.3%</td>
+<td>55.4%</td>
+<td>22.3%</td>
+</tr>
+<tr>
+<td>稀释EPS（美元）</td>
+<td>3.06</td>
+<td>3.49</td>
+<td>3.68</td>
+<td>3.97</td>
+<td>4.87</td>
+<td><strong>11.62</strong></td>
+<td>4.88</td>
+</tr>
+</tbody>
+</table></div>
+<h6>4.2 同比增速拆解</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>2026Q1 YoY</th>
+<th>2026Q2 YoY</th>
+<th>2026Q3 YoY</th>
+<th>前三季累计</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营收</td>
+<td><strong>+11.3%</strong></td>
+<td>+8.5%</td>
+<td><strong>+7.6%</strong></td>
+<td>6,376 vs 5,845 = <strong>+9.1%</strong></td>
+</tr>
+<tr>
+<td>毛利</td>
+<td>+12.4%</td>
+<td>+9.3%</td>
+<td>+8.6%</td>
+<td>4,447 vs 4,042 = +10.0%</td>
+</tr>
+<tr>
+<td>营业利润</td>
+<td>+8.4%</td>
+<td>+6.8%</td>
+<td><strong>+8.7%</strong></td>
+<td>1,778 vs 1,647 = <strong>+8.0%</strong></td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>+0.7pt</td>
+<td>+0.5pt</td>
+<td>+0.6pt</td>
+<td>69.7% vs 69.2% = +0.5pt</td>
+</tr>
+<tr>
+<td>营业利润率</td>
+<td>-0.7pt</td>
+<td>-0.5pt</td>
+<td>+0.3pt</td>
+<td>27.9% vs 28.2% = <strong>-0.3pt</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>关键观察：</strong></p>
+<ol>
+<li><strong>毛利率持续改善</strong>（69.2% → 69.7%），表明高毛利软件/经常性收入占比继续提升，或剥离了低毛利业务。</li>
+<li><strong>营业利润率微降 0.3pt</strong>：毛利改善被更高的 SG&amp;A / 无形资产摊销（并购带来）吞掉，即&quot;买来的增长&quot;在营业利润层面摊薄了杠杆。</li>
+<li><strong>营收增速逐季下滑（11.3% → 8.5% → 7.6%）</strong>，若剔除并购贡献，内生增长大概率在 4–6% 区间。这是本报告最重要的<strong>减速信号</strong>。</li>
+<li>2025Q4 为倒算值（FY2025 年报 − 前三季），Q4 2025 营收 2,057、EPS 3.97，说明进入 2026 年的基期已不低。</li>
+</ol>
+<hr />
+<h5>五、年度财务历史（FY2019–FY2025，百万美元）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>财年</th>
+<th>营业收入</th>
+<th>毛利</th>
+<th>毛利率</th>
+<th>营业利润</th>
+<th>营业利润率</th>
+<th>净利润</th>
+<th>净利率</th>
+<th>稀释EPS</th>
+<th>经营现金流</th>
+<th>OCF/营收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2019</td>
+<td>4,728</td>
+<td>3,140</td>
+<td>66.4%</td>
+<td>1,328</td>
+<td>28.1%</td>
+<td>1,768*</td>
+<td>37.4%</td>
+<td>16.82</td>
+<td>1,462</td>
+<td>30.9%</td>
+</tr>
+<tr>
+<td>2020</td>
+<td>4,022</td>
+<td>2,828</td>
+<td>70.3%</td>
+<td>1,083</td>
+<td>26.9%</td>
+<td>950</td>
+<td>23.6%</td>
+<td>8.98</td>
+<td>1,525</td>
+<td>37.9%</td>
+</tr>
+<tr>
+<td>2021</td>
+<td>4,834</td>
+<td>3,408</td>
+<td>70.5%</td>
+<td>1,241</td>
+<td>25.7%</td>
+<td>1,153</td>
+<td>23.8%</td>
+<td>10.82</td>
+<td>2,012</td>
+<td>41.6%</td>
+</tr>
+<tr>
+<td>2022</td>
+<td>5,372</td>
+<td>3,753</td>
+<td>69.9%</td>
+<td>1,524</td>
+<td>28.4%</td>
+<td>4,545*</td>
+<td>84.6%</td>
+<td>42.55</td>
+<td>735</td>
+<td>13.7%</td>
+</tr>
+<tr>
+<td>2023</td>
+<td>6,178</td>
+<td>4,307</td>
+<td>69.7%</td>
+<td>1,745</td>
+<td>28.2%</td>
+<td>1,384</td>
+<td>22.4%</td>
+<td>12.89</td>
+<td>2,035</td>
+<td>32.9%</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>7,039</td>
+<td>4,878</td>
+<td>69.3%</td>
+<td>1,997</td>
+<td>28.4%</td>
+<td>1,549</td>
+<td>22.0%</td>
+<td>14.35</td>
+<td>2,393</td>
+<td>34.0%</td>
+</tr>
+<tr>
+<td>2025</td>
+<td><strong>7,902</strong></td>
+<td><strong>5,472</strong></td>
+<td>69.2%</td>
+<td><strong>2,235</strong></td>
+<td>28.3%</td>
+<td>1,536</td>
+<td>19.4%</td>
+<td>14.20</td>
+<td><strong>2,540</strong></td>
+<td>32.1%</td>
+</tr>
+</tbody>
+</table></div>
+<p>* 2019、2022 年净利润含大额处置/重估收益（营业利润与净利润严重不匹配，2022 年净利润 4,545 远超营业利润 1,524），<strong>不可与其它年度直接比较</strong>。2022 年经营现金流 735 亦因一次性项目（含税负/营运资金）而失真。</p>
+<h6>5.1 长期增长与利润率轨迹</h6>
+<ul>
+<li><strong>营收 CAGR（FY2019→FY2025）：约 8.9%</strong>（4,728 → 7,902）；<strong>FY2021→FY2025：约 13.1%</strong>（4,834 → 7,902）。</li>
+<li><strong>营业利润 CAGR（FY2019→FY2025）：约 9.0%</strong>（1,328 → 2,235），与营收基本同步，说明&quot;增长即增值&quot;但<strong>没有显著的经营杠杆放大</strong>。</li>
+<li><strong>营业利润率七年稳定在 25.7%–28.4% 的窄区间</strong>：这是典型的&quot;高定价权 + 并购摊销对冲&quot;结果，也意味着<strong>向上突破的空间有限</strong>（2026 年前三季已回落到 27.9%）。</li>
+<li><strong>毛利率一次性台阶上移</strong>：2019 年 66.4% → 2020 年 70.3%（业务组合重构，剥离低毛利工业资产），此后稳定在 69–70%。</li>
+<li><strong>营收波动来自并购/剥离节奏</strong>：2020 年营收 -14.9%，2022 年 -13.0%（均为剥离年），2021 年 +20.2%、2023 年 +15.0%、2024 年 +13.9%、2025 年 +12.3%（并购年）。<strong>这家公司的营收曲线本质上是资本配置曲线，不是有机增长曲线。</strong></li>
+</ul>
+<hr />
+<h5>六、现金流质量与&quot;GAAP vs 现金&quot;拆解</h5>
+<h6>6.1 现金流（百万美元）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>财年</th>
+<th>经营现金流</th>
+<th>投资现金流</th>
+<th>融资现金流</th>
+<th>资本开支</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2021</td>
+<td>2,012</td>
+<td>-143</td>
+<td>-1,814</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>2022</td>
+<td>735</td>
+<td>+1,210</td>
+<td>-1,465</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>2023</td>
+<td>2,035</td>
+<td>-2,126</td>
+<td>-500</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>2,393</td>
+<td>-3,468</td>
+<td>+1,070</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>2025</td>
+<td>2,540</td>
+<td>-3,388</td>
+<td>+924</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>2026 前三季</td>
+<td>1,882</td>
+<td>-72（净）</td>
+<td>-2,571</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>解读：</strong></p>
+<ul>
+<li><strong>2024–2025 是&quot;重仓并购期&quot;</strong>：两年投资净流出 34.7 亿 + 33.9 亿美元，对应负债两年增加 22.3 亿（12,467 → 14,696），融资现金流转正（+10.7 亿、+9.2 亿）——即<strong>用债务为并购融资</strong>。</li>
+<li><strong>2026 年模式突变</strong>：投资净流出仅 0.72 亿美元（Q3 单季 +7.16 亿净流入，说明发生了<strong>资产剥离</strong>），融资净流出 25.7 亿美元——<strong>从&quot;买资产&quot;切换为&quot;还债/回购股票&quot;</strong>。这是资本配置逻辑的方向性转变，也是 2026 年 EPS 高增的重要来源。</li>
+<li><strong>OCF/净利润</strong>：FY2025 = 2,540/1,536 = <strong>1.65x</strong>。净利润被无形资产摊销压低，现金转化极强，这是 Roper 最核心的质量特征。</li>
+<li><strong>OCF/营收</strong> 从 2021 年 41.6% 逐级回落至 2026 前三季 29.5%，与并购标的利润率结构及营运资金消耗（见 7.3）有关，值得跟踪。</li>
+</ul>
+<h6>6.2 2026 年一次性项目量化（关键）</h6>
+<p>用「营业利润 × 0.70」估算&quot;干净&quot;净利润（2025 四个季度该比值分别为 0.629 / 0.690 / 0.694 / 0.730）：</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>季度</th>
+<th>营业利润</th>
+<th>隐含常态化净利</th>
+<th>实际净利润</th>
+<th>隐含超额</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026Q1</td>
+<td>570</td>
+<td>~399</td>
+<td>509</td>
+<td><strong>+110</strong></td>
+</tr>
+<tr>
+<td>2026Q2</td>
+<td>585</td>
+<td>~410</td>
+<td>1,168</td>
+<td><strong>+758</strong></td>
+</tr>
+<tr>
+<td>2026Q3</td>
+<td>623</td>
+<td>~436</td>
+<td>485</td>
+<td><strong>+49</strong></td>
+</tr>
+<tr>
+<td>前三季</td>
+<td>1,778</td>
+<td>~1,245</td>
+<td>2,162</td>
+<td><strong>+917</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>2026Q2 净利 1,168、EPS 11.62 中，约 7.3 美元/股为一次性项目</strong>（推测为资产处置/权益投资重估收益——与 Q3 投资活动净流入 7.16 亿美元、以及 Q2 融资流出后股数骤降的时序一致）。</li>
+<li><strong>2026 年前三季 GAAP EPS 累计 21.37 美元，其中约 9 美元/股为一次性</strong>；<strong>常态化 EPS 大致落在 11.8–12.3 美元区间</strong>（按约 1.01 亿股），对 9M 2025 的 10.23 美元约 <strong>+16%~+20%</strong>。</li>
+<li>结论：<strong>Roper 2026 年&quot;EPS 暴涨&quot;是真实的、但质量问题分层</strong>——一次性收益贡献一半以上，同时股数下降贡献约 8 个点，内生/经营性 EPS 增长约 8–10%。<strong>任何用 GAAP 增速线性外推的做法都是错的。</strong></li>
+</ul>
+<hr />
+<h5>七、资产负债表与资本结构</h5>
+<h6>7.1 关键数据（财年末 + 最近四季，百万美元）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>FY2022</th>
+<th>FY2023</th>
+<th>FY2024</th>
+<th>FY2025</th>
+<th>2026Q1</th>
+<th>2026Q2</th>
+<th>2026Q3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总资产</td>
+<td>26,981</td>
+<td>28,168</td>
+<td>31,335</td>
+<td>34,577</td>
+<td>35,170</td>
+<td>34,338</td>
+<td>34,338</td>
+</tr>
+<tr>
+<td>流动资产</td>
+<td>1,932</td>
+<td>1,481</td>
+<td>1,543</td>
+<td>1,928</td>
+<td>1,946</td>
+<td>1,913</td>
+<td>1,946</td>
+</tr>
+<tr>
+<td>现金</td>
+<td>793</td>
+<td>214</td>
+<td>188</td>
+<td>297</td>
+<td>383</td>
+<td>365</td>
+<td>311</td>
+</tr>
+<tr>
+<td>总负债</td>
+<td>10,943</td>
+<td>10,723</td>
+<td>12,467</td>
+<td>14,696</td>
+<td><strong>16,469</strong></td>
+<td>15,733</td>
+<td>15,166</td>
+</tr>
+<tr>
+<td>流动负债</td>
+<td>2,892</td>
+<td>2,963</td>
+<td>3,832</td>
+<td>3,726</td>
+<td>3,578</td>
+<td>3,470</td>
+<td><strong>4,571</strong></td>
+</tr>
+<tr>
+<td>股东权益</td>
+<td>16,038</td>
+<td>17,445</td>
+<td>18,868</td>
+<td>19,882</td>
+<td>18,700</td>
+<td>18,818</td>
+<td>19,173</td>
+</tr>
+<tr>
+<td>权益/总资产</td>
+<td>59.4%</td>
+<td>61.9%</td>
+<td>60.2%</td>
+<td>57.5%</td>
+<td>53.2%</td>
+<td>54.8%</td>
+<td><strong>55.8%</strong></td>
+</tr>
+<tr>
+<td>流动比率</td>
+<td>0.67</td>
+<td>0.50</td>
+<td>0.40</td>
+<td>0.52</td>
+<td>0.54</td>
+<td>0.55</td>
+<td><strong>0.43</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h6>7.2 资本结构判断</h6>
+<ul>
+<li><strong>权益比率 55.8%</strong>，账面杠杆温和；但<strong>资产质量以商誉与无形资产为主</strong>（推算占总资产 70% 以上，有形净资产为负），因此账面权益<strong>不能</strong>作为下行保护来理解。</li>
+<li><strong>有息负债未在数据集中单独列示</strong>（数据缺口）。根据负债规模与融资活动推断，有息负债大致在 <strong>75–85 亿美元</strong>区间；以营业利润 + 折旧摊销估算 EBITDA 约 31 亿美元，<strong>净负债/EBITDA 约 2.4–2.7 倍</strong>——属&quot;投资级、可控但不低&quot;的水平。<em>此项为估算，需以最新 10-Q 债务附注核实。</em></li>
+<li><strong>Q1 2026 负债单季激增 17.7 亿美元、权益减少 11.8 亿美元</strong>：这是<strong>举债回购</strong>的直接证据（同期现金几乎未变、经营现金流仅 5.92 亿美元）。</li>
+<li><strong>2026Q3 流动负债单季跳升 11.0 亿美元至 4,571 万美元×10（45.7 亿）</strong>，同时现金降至 3.11 亿美元、流动比率跌至 0.43。<strong>这是本次报表中最值得警惕的一处</strong>：很可能是债务被重分类为一年内到期（或商业票据）叠加回购后的现金消耗。虽然 Roper 长期依赖循环信贷额度，日常无流动性压力，但<strong>现金缓冲已明显下降</strong>，若信贷市场收紧或需再融资，弹性小于 2024 年。</li>
+</ul>
+<h6>7.3 营运资金与&quot;负运营资本&quot;模式</h6>
+<p>流动负债中含大量<strong>递延收入（订阅/维护预收）</strong>，属于&quot;客户的免费融资&quot;，这是 Roper 现金流常年高于净利润的原因之一。但也意味着<strong>流动比率长期 &lt;1 属正常</strong>，不能机械套用传统流动性标准。</p>
+<hr />
+<h5>八、资本配置：并购、回购、股息</h5>
+<h6>8.1 摊薄股数变化（推算，由净利润 ÷ 稀释EPS 得出）</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>期间</th>
+<th>稀释股数（百万股）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY2019</td>
+<td>~105.1</td>
+</tr>
+<tr>
+<td>FY2021</td>
+<td>~106.6</td>
+</tr>
+<tr>
+<td>FY2023</td>
+<td>~107.4</td>
+</tr>
+<tr>
+<td>FY2024</td>
+<td>~107.9</td>
+</tr>
+<tr>
+<td>FY2025</td>
+<td><strong>~108.2</strong></td>
+</tr>
+<tr>
+<td>2026Q1</td>
+<td>~104.5</td>
+</tr>
+<tr>
+<td>2026Q2</td>
+<td>~100.5</td>
+</tr>
+<tr>
+<td>2026Q3</td>
+<td><strong>~99.4</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>九个月减少约 8.1%（-880 万股），是过去七年从未出现的方向性变化。</strong> 结合：</p>
+<ul>
+<li>融资活动净流出 25.7 亿美元；</li>
+<li>权益在净利润 21.6 亿美元的情况下<strong>净减少 7.09 亿美元</strong>（隐含约 28.7 亿美元的股东回报 + 其他调整）；</li>
+<li>Q3 剥离净流入 7.16 亿美元；</li>
+</ul>
+<p>推断 <strong>2026 年前三季回购规模约 20–30 亿美元</strong>（其中 Q1 部分为举债融资），另有约 2.5–3 亿美元的股息支付（Roper 长期维持低派息率、连续增息的股息政策）。</p>
+<h6>8.2 资本配置逻辑的转变（本篇最重要的定性结论）</h6>
+<ul>
+<li><strong>2019–2025 剧本</strong>：自由现金流 + 增量债务 → 每年 20–35 亿美元并购 → 抬高营收基数与经常性收入占比。</li>
+<li><strong>2026 剧本</strong>：剥离非核心资产（Q3 净流入 7.16 亿）→ 回购（股数 -8%）+ 降杠杆。<strong>这是从&quot;买增长&quot;到&quot;买自己&quot;的转向。</strong></li>
+<li><strong>交易含义</strong>：当一家连续并购型公司开始大额回购自己的股票，通常意味着（a）管理层认为内部收益率高于并购标的，或（b）并购估值过高/管道枯竭。<strong>两种情况都利好每股价值，但会牺牲未来的营收增速</strong>——这也正好解释了为什么 2026 年营收增速从 11.3% 逐季降到 7.6%，而 EPS 却高速增长。</li>
+</ul>
+<hr />
+<h5>九、回报率（估算）</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>FY2025</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROE（GAAP）</td>
+<td>1,536 / 19,375（平均权益）= <strong>7.9%</strong></td>
+<td>被无形资产摊销严重压低</td>
+</tr>
+<tr>
+<td>ROE（加回摊销后）</td>
+<td>约 <strong>11–12%</strong></td>
+<td>更接近真实现金回报</td>
+</tr>
+<tr>
+<td>ROA</td>
+<td>1,536 / 32,956 = <strong>4.7%</strong></td>
+<td>资产端被商誉主导</td>
+</tr>
+<tr>
+<td>ROIC（GAAP）</td>
+<td>约 <strong>6.3%</strong>（NOPAT 1,743 / 投入资本约 27,600）</td>
+<td>商誉基数大，<strong>结构性低估</strong></td>
+</tr>
+<tr>
+<td>ROIC（加回税后摊销）</td>
+<td>约 <strong>8.5–9%</strong></td>
+<td>仍属&quot;温和&quot;而非&quot;卓越&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>这是 Roper 常被误读的地方</strong>：其账面回报率看似平庸（ROIC 6–9%），但这是因为<strong>并购溢价被资本化为商誉、且无形资产按年摊销</strong>。真实的股东价值创造体现在<strong>每股自由现金流的长期复合增长</strong>（FY2019→FY2025 OCF/股：约 13.9 → 23.5 美元，CAGR 约 9.2%），而非 ROIC 数字本身。</p>
+<hr />
+<h5>十、风险与关注点（按重要性排序）</h5>
+<ol>
+<li><strong>★ 增速减速</strong>：营收同比 +11.3% → +8.5% → +7.6%，且 2026 年转为净剥离。若并购引擎停摆，2027 年营收增速可能落到中个位数甚至更低。<strong>这是估值溢价最脆弱的支点。</strong></li>
+<li><strong>★ 盈利质量分层</strong>：2026 前三季 GAAP 净利 21.6 亿美元中约 9.2 亿为一次性；Q2 EPS 11.62 中约 7.3 美元是一次性。<strong>用 GAAP 数字做同比或估值会系统性高估。</strong></li>
+<li><strong>★ 现金缓冲与流动负债</strong>：现金仅 3.11 亿美元、流动负债单季 +11 亿至 45.7 亿、流动比率 0.43。虽然属于商业模式常态，但<strong>容错空间在收窄</strong>。</li>
+<li><strong>☆ 营业利润率停滞</strong>：连续七年 26–28% 区间震荡，2026 前三季回落 0.3pt。并购标的的 SG&amp;A 与摊销正在吃掉毛利改善。</li>
+<li><strong>☆ 商誉减值风险</strong>：总资产 70%+ 为商誉/无形资产，权益账面值对减值高度敏感（一旦某垂直软件标的增长失速，减值会直接冲击账面权益与 ROE）。</li>
+<li><strong>☆ 杠杆与利率</strong>：估算有息负债 75–85 亿美元，若为浮动/短端再融资，利率路径会直接压制 EPS（每 100bp 约影响税后 0.6–0.7 亿美元，约 0.06–0.07 美元/股/季）。</li>
+<li><strong>☆ 数据盲点</strong>：<strong>本次无内部人交易数据、无估值数据</strong>。管理层是否在 Q2 高位减持、当前股价处于历史什么分位，均无法判断——这两点必须由其他工具补齐后再下最终交易决策。</li>
+</ol>
+<hr />
+<h5>十一、可操作结论</h5>
+<p><strong>支持做多的证据（明确、可验证）：</strong></p>
+<ul>
+<li>毛利率连续改善（69.2% → 70.1%），Q3 2026 营业利润率 28.7% 为 2024Q3 以来同期最佳；</li>
+<li>前三季经营性现金流 18.8 亿美元、OCF/净利 1.65x（FY2025），资本开支 &lt;1% 营收，现金创造能力无争议；</li>
+<li>股数 9 个月减少 8.1%（约 880 万股），叠加 7.16 亿美元剥离回笼资金，<strong>每股价值增厚是 2026 年 EPS 高增的第二引擎</strong>；</li>
+<li>权益比率 55.8%、净负债/EBITDA 约 2.5x（估算），财务风险可控。</li>
+</ul>
+<p><strong>支持谨慎的证据：</strong></p>
+<ul>
+<li>营收增速逐季走低（11.3% → 7.6%），且转向净剥离，中期增长动能弱化；</li>
+<li>2026 年 EPS 增长的一半以上来自一次性收益，<strong>&quot;表面惊艳、内里约 +8–10% 内生&quot;</strong>；</li>
+<li>流动比率 0.43、现金 3.11 亿美元为近年低位，缓冲变薄；</li>
+<li>营业利润率七年横盘，缺乏经营杠杆；</li>
+<li><strong>估值完全无法评估</strong>（供应商扣留），在缺少价格锚的情况下，只能给出&quot;基本面方向&quot;，不能给出&quot;风险收益比&quot;。</li>
+</ul>
+<p><strong>操作建议（供交易台参考）：</strong></p>
+<ul>
+<li>若已持仓：<strong>继续持有</strong>，基本面未破坏，回购提供每股底部支撑；关注下季营收增速是否跌破 7% 与营业利润率是否跌破 27%。</li>
+<li>若考虑建仓：<strong>等待增速企稳或估值回落信号</strong>，尤其需先补齐估值倍数与内部人交易数据再确认入场点；Q2 的一次性收益会<strong>虚增 TTM EPS 与压低表观 P/E</strong>，直接按 TTM P/E 买入是典型陷阱。</li>
+<li>关键跟踪项（下一份 10-Q/10-K）：① 有息负债与到期结构明细；② 商誉/无形资产余额与减值测试假设；③ 回购授权剩余额度；④ 分部有机增长拆分；⑤ 流动负债跳升的构成（是否为债务重分类）。</li>
+</ul>
+<hr />
+<h5>十二、关键要点汇总表</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>具体数据 / 事实</th>
+<th>解读与交易含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最新单季（2026Q3）</td>
+<td>营收 2,172；营业利润 623；净利 485；EPS 4.88</td>
+<td>毛利率 70.1%（同比 +0.6pt）、营业利润率 28.7%（+0.3pt），<strong>质量环比的实质性改善</strong></td>
+</tr>
+<tr>
+<td>前三季累计（2026）</td>
+<td>营收 6,376（+9.1%）；营业利润 1,778（+8.0%）；净利 2,162（含约 9.2 亿一次性）</td>
+<td>GAAP 净利被扭曲，<strong>常态化 EPS 约 11.8–12.3 美元，同比 +16–20%</strong></td>
+</tr>
+<tr>
+<td>增速趋势</td>
+<td>单季营收 +11.3% → +8.5% → +7.6%</td>
+<td><strong>最重要的减速信号</strong>，直接决定估值溢价能否维持</td>
+</tr>
+<tr>
+<td>年度历史</td>
+<td>FY2019→FY2025 营收 4,728→7,902（CAGR 8.9%）；营业利润率稳居 25.7–28.4%</td>
+<td>增长来自资本配置而非经营杠杆，<strong>上行弹性有限</strong></td>
+</tr>
+<tr>
+<td>现金流</td>
+<td>FY2025 OCF 2,540（营收 32.1%）；OCF/净利 1.65x；2026 前三季 1,882（+4.4%）</td>
+<td>现金创造是真护城河；但 2026 年 OCF 增速（4.4%）已低于营收增速（9.1%），<strong>营运资金开始消耗现金</strong></td>
+</tr>
+<tr>
+<td>毛利率</td>
+<td>69.2%（FY2025）→ 69.7%（2026 前三季）→ 70.1%（Q3）</td>
+<td>软件/经常性收入占比提升，<strong>结构性利好</strong></td>
+</tr>
+<tr>
+<td>资产负债表</td>
+<td>Q3 总资产 34,338；负债 15,166；权益 19,173（55.8%）</td>
+<td>账面杠杆温和，但资产 70%+ 为商誉/无形资产，<strong>权益不构成真实保护</strong></td>
+</tr>
+<tr>
+<td>流动性</td>
+<td>现金 311；流动负债 4,571（单季 +1,101）；流动比率 0.43</td>
+<td><strong>最需警惕的一处</strong>：现金缓冲变薄，需核实是否为债务重分类</td>
+</tr>
+<tr>
+<td>资本配置</td>
+<td>股数 108.2M（FY2025）→ 99.4M（2026Q3），-8.1%；推定回购 20–30 亿美元</td>
+<td>从&quot;并购驱动&quot;转向&quot;回购驱动&quot;，<strong>每股价值增厚是新引擎，但以牺牲营收增速为代价</strong></td>
+</tr>
+<tr>
+<td>投资/剥离</td>
+<td>2024–25 投资净流出 34.7 亿 / 33.9 亿；2026 前三季仅 -0.72 亿，Q3 +7.16 亿</td>
+<td><strong>并购引擎明显降温，出现资产剥离</strong></td>
+</tr>
+<tr>
+<td>回报率</td>
+<td>ROE 7.9%（GAAP）/ 约 11–12%（加回摊销）；ROIC 约 6.3% / 8.5–9%</td>
+<td>账面数字低估真实现金回报，<strong>不可据 GAAP ROIC 得出&quot;平庸&quot;结论</strong></td>
+</tr>
+<tr>
+<td>一次性项目</td>
+<td>Q2 2026 净利 1,168 vs 营业利润 585（隐含约 7.58 亿超额）</td>
+<td><strong>勿将 Q2 年化</strong>，TTM 指标全部失真</td>
+</tr>
+<tr>
+<td>内部人交易</td>
+<td><strong>数据被供应商扣留</strong></td>
+<td>盲点，需另行补齐后再定仓位</td>
+</tr>
+<tr>
+<td>估值</td>
+<td><strong>数据被供应商扣留（市值、倍数、52周区间均无）</strong></td>
+<td><strong>无法判断贵贱</strong>，本报告只提供基本面方向</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><strong>Rating</strong>: Buy</p>
+<p><strong>FINAL TRANSACTION PROPOSAL:</strong> <strong>BUY</strong></p>
+<blockquote>
+<p>评级说明：基本面质量（70% 毛利率、28% 营业利润率、32% 经营现金流率、&lt;1% 资本开支、8% 股数缩减）支撑&quot;买入&quot;；但须以&quot;增速跌破 7% 或营业利润率跌破 27%&quot;作为降级触发条件，并在补齐估值与内部人数据后最终确认仓位规模。</p>
+</blockquote>
+</section><section id="s2"><h2>II. Research Team Decision</h2><h3 id="s2-1">Bull Researcher</h3>
+<p>Bull Analyst: 空头还没开口，我先替他把最刺耳的三句话摆上桌：<br />
+第一，“营收增速从 11.3% 掉到 7.6%”；第二，“Q2 的 11.62 美元 EPS 里有一大笔一次性收益”；第三，“价格跌破 10 EMA 和 VWMA，MACD 死叉”。</p>
+<p>如果这就是全部弹药，我的回答很直接：这些最多证明“短期别追高”，不能证明 ROP 该卖。我的立场是<strong>买入</strong>，但不是闭眼追涨，而是利用这轮高位换手分批建仓。</p>
+<h5>一、技术面：你看到的是破位，我看到的是主升后的正常换手</h5>
+<p>先承认空头对的地方：ROP 现价 458.13，确实低于 10 EMA 467.31，也低于 VWMA 477.72；11 月 13 日 MACD 死叉后负柱扩大到 -5.52，短线动量在卖方手里。这些是事实。</p>
+<p>但请看更大的结构：</p>
+<ul>
+<li>200 SMA 在 370.92，价格高出 23.5%，而且 200 SMA 从 10 月 22 日的 362.79 一路抬升到 370.92，长期结构在修复，不是破位。</li>
+<li>50 SMA 在 413.16，价格高出 10.9%，一个月上行约 28 点；50 SMA 对 200 SMA 的价差 +42.24，中期多头排列非常明确。</li>
+<li>RSI 从 11 月 2 日的 84.47 降到 54.10，这是超买消化，不是趋势转空；MACD 线仍在正区 13.86，离零轴还有距离。</li>
+<li>技术报告自己给“直接转弱”的情景只有约 20%，而且触发条件是放量跌破 434、MACD 跌破零轴、RSI 跌破 40——现在一个都没出现。</li>
+</ul>
+<p>所以技术面给的是“持有”，不是“卖出”。这两者差别很大。空头若想把 ROP 说成趋势反转，请先让价格放量跌破 434，再谈趋势级别下移；在那之前，449–453 的缺口区、439 的布林下轨、434–436 的10月突破区，都是多头的防守带。</p>
+<p>我的交易计划也很清楚：458 附近先建底仓，449–453 加一次，439–434 再加一次；止损放在 434 下方，单笔风险按 1.0–1.5 倍 ATR 控制，当前 ATR 11.81，所以止损缓冲给 12–18 美元；向上先看 467.31，再看 477–480 供应带，突破后看 492.22 和 507.24。若价格重新站上 467 并有效突破 477.72 的 VWMA，再追加动量仓。<strong>这不是猜底，是有价位纪律的买入。</strong></p>
+<h5>二、增长：不是熄火，是换引擎</h5>
+<p>空头最爱拿增速说事：2026Q1 营收 +11.3%，Q2 +8.5%，Q3 +7.6%，逐季减速。这个观察没错，但结论错了。</p>
+<p>第一，Q3 营收 21.72 亿美元、毛利率 70.1%、营业利润率 28.7%，毛利率同比 +0.6 个百分点、营业利润率同比 +0.3 个百分点。<strong>增速降一点，但盈利质量在升。</strong> 这不是“卖不动了”，而是业务组合继续向高毛利软件和经常性收入倾斜。</p>
+<p>第二，空头只看营收，不看每股。2026 年前三季度稀释股数从 FY2025 的约 1.082 亿股降到约 9,940 万股，<strong>九个月减少 8.1%</strong>。公司从“并购驱动”转向“剥离 + 大额回购”，推定回购规模约 20–30 亿美元。营收增速牺牲一两个点，换每股价值增厚，这笔账对股东是划算的。</p>
+<p>第三，增长期权还在。ROP 有约 60 亿美元可部署资金，软件留存率中高 90%。如果并购引擎重新启动，营收增速会回来；如果并购估值太高，公司继续回购自己，同样增厚每股价值。<strong>空头把“暂缓并购”解读成“增长枯竭”，但公司其实是在两个高回报选项之间做资本配置。</strong></p>
+<p>更关键的是，Citi 在 Q3 后把 ROP 上调为后台应用软件板块第三优选，理由是“基础设施属性/监管驱动型价值 + 差异化 AI 战略”。这是增量机构动作，不是空头口中的“没人要”。Zacks 也明确指出应用软件分部受 SaaS 渗透、AI 创新和核心业务强势推动。<strong>基本面报告给的是买入，不是持有，更不是卖出。</strong></p>
+<h5>三、护城河：监管/合规型垂类软件，AI 是放大器不是颠覆者</h5>
+<p>空头会说：AI 会颠覆按席位收费的 SaaS，ROP 的软件分部有定价风险。这个风险真实存在，但 ROP 不是普通工具型 SaaS。</p>
+<p>ROP 的核心资产是 Deltek、Vertafore、Medidata、PowerPlan 这类嵌入客户关键流程的垂直软件，特点是合规驱动、切换成本高、任务关键、数据壁垒深。Citi 的选股逻辑正是偏好“基础设施属性/监管驱动型”软件，而对 SMB 敞口大的厂商保持谨慎——这恰好把 ROP 放在了防御性溢价的一边。</p>
+<p>70% 的毛利率、28% 的营业利润率、中高 90% 的留存率，就是护城河的财务证据。AI 对 ROP 更像双刃剑：它可能压缩界面层按席位收费的空间，但也可能强化数据、合规和工作流壁垒。Citi 把 ROP 与 Box、Navan 并列，本质上是在押注“数据与合规壁垒 &gt; 界面层 AI 替代”。<strong>空头若只说“AI 颠覆 SaaS”，那是行业 beta，不是 ROP 的个股 alpha。</strong></p>
+<h5>四、现金流与股东回报：这是硬证据，不是故事</h5>
+<p>空头第二张牌是“Q2 净利 11.68 亿美元、EPS 11.62 美元，一次性收益虚增”。对，这一点要承认：Q2 营业利润只有 5.85 亿美元，净利却到 11.68 亿美元，确实有约 7.3 美元/股的一次性项目。用 GAAP 数字线性外推是错的。</p>
+<p>但请把一次性收益剔除后再看：2026 年前三季度常态化 EPS 大致在 11.8–12.3 美元，对 2025 年同期的 10.23 美元仍增长约 16%–20%。<strong>这不是虚胖，这是经营利润、回购和税率共同支撑的增长。</strong></p>
+<p>现金流更硬：2026 年前三季度经营性现金流 18.82 亿美元，FY2025 经营现金流 25.40 亿美元，OCF/净利约 1.65 倍，资本开支不到营收的 1%。这家公司是典型的“高毛利、低资本开支、强现金转化”机器。再加上季度股息上调 10% 至 1.00 美元/股、连续 34 年增派，管理层用真金白银表达了对现金流的信心。</p>
+<p>空头还会拿流动比率 0.43、现金 3.11 亿美元说事。但 ROP 是订阅/维护预收模式，流动负债里大量是递延收入，这是“客户给公司的无息融资”，流动比率低于 1 是商业模式常态，不是流动性危机。估算净负债/EBITDA 约 2.4–2.7 倍，属于投资级、可控水平。<strong>空头把递延收入当成债务危机，是把 ROP 的商业模式读反了。</strong></p>
+<h5>五、估值、宏观、情绪：未知不是利空</h5>
+<p>基本面报告明确说，供应商扣留了市值、估值倍数、52 周区间和内部人交易数据；宏观报告也明确说 FRED 和预测市场数据不可用。所以空头不能把“估值贵”当成事实来打——<strong>没有数据，就不能编结论。</strong></p>
+<p>我们能确认的是什么？</p>
+<ul>
+<li>ROP 过去一年跑输大盘，但 Citi 刚刚上调排序，说明卖方叙事在修复；</li>
+<li>散户情绪温和偏多，有效样本很薄，但没有看空评级、没有盈利预警、没有监管黑天鹅；</li>
+<li>StockTwits 上一条有效多头帖说“好股票但几乎没人知道”，这更像低关注度、未被充分持有的价值股，而不是拥挤交易；</li>
+<li>ETF 10 月 30 日净卖出 6,370 万美元，属于指数/量化再平衡噪音，不是产业资本撤离。</li>
+</ul>
+<p>利率确实是 ROP 的核心估值变量，长久期现金流和高倍数并购平台对利率敏感。但 ROP 不是高杠杆故事：现金流强、资本开支低、负债可控。利率若企稳或回落，这类高质量长久期资产反而最先受益。<strong>空头把宏观不确定性当成个股卖出理由，但 ROP 的自身催化——Citi 上调、股息增派、回购、应用软件分部韧性——足以对冲 beta 噪音。</strong></p>
+<h5>六、结论：空头能证明“别追高”，不能证明“该卖出”</h5>
+<p>把四份材料放在一起看：技术面是“持有”，情绪面是“温和偏多”，新闻面是“持有”，基本面是“买入”。<strong>没有一票是卖出。</strong> 空头最强论点只能证明 ROP 短期需要消化 10 月 +41% 的主升和 11 月 5 日 507.24 的放量长上影，但不能证明长期趋势、现金流、护城河和资本配置出了问题。</p>
+<p>我的判断是：ROP 的长期和中期多头结构完好，基本面质量在改善，Citi 上调提供了边际资金催化，回购和股息提供了每股价值支撑。当前 458 附近不是最舒服的追涨点，但却是<strong>用短期回调买长期质量</strong>的合理起点。策略上分批买入、跌破 434 再降级，而不是在 458 恐慌离场。</p>
+<p><strong>Rating</strong>: BUY<br />
+FINAL TRANSACTION PROPOSAL: BUY</p>
+<h3 id="s2-2">Bear Researcher</h3>
+<p>Bear Analyst: Bull，你的开场很聪明：先替我把三个利空摆上桌，然后一句“最多证明别追高”带过。但问题恰恰在这里——对 ROP 这种一个月涨约 35.5%、刚出现放量长上影、跌破 10 EMA 和 VWMA、MACD 死叉后负柱仍在扩大的股票，“别追高”本身就是投资结论。你不能一边承认短期破位，一边在 458 美元喊 BUY。</p>
+<h5>一、技术面不是“正常换手”，是高位派发未完成</h5>
+<p>你说 ROP 长期结构没坏，我同意一半：200 SMA 在 370.92，50 SMA 在 413.16，中期趋势确实还在。但“趋势没坏”不等于“现在能买”。当前价格 458.13 已经跌破 10 EMA 467.31，也跌破 VWMA 477.72；11 月 13 日 MACD 死叉后，柱状图从 -0.73 扩大到 -5.52，负柱还在放大。这是短期动量继续向卖方倾斜的证据，不是买点。</p>
+<p>更关键的是量价：11 月 5 日 ROP 盘中高点 507.24，当日成交 2,220,500 股，为区间最大量，却收出长上影；随后 11 月 10 日至 16 日反弹段成交量只有 524,700–755,100 股，而 11 月 20 日下跌日成交 1,292,800 股，高于 21 日均量约 108 万股。<strong>涨时缩量、跌时放量，价格又跌破 VWMA，这不是健康换手，是派发特征。</strong> 你把它叫“主升后的正常换手”，但正常换手不会让近一个月买入者的加权成本 477.72 全部变成上方套牢盘。</p>
+<p>你的交易计划也有明显矛盾：你说 458 建底仓，449–453 加一次，439–434 再加一次，止损放在 434 下方。且不说 458 到 434 已经是 -5.2%，你在 434–439 加仓、却在 434 下方止损，等于用不到 0.5 倍 ATR 的缓冲去接飞刀。当前 ATR 11.81，正常单日波动约 12 美元，你自己说止损要给 12–18 美元，但你的加仓下沿和止损位几乎重合。<strong>这不是有纪律的买入，这是计划里的自相矛盾。</strong> 技术报告给的是 HOLD，不是 BUY；报告甚至把“放量跌破 434”定义为趋势级别下移的触发条件。你在触发条件之前加仓，就是在逆短期动量猜底。</p>
+<h5>二、增速减速不是“换引擎”，是估值溢价最脆弱的支点</h5>
+<p>你说营收增速从 11.3% 降到 8.5%、再降到 7.6% 没关系，因为毛利率和营业利润率在改善。但请看完整数据：2026 年前三季营业利润率 27.9%，较 2025 年同期的 28.2% 是 <strong>-0.3 个百分点</strong>，不是改善。Q3 单季营业利润率 28.7%、同比 +0.3 个百分点，只是一个季度，不能掩盖前三季的回落。毛利率从 69.2% 升到 69.7% 的改善，被更高的 SG&amp;A 和并购带来的无形资产摊销吃掉了。<strong>RO P 没有展现出经营杠杆，七年营业利润率都在 25.7%–28.4% 的窄区间里横盘。</strong></p>
+<p>你说公司从“并购驱动”转向“回购驱动”，股数九个月减少 8.1%，这是每股价值增厚。没错，但这是<strong>用资产负债表换每股数字</strong>，不是经营改善。回购 20–30 亿美元的同时，权益比率从 FY2025 的 57.5% 降到 2026Q3 的 55.8%，现金只剩 3.11 亿美元，流动比率降到 0.43。回购在低价时创造价值，在高价时只是财务工程；而 ROP 刚经历一个月 +35.5% 的上涨，这个时候回购的资本回报率并不天然高于并购。你把“暂缓并购”说成“两个高回报选项之间做资本配置”，但另一种可能是：<strong>并购管道变贵了，或者公司自己也知道内生增速在放缓，只能用回购托住 EPS。</strong></p>
+<p>还有 Citi 上调。它是把 ROP 从榜外提到后台应用软件第三位，排在 BOX、NAVN 之后，这是相对排序，不是“买入评级”，而且两条报道本质是同一动作的重复。Barchart 同时明确说 ROP 过去一年跑输大盘。<strong>一个卖方的一次相对排序上调，不能抵消营收增速逐季减速和过去一年价格弱势。</strong> 你把 Citi 当增量催化，但市场已经用一个月 +35.5% 定价了这条消息；现在追，是在催化落地后买预期。</p>
+<h5>三、盈利质量被一次性收益和回购双重美化，现金流增速已经跟不上营收</h5>
+<p>你承认 Q2 的 11.62 美元 EPS 里有约 7.3 美元一次性项目，但随后说常态化 EPS 仍增长 16%–20%。问题是，这个“常态化”是报告用“营业利润 × 0.70”估算出来的，不是公司披露的干净 EPS。更硬的现金流数据是：2026 年前三季经营性现金流 18.82 亿美元，同比只增长 4.4%，而营收增长 9.1%；OCF/营收从 2021 年的 41.6% 降到 2026 前三季的 29.5%。<strong>现金创造仍然强，但边际在减弱。</strong> 你拿 FY2025 的 OCF/净利 1.65 倍说事，可 2026 年净利润被一次性收益抬高，这个比率已经失真。</p>
+<p>股息上调 10% 至 1.00 美元/季、连续 34 年增派，确实是质量信号，但股息率按 458.13 计算只有约 0.8%。在利率仍偏高的环境里，0.8% 的股息率不足以提供下行保护。你把 ROP 说成“现金流机器”，但市场给长久期现金流机器的估值，最怕的就是利率上行和增速下修同时发生。新闻报告已经明确提到“higher interest rates”仍是估值约束；ROP 是有约 60 亿美元可部署资金、依赖并购和杠杆的平台，利率不是 beta 噪音，而是核心估值变量。</p>
+<h5>四、资产负债表不是“商业模式常态”就能一笔带过</h5>
+<p>你说流动比率 0.43 是递延收入导致的，部分正确。但请注意 2026Q3 的边际变化：现金只有 3.11 亿美元，流动负债单季增加 11.01 亿美元至 45.71 亿美元，流动比率从 0.55 降到 0.43。<strong>即便其中很多是递延收入，单季 11 亿美元的跳升和现金缓冲变薄也需要解释。</strong> 这可能是债务重分类、商业票据或回购后的现金消耗；在核实之前，不能像你那样直接把它归为“客户给公司的无息融资”然后不再讨论。</p>
+<p>更关键的是资产质量：总资产 343.38 亿美元中，商誉和无形资产推算占 70% 以上，账面权益 191.73 亿美元不是真实的下行保护。估算净负债/EBITDA 约 2.4–2.7 倍，你说“投资级、可控”，对，但 ROP 不是普通工业公司，它是高倍数并购平台；一旦某个垂直软件标的增长失速，商誉减值会直接冲击账面权益和 ROE。<strong>2.5 倍杠杆加 70%  intangible s，不是危机，但绝对不是你可以忽略的风险。</strong></p>
+<h5>五、估值和内部人数据缺失，不能成为买入理由</h5>
+<p>你说“未知不是利空”。但基本面报告明确写了：供应商扣留市值、估值倍数、52 周区间和内部人交易数据，<strong>无法给出估值判断和风险收益比</strong>。这句话对多空双方都成立：你不能说它贵，但你也不能说它便宜，更不能在缺少价格锚的情况下给 BUY。你把基本面报告的“方向性买入”升级成“现在买入”，这是越权。报告本身还提醒：Q2 一次性收益会虚增 TTM EPS、压低表观 P/E，直接按 TTM P/E 买入是典型陷阱。</p>
+<p>情绪面也一样。你说“温和偏多”，但报告自己的置信度是 low：Reddit 抓取失败，StockTwits 有效样本只有 2 条，新闻 11 条里 6 条与 ROP 无关，还有 Roche 的代码串号。ETF 在 10 月 30 日净卖出 6,370 万美元。<strong>低关注度可以是机会，也可以是长期没人接盘；在有效样本只有 2 条、资金流为负的情况下，把它当成买入信号太牵强。</strong></p>
+<h5>六、直接回应你的核心结论</h5>
+<p>你说“四份材料没有一票是卖出”。但三份 HOLD 不等于支持 BUY。技术面 HOLD 的含义是“不要追、等确认”；新闻面 HOLD 的含义是“等回调”；情绪面 HOLD 且低置信度；基本面 BUY 却明确没有估值和内部人数据。<strong>HOLD 在 458 美元这个位置，对新增资金来说就是“不要买”。</strong> 你把“不卖出”偷换成“可以买入”，这是逻辑跳跃。</p>
+<p>你说“空头只能证明别追高，不能证明该卖出”。我反过来问你：如果一只股票短期跌破 10 EMA 和 VWMA、MACD 负柱扩大、顶部放量长上影、营收增速逐季减速、前三季营业利润率同比下降、现金流增速只有营收增速一半、现金缓冲变薄、估值无法判断，那么新资金为什么要现在买？就为了 4.1% 上方第一阻力 477.72，去承担 5.2% 止损和 19% 回踩 200 SMA 的尾部风险？<strong>这个风险收益比不成立。</strong></p>
+<p>我的结论很明确：ROP 是好公司，但 458 美元不是好买点。当前是高位派发未完成、增速减速被回购掩盖、估值锚缺失、利率敏感度被低估的组合。对持仓者，应该减持或至少不再加仓；对新资金，应该回避，等价格放量跌破 434 后的风险释放，或者等它重新站上 480 并确认 MACD 柱转正再谈。<strong>在那之前，Bull，你证明的是 ROP 的质量，不是 458 美元的回报。</strong></p>
+<p><strong>Rating</strong>: SELL<br />
+FINAL TRANSACTION PROPOSAL: SELL</p>
+<h3 id="s2-3">Research Manager</h3>
+<p><strong>Recommendation</strong>: Underweight</p>
+<p><strong>Rationale</strong>: 这场辩论的胜负不在“ROP 是不是好公司”，而在“458.13 是否值得现在加仓或建仓”。我采信空头对交易时机和风险收益的核心证据：价格已跌破 10 EMA 467.31 与 VWMA 477.72，MACD 死叉后负柱扩大至 -5.52；11 月 5 日 507.24 高点放量长上影，之后反弹缩量、11 月 20 日下跌日放量，符合高位派发未完成。按多头自己的计划，458 到第一阻力 477.72 只有约 4.1% 空间，而止损 434 下方意味着约 5.2% 下行，还要承担回踩 200 SMA 370.92 的尾部风险，新增资金风险收益比不成立。基本面也不是无瑕：营收增速从 11.3% 降至 8.5%、再降至 7.6%；2026 前三季营业利润率 27.9%，低于 2025 同期 28.2%；OCF 同比仅增 4.4%，低于营收 9.1% 的增速；现金仅 3.11 亿美元、流动比率 0.43，且单季流动负债增加 11.01 亿美元。估值倍数、市值、52 周区间、内部人交易数据均缺失，无法证明“便宜”，因此不支持在 458 主动买入。<br />
+但不给 Sell：长期趋势仍正，价格高于 50 SMA 413.16 和 200 SMA 370.92，50/200 价差 +42.24；Q3 毛利率 70.1%、营业利润率 28.7%，监管/合规型垂类软件、经常性收入、股息上调、回购和常态化 EPS 增长仍提供质量支撑；且“放量跌破 434、MACD 下零轴、RSI 破 40”的卖出触发条件尚未出现。空头赢在“现在不买/应减仓”，未赢在“清仓做空”。</p>
+<p><strong>Strategic Actions</strong>: 把 ROP 的标准单一个股目标仓位记为 1.0。当前只保留 0.5–0.75，即低于标准配置；若当前仓位为标准仓或更高，先减持 25%–50% 至 0.5–0.75，且不在 458 附近加仓。若标准配置为组合 5%，则当前只留 2.5%–3.75%。没有仓位者不新建。<br />
+剩余仓位以 434 为硬性观察线：若日线放量收盘跌破 434，并伴随 MACD 下零轴或 RSI 破 40，减至 0–0.25；若反弹至 467.31–477.72 但无法放量突破，利用反弹继续减持。只有在两种情况下才考虑升级：一是回踩 449–453 或 439–434 后缩量止跌、未放量破 434；二是重新站上 467.31 并放量突破 477.72、MACD 柱转正。首次加回不超过 0.25，止损按 1.0–1.5 倍 ATR（约 12–18 美元）或 434 下方执行。估值倍数、市值、52 周区间、内部人交易、宏观 FRED/预测市场数据缺失，不能把“低关注”直接当买入信号；在补齐估值锚前，仓位上限保持低于标准配置。</p>
+<p><strong>Rating</strong>: Underweight<br />
+FINAL TRANSACTION PROPOSAL: UNDERWEIGHT</p>
+</section><section id="s3"><h2>III. Trading Team Plan</h2><h3 id="s3-1">Trader</h3>
+<p><strong>Action</strong>: Sell</p>
+<p><strong>Reasoning</strong>: 研究主管的结论是 Underweight，按映射规则即 Sell——但这是“减仓至低于标准配置”，不是清仓做空。技术面给出四项独立证据互相印证短期派发尚未结束：收盘 458.13 已跌破 10 EMA 467.31（约 2.0%）与 VWMA 477.72（约 4.1%，自 11-17 起再未收复）；11-13 MACD 死叉后柱状图由 -0.73 扩大至 -5.52 且无收敛；11-05 盘中 507.24 长上影配区间最大量 2,220,500 股，随后“涨缩量、跌放量”。风险收益比不成立：现价到第一强供应带 477.72 仅约 4.1% 空间，而跌破 434 的下行缓冲约 5.2%，还要承担回踩 200 SMA 370.92 的尾部风险；基本面（营收增速 11.3%→8.5%→7.6%、营业利润率 27.9% 低于去年同期 28.2%、OCF 仅增 4.4%）也不足以支撑在 458 主动买入。同时不给清仓：价格仍高于 50 SMA 413.16 与 200 SMA 370.92，50/200 价差 +42.24，MACD 线仍在正区 13.86，RSI 54.10 只是中性化，“放量跌破 434 + MACD 下零轴 + RSI 破 40”的卖出触发条件一个都没出现，因此是分批减持而非离场。</p>
+<p><strong>Entry Price</strong>: 458.13</p>
+<p><strong>Stop Loss</strong>: 480.0</p>
+<p><strong>Position Sizing</strong>: 把 ROP 的标准单一个股仓位记为 1.0。现价 458.13 附近先减持 25%–50%，将敞口降至标准的 0.5–0.75（若标准配置为组合 5%，则留 2.5%–3.75%）；无仓位者不新建。若反弹至 467.31–477.72 而无法放量突破，利用反弹继续减持；日线放量收盘跌破 434 并伴随 MACD 下零轴或 RSI 破 40，则降至 0–0.25。反向失效条件：放量站上 477.72 且 MACD 柱转正，则恢复至 ≤1.0，首次加回不超过 0.25，加仓部分止损按 1.0–1.5×ATR（约 12–18 美元）设定。</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+</section><section id="s4"><h2>IV. Risk Management Team Decision</h2><h3 id="s4-1">Aggressive Analyst</h3>
+<p>Aggressive Analyst: 各位，我先把话放在前面：今天这场辩论里最“危险”的立场，其实不是卖出，而是继续持有。因为 HOLD 看起来不需要做决定，本质上却是一个高杠杆的赌注——赌短期的派发会在没有任何证据的情况下自行结束。而我们手上唯一硬的数据——价格、成交量、量价成本——全都在说反话。所以我支持交易员的决定：对 ROP 执行减持，把敞口从标准 1.0 压到 0.5–0.75，无仓位者不新建；这不是看空 ROP 的生意，而是拒绝在一个风险收益比不成立的位置替别人接盘。</p>
+<p>先回应我预判保守派会说的第一句话：“长期趋势没坏，50 SMA 413.16、200 SMA 370.92 都在上行，MACD 还在正区，慌什么？”我承认这些数字是真的，但请看清楚它们保护的是什么——它们保护的是“趋势”，不是“你的持仓成本”。收盘 458.13 已经跌破 10 EMA 467.31 约 2.0%，自 11-17 起再没收复 VWMA 477.72，现价低于成交量加权成本 4.1%。这意味着过去一个月买入 ROP 的人整体是浮亏的，上方 477–480 是一条由套牢盘和 11-12/11-13 收盘（477.87 / 479.98）叠出来的强供应带。长期均线在金叉，短期筹码在派发，这两件事可以同时为真——而账户的盈亏是由后者决定的。更关键的是，交易员根本没让保守派清仓：价格仍在 50 SMA 上方 10.9%、200 SMA 上方 23.5%，保留 0.5–0.75 的核心敞口，就是给“长期多头结构”留的票。保守派把“减仓”读成“离场”，这是对仓位的误读，不是对风险的审慎。</p>
+<p>第二句我猜保守派会说：“等跌破 434 再走，别抢跑。”问题是，等 434 确认，你要先承受从 458 到 434 的 5.2% 回撤，再叠加放量破位当天可能出现的滑点——而这段时间你能拿到的补偿是什么？向上到第一强供应带 477.72 只有 4.1% 的空间。用 5.2% 的下行缓冲去换 4.1% 的上行空间，这不是投资，这是付费上班。ATR 现值 11.81、占股价 2.58%，一个月前才 9.18，波动率扩张了 28%——在这种波动下，所谓“精确等确认”在数学上就是让你多扛一到两个 ATR 的噪音。而交易员给的方案恰恰是把“确认”变成“分段执行”：先在 458.13 减 25%–50%，反弹到 467.31–477.72 放不出量就继续减，跌破 434 且 MACD 下零轴或 RSI 破 40 才降到 0–0.25。这条路既不赌方向，也不放弃筹码，它是把决策权从“运气”手里拿回来。</p>
+<p>现在轮到中立派。中立派的报告自己写了情景概率：A（449.65–467.31 震荡）约 50%，B（回落到 439.38 → 434.48–436.23）约 30%，C（放量破 434 转弱）约 20%。我请中立派自己算一下：他们的基准情景里，价格有 50% 的时间要回到 449.65 附近，30% 的时间要去 439 甚至 434——也就是说，中立派的数据里有 80% 的概率，现价 458.13 不是低点。既然如此，“HOLD、等收复 467–480 再加仓”这套说法的实质是什么？是先让持仓者吃下这段回撤，再在更高的位置买回来。这不是中性，这是把择时的成本单方面转嫁给持有人。中立派最有力的一句话其实是他们自己写的：“在出现确认之前，任何抄底追多都是在逆短期动量交易。”——我完全同意，只不过这句话的结论应该是减仓，而不是持有。</p>
+<p>再看基本面派给的 BUY。我不否认 ROP 的生意质量：毛利率 70.1%、营业利润率 28.7%、OCF/净利 1.65x、资本开支不到营收 1%，这些是真的。但请看同一份报告里的三个数字：单季营收增速 11.3% → 8.5% → 7.6%，逐季减速；2026 前三季营业利润率 27.9%，低于去年同期 28.2%；经营性现金流只增 4.4%，已经跑不过 9.1% 的营收增速——营运资金开始吃现金。更要命的是盈利质量：Q2 净利 1,168 百万而营业利润只有 585 百万，前三季 GAAP 净利里约 9.2 亿美元是一次性的，Q2 的 11.62 美元 EPS 里约 7.3 美元不可持续。换句话说，那份报告自己承认“常态化 EPS 大约 11.8–12.3 美元、内生增长 8–10%”，并且明确写了“供应商扣留了市值、估值倍数、52 周区间，无法给出估值判断”。一份自己承认没有价格锚的报告，最后却给了 BUY——这不是基本面结论，这是叙事惯性。没有估值判断的买入建议，不能作为对抗量价派发证据的理由。</p>
+<p>情绪面我也要给中立派和保守派泼一盆冷水。6.1/10 的 Mildly Bullish，报告自己标了 low confidence：Reddit 抓取失败是结构性盲区，StockTwits 剔掉两条离题贴后有效样本只有 2 条，11 条新闻里 6 条是罗氏（SWX:ROP）的代码撞号噪音，真正的机构增量动作只有 Citi 一家把它排到第三。而 Barchart 那句“过去一年跑输大盘”才是价格已经投票的结果。这叫什么？叫“叙事在修复、资金没确认”。叙事修复是慢变量，量价派发是快变量；在 458 这个位置，快变量决定你这一周的损益，慢变量决定你明年的收益。交易员的方案恰好同时要了两者：现在减，等它在 477.72 之上放量站回去、MACD 柱转正，再用每次不超过 0.25 的节奏加回来，加仓部分按 1.0–1.5×ATR 也就是 12–18 美元设止损。这叫输了小钱、赢了选择权。</p>
+<p>我要特别强调这个方案的高赔率在哪：它不是单向做空，它是一张双向期权。往下，跌破 434 后下一站是布林下轨 439.38，再往下才是 50 SMA 413.16，极端情形回踩 200 SMA 370.92——从 458 算那是近 19% 的尾部空间，这就是为什么现在必须先把敞口降下来；往上，如果 ROP 真的靠 Citi 的第二家跟进、靠应用软件分部的 SaaS 与 AI 变现把叙事兑现，你手里还有 0.5–0.75 的核心仓，还能在确认后加回。真正的高风险不是“减仓”，是满仓死扛一个负柱还在扩大的 MACD——-0.73 → -4.91 → -5.52，三项独立证据加 11-05 那根 507.24 长上影配 2,220,500 股区间最大量的派发蜡烛，全都没有收敛迹象。</p>
+<p>所以我的结论很明确：保守派的“等确认”是用回撤买安心，中立派的 HOLD 是把择时成本转嫁给持有人，基本面派的 BUY 建立在一份自己承认无法估值的报告和被一次性收益扭曲的 GAAP 之上。交易员的 SELL 才是这里唯一同时尊重量价证据、尊重波动率、又保留了向上参与权的方案。执行上就按他写的来：ROP 现价 458.13 附近先减 25%–50%，把标准 1.0 的敞口压到 0.5–0.75；反弹到 467.31–477.72 放不出量继续减；放量收盘破 434 且 MACD 下零轴或 RSI 破 40 降到 0–0.25；反向失效条件是放量站上 477.72 且 MACD 柱转正，届时恢复至不超过 1.0，首次加回不超过 0.25，止损按 1.0–1.5×ATR。止损位 480 就在头上，这不是随便设的，它正好在 VWMA 供应带之上——风险被量化了，收益被保留了，这才是我们要的赔率。</p>
+<p><strong>Rating</strong>: SELL
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s4-2">Conservative Analyst</h3>
+<p>Conservative Analyst: 各位，我是负责资本保全的保守风险分析师。先把立场讲清楚：方向上我认同交易员的减持，但我既不接受激进派把这套操作包装成&quot;高赔率双向期权&quot;的叙事，也绝不接受中立派的继续持有。我的职责不是赢下这场辩论，而是确保无论方向对错，公司都不会因为一次判断失误而伤到本金。所以我今天要做的，是把交易员这个正确的方向，改造成一个真正符合&quot;低风险、可持续&quot;标准的方案。</p>
+<p>激进派，你摆出的量价证据我一条都不否认：458.13 跌破 10 EMA 467.31 约 2.0%，11-17 起再没收复 VWMA 477.72，MACD 负柱从 -0.73 扩大到 -5.52，11-05 那根 507.24 长上影配 2,220,500 股区间最大量，确实是派发。但你犯了一个保守派最忌讳的错误——你把&quot;减仓&quot;说成一张高赔率期权。期权是有权利金的，在这里权利金就是波动率和执行偏差。你主张在 458.13 一次性减 25%–50%，可现价正好坐在 10-30 向上跳空缺口（449.65–453.72）内部，11-23 当天开在最低 453.72、收在振幅 68% 的位置，说明 453–455 一带有承接。在这个位置一次性倒出半个仓位，很可能卖在短期支撑上，然后被 467–477 的反弹打脸。这不是保护资本，这是用执行风险去换心理安慰。真正稳妥的做法不是&quot;现在全砸&quot;，而是&quot;现在就减、但分批减、优先在反弹里减&quot;，让卖出的平均价落在供应带而不是支撑带。</p>
+<p>第二，你自己写了从 458 到 200 SMA 370.92 有近 19% 的尾部空间，然后你却主张保留 0.5–0.75 的核心仓。请算一下：0.75 的敞口吃满这段尾部，账户级损失是 14% 以上；就算 0.5，也接近 10%。一个以保本为第一目标的组合，不该把&quot;尾部风险&quot;当口号喊完，却在仓位上给它留这么大的口子。保守的做法是初始减得更坚决、残余敞口压得更低，保留向上参与权时用对冲而不是裸持。</p>
+<p>第三，你说&quot;止损 480 就在头上，风险被量化了&quot;。但 480 是卖出逻辑的失效位，不是残余持仓的止损位。你的方案是破 434 才降到 0–0.25，留下一个&quot;也许反弹&quot;的尾巴。对保守派来说，日线收盘跌破 434 就该干净离场——那意味着 10 月突破结构退化，下一站是布林下轨 439.38 之下的 413.16（50 SMA），极端到 370.92。留 0.25 不是谨慎，是舍不得。真正的纪律是把&quot;0–0.25&quot;改成&quot;0&quot;。</p>
+<p>现在说中立派的 HOLD。我知道你的逻辑是&quot;长期多头完好、短期调整未结束，等确认再加&quot;。那就用你自己的情景概率算账：A 情景 50% 回到 449.65，B 情景 30% 去 439→434，C 情景 20% 放量破 434。按你自己给出的分布，80% 的概率现价 458.13 不是终点。那么 HOLD 在数学上就是让持有人先承担 5.2% 到 434、10.9% 到 50 SMA、极端 19% 到 200 SMA 的回撤，再在 467–480 的供应带上方买回来。这不是中性，这是用持有人的本金为&quot;等待确认&quot;付费。你报告里那句最有力的话——&quot;在出现确认之前，任何抄底追多都是在逆短期动量交易&quot;——我完全同意，但它的结论不该是持有，而是降低敞口。一只已经跌破 VWMA、MACD 负柱还在扩大、顶部有最大量长上影的标的，凭什么给满仓？</p>
+<p>中立派还有一个更危险的说法：439–453 是&quot;风险收益比最佳的低吸区&quot;。保守派不做这种左侧承接。你的报告自己写了 1 月 27 日单日 -9.6%、成交 5,077,700 股的事件风险；这种跳空一旦重演，439 的低吸会瞬间变成 400 的浮亏。你看到的&quot;最佳风险收益比&quot;，是因为你低估了尾部。</p>
+<p>除了你们两位的论点，还有几个被系统性低估的威胁，我必须点出来。第一是盈利质量：前三季 9.2 亿美元一次性收益、Q2 的 11.62 美元 EPS 里约 7.3 美元不可持续、常态化 EPS 只有 11.8–12.3。如果市场开始按常态化盈利重定价，现在的回调可能只是重估的开始，而不是结束。第二是资产负债表：现金仅 3.11 亿美元、流动比率 0.43、Q3 流动负债单季跳升 11 亿至 45.7 亿——这是回购叠加债务重分类的结果。高利率环境下，回购驱动 EPS 的引擎会变成脆弱点。第三是利率：ROP 是长久期、高倍数、靠杠杆并购的资产，新闻里&quot;higher interest rates&quot;是明牌，但市场定价未必充分。第四是数据盲区：Reddit 抓取失败、StockTwits 有效样本仅 2 条、11 条新闻里 6 条是罗氏（SWX:ROP）串号，6.1/10 的温和看多是 low confidence——它只能说明&quot;没有额外买盘&quot;，不能当作持有的理由。第五是相对弱势：过去一年跑输大盘，资金已经用脚投票，叙事修复是慢变量，对抗不了当下的派发。</p>
+<p>所以我的保守调整很明确：方向 SELL，但执行要更稳、风险要封死。第一，不在 458 的支撑区一次性砸 50%——初始减 25%，把标准 1.0 降到 0.75，然后利用 467.31–477.72 的反弹分批减到 0.5 甚至更低，避免在短期支撑上贱卖。第二，如果组合以保本为先，残余敞口上限压到 0.5 而不是 0.75；风险承受度更低的账户压到 0.25–0.5。第三，把&quot;破 434 降到 0–0.25&quot;改成&quot;日线收盘破 434 直接降到 0&quot;，不留尾巴。第四，残余仓位用保护性看跌或领口期权锁定下行；如果期权成本太高，就用降低仓位来替代，而不是裸持等反弹。第五，反向再入必须严格：只有放量站上 477.72 且 MACD 柱转正，才恢复至不超过 1.0，首次加回不超过 0.25，止损按 1.0–1.5×ATR 即 12–18 美元。风控参数上，ATR 已到 11.81（占股价 2.58%），比一个月前的 9.18 扩张约 28%，仓位必须相应下调 20%–25%。</p>
+<p>激进派赢的是赔率叙事，中立派输的是持有人的本金，而我们要的是长期活着。保守不是懦弱，是不拿本金去赌一个 80% 概率不是低点的位置。交易员的 SELL 方向对，但我要把它的执行改得更稳、残余敞口压得更低、尾部风险用硬规则和对冲封死。这才是真正保护资产、最小化波动、确保长期可靠增长的路径。</p>
+<p><strong>Rating</strong>: SELL
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+<h3 id="s4-3">Neutral Analyst</h3>
+<p>Neutral Analyst: 我先说结论：对 ROP，我仍然给 SELL，但这个 SELL 的含义是“把 ROP 从标准 1.0 降到低于基准的敞口”，不是清仓做空。激进派把减持说成高赔率双向期权，保守派把尾部风险当成必须清零的理由，两边都走向了过度自信。我的中立方案是：方向认同交易员减持 ROP，但执行上更重视分批、价格带和风险预算，保留 ROP 的核心敞口但压到 0.5–0.7 左右，避免在 458.13 附近的缺口支撑区一次性砸出半个仓位。</p>
+<p>激进派，你对 ROP 的短期量价判断我基本认同：458.13 跌破 10 EMA 467.31，11-17 后未收复 VWMA 477.72，MACD 负柱从 -0.73 扩到 -5.52，11-05 的 507.24 长上影配 2,220,500 股区间最大量，这些确实说明短期派发未结束。但你的问题在于把“概率上不是低点”直接推成“现在就该大幅减”。你自己引用中立报告的情景概率，但那是主观情景，不是硬概率；80% 不是低点，不等于 80% 会立刻深跌，也不等于在 458.13 一次性卖出 25%–50% 就是最优执行。现价正坐在 10-30 向上跳空缺口 449.65–453.72 内部，11-23 当天开在最低 453.72、收在振幅约 68% 的位置，说明 453–455 有承接。你批评保守派“等跌破 434 再走”是用回撤买安心，但你的第一笔减仓如果直接砸在支撑带上，同样可能被 467–477 的反弹打脸。所谓“双向期权”也不是免费的，权利金就是滑点、税费、被反弹逼空后的再入场成本。还有，480 是卖出逻辑的失效位，不是残余核心仓的止损位；这两个概念不能混用。</p>
+<p>保守派，你对执行风险和尾部风险的提醒是对的，但你把 ROP 的 Underweight 读成了近乎 Exit。ROP 仍高于 50 SMA 413.16 约 10.9%，高于 200 SMA 370.92 约 23.5%，50/200 价差 +42.24，MACD 线仍在正区 13.86，RSI 54.10 只是中性化，基本面也有毛利率 70.1%、营业利润率 28.7%、OCF/净利 1.65x、资本开支低于营收 1% 这些支撑。这些不是让你满仓的理由，但也不支持无差别清零。你用 458 到 200 SMA 370.92 的近 19% 尾部空间来压仓位，问题在于这是极端情景，不是基准情景；如果标准 1.0 对应组合 5%，残余 0.5 只是 2.5% 的组合敞口，不是“裸奔”。破 434 直接清零看似纪律，实际可能卖在恐慌低点；更合理的是破 434 且放量、MACD 下零轴或 RSI 破 40 后降到 0–0.25，只有风险预算极低的账户才机械执行 0。保护性看跌或领口也不是万能药，高波动环境下权利金很贵，降低成本最直接的办法还是降仓位，而不是把期权成本再叠上去。</p>
+<p>所以我给 ROP 的中立调整是：认同交易员的 SELL 方向，但把执行改成“先减、分批减、优先在反弹里减”。现价 458.13 附近先减 25%–33%，把 ROP 标准 1.0 降到 0.67–0.75；如果账户风险承受度低，降到 0.5–0.6。无仓位者不新建 ROP。反弹到 467.31–477.72 若无法放量突破，再减 10%–20%，把残余敞口压到 0.5–0.65。日线放量收盘跌破 449.65，降到 0.35–0.5；跌破 434 且 MACD 下零轴或 RSI 破 40，降到 0–0.25，严格保本账户可以到 0。反向失效条件保留交易员原案：放量站上 477.72 且 MACD 柱转正，才恢复至不超过 1.0，首次加回不超过 0.25，加仓部分止损按 1.0–1.5×ATR，约 12–18 美元。ATR 已到 11.81、波动率比一个月前扩张约 28%，整体仓位基准应下调 20%–25%。480 可以继续作为战术卖出失效位，但不要把它当成 ROP 残余核心仓的机械止损。</p>
+<p>这样既吸收了激进派对短期量价的尊重，也吸收了保守派对资本保全的纪律，但不接受激进派的“高赔率期权”叙事，也不接受保守派的过度清零。对 ROP，最可持续的做法是降低敞口、保留核心、用确认条件管理再入场，而不是在 458.13 猜底、死扛或恐慌离场。</p>
+<p><strong>Rating</strong>: SELL
+FINAL TRANSACTION PROPOSAL: <strong>SELL</strong></p>
+</section><section id="s5"><h2>V. Portfolio Manager Decision</h2><h3 id="s5-1">Portfolio Manager</h3>
+<p><strong>Rating</strong>: Underweight</p>
+<p><strong>Executive Summary</strong>: 对 ROP 给出 Underweight——把敞口降到标准单一个股仓位的 0.5–0.65，而非清仓做空。执行上不在 458.13 一次性砸半个仓位（现价正坐在 449.65–453.72 的向上跳空缺口与 453–455 承接带内），而是先减 25%–33% 至 0.67–0.75，再在 467.31–477.72 反弹无量时续减至 0.5–0.65；若标准配置为组合 5%，即只留 2.5%–3.25%。硬性观察线 434：日线放量收盘跌破且伴随 MACD 下零轴或 RSI 破 40，降至 0–0.25（保本优先账户直接到 0）；反向再入只在放量站上 477.72 且 MACD 柱转正后开启，首次加回不超过 0.25，止损按 1.0–1.5×ATR（约 12–18 美元）或 434 下方。ATR 已升至 11.81（占股价 2.58%，比一个月前 9.18 扩张约 28%），仓位基准相应下调 20%–25%；无仓位者不新建，时间跨度 3–6 个月。</p>
+<p><strong>Investment Thesis</strong>: 这场辩论里三位风险分析师最终都落到 SELL 方向，分歧只在执行强度；真正的争议是&quot;458.13 这个位置该不该保有标准仓位&quot;，而不是&quot;ROP 是不是好生意&quot;。我采信空头/减持方的核心证据链，因为它同时由量价、风险收益比和基本面趋势三条独立腿支撑，且相互印证。</p>
+<p>一，短周期派发未完成，且有四项硬证据互相咬合：收盘 458.13 已跌破 10 EMA 467.31 约 2.0%，并自 11-17 起再未收复 VWMA 477.72（现价低于成交量加权成本约 4.1%），意味着近一个月的买方整体浮亏，477–480 是由套牢盘与 11-12/11-13 收盘 477.87/479.98 叠加的强供应带；11-13 MACD 死叉后柱状图自 -0.73 扩至 -4.91、再到 -5.52，无任何收敛；11-05 盘中冲高 507.24 收出长上影，配区间最大量 2,220,500 股，随后呈&quot;涨缩量、跌放量&quot;。激进派把这三项指为独立证据是对的，中立派与保守派也都未否认，中立派甚至自认&quot;在出现确认之前，任何抄底追多都是在逆短期动量交易&quot;——这句话的结论只能是降低敞口，而不是持有。</p>
+<p>二，风险收益比在 458 不成立，这是决定&quot;现在不买/减仓&quot;而非&quot;等确认&quot;的关键。现价到第一强供应带 477.72 只有约 4.1% 空间，而到 434 有约 5.2% 缓冲，且极端情形要承担回踩 200 SMA 370.92 的尾部空间（约 19%）。中立派自己的情景分布（A 449.65–467.31 约 50%、B 439→434 约 30%、C 放量破 434 约 20%）意味着约 80% 的概率现价不是低点——HOLD 等于让持有人先吃这段回撤、再在更高位置买回。ATR 从 9.18 升到 11.81（+28%），说明&quot;精确等 434 确认&quot;在数学上要多扛一到两个 ATR 的噪音，这 reaffirm 了此前 MRNA 一案的教训：对有大跳空历史（1 月 27 日单日 -9.6%、成交 5,077,700 股）的高波动标的，靠降低名义敞口优于依赖裸止损。</p>
+<p>三，基本面不是无瑕，支撑不了在 458 主动买入。单季营收增速 11.3%→8.5%→7.6% 逐季减速；2026 前三季营业利润率 27.9%，低于去年同期 28.2%；经营性现金流仅同比增 4.4%，已跑不过 9.1% 的营收增速，营运资金开始吃现金。盈利质量亦被扭曲：9M GAAP 净利中约 9.2 亿美元为一次性，Q2 的 11.62 美元 EPS 里约 7.3 美元不可持续，常态化 EPS 约 11.8–12.3、内生增长 8–10%；资产负债表上现金仅 3.11 亿美元、流动比率 0.43、单季流动负债跳升 11.01 亿美元。情绪面同样不构成买盘确认：6.1/10 的 Mildly Bullish 自标 low confidence，Reddit 抓取失败、StockTwits 有效样本仅 2 条、11 条新闻中 6 条是罗氏（SWX:ROP）代码撞号噪音，唯一实在的机构增量只有 Citi 一家——叙事在修复、资金没确认。估值倍数、市值、52 周区间、内部人交易与宏观数据全部缺失，因此&quot;便宜&quot;无法被证明，不能把低关注当买入信号。</p>
+<p>四，但不给 Sell（清仓/回避），因为减持方赢在&quot;现在不该加、应减仓&quot;，没赢在&quot;结构已破&quot;。价格仍高于 50 SMA 413.16 约 10.9%、200 SMA 370.92 约 23.5%，50/200 价差 +42.24，MACD 线仍在正区 13.86，RSI 54.10 属中性化；Q3 毛利率 70.1%、营业利润率 28.7%、OCF/净利 1.65x、资本开支低于营收 1%，监管/合规型垂类软件的经常性收入、股息上调与回购提供质量托底。交易员设定的卖出触发条件（放量收盘破 434 + MACD 下零轴 + RSI 破 40）一个都没出现。保守派主张&quot;破 434 就机械清零&quot;、残余敞口一律压到 0.5 并叠加保护性看跌，我认为这在极端情景（19% 尾部）而非基准情景上定价过度，且在高波动下用期权成本替代降仓位并不划算；中立派的&quot;先减、分批减、优先在反弹里减&quot;与 0.5–0.65 的区间更可执行。因此我把最终仓位定为 Underweight 而非 Sell：低于标准配置、保留核心参与权、用确认条件换回加仓权。</p>
+<p>改变判断的条件：（1）上行——重新站上 467.31 并放量突破 477.72、MACD 柱转正，则升级至 Hold/Overweight，恢复至不超过 1.0，首次加回不超过 0.25；或在 449–453、439–434 缩量止跌且不放量破 434，可小幅回补 0.25。（2）下行——日线放量收盘跌破 434 并伴随 MACD 下零轴或 RSI 破 40，降至 0–0.25 乃至 0，评级下调至 Sell。（3）补齐估值锚后若显示倍数处于历史高位、且市场开始按常态化 EPS 重定价（一次性收益退坡），则减持强度应上调。</p>
+<p><strong>Price Target</strong>: not provided</p>
+<p><strong>Time Horizon</strong>: 3-6 months</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>

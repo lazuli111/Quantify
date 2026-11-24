@@ -42,7 +42,12 @@
      "reason": "三连跌回调信号",
      "ref_price": 458.13,
      "est_shares": 2,
-     "ai": null
+     "ai": {
+      "rating": "Underweight",
+      "rating_zh": "减持",
+      "agrees": false,
+      "report": "ai/2026-11-23_ROP.html"
+     }
     }
    ],
    "position": {
@@ -975,8 +980,8 @@
  ],
  "ai": {
   "model": "deepseek-flash",
-  "runs": 16,
-  "total_cost": 2.89,
+  "runs": 17,
+  "total_cost": 3.24,
   "currency": "CNY"
  }
 }
