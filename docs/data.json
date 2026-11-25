@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-11-24T06:30+00:00",
- "as_of": "2026-11-23",
- "next_session": "2026-11-24",
- "next_open": "2026-11-24T09:30-05:00",
- "new_day": false,
+ "generated_at": "2026-11-25T04:10+00:00",
+ "as_of": "2026-11-24",
+ "next_session": "2026-11-25",
+ "next_open": "2026-11-25T09:30-05:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -19,54 +19,41 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1321.02,
-    "cash": 48.54,
-    "return_pct": 1.62,
-    "qqq_return_pct": -12.45,
-    "fees_paid": 7.93,
-    "quota_used_hkd": 58255,
+    "equity": 1363.12,
+    "cash": 410.16,
+    "return_pct": 4.86,
+    "qqq_return_pct": -14.18,
+    "fees_paid": 8.15,
+    "quota_used_hkd": 75379,
     "quota_hkd": 250000,
-    "round_trips_left": 9
+    "round_trips_left": 8
    },
    "tonight": [
     {
      "action": "sell",
-     "symbol": "MRNA",
-     "reason": "收盘高于前一天最高价",
-     "ref_price": 212.08,
-     "ai": null
-    },
-    {
-     "action": "buy",
      "symbol": "ROP",
-     "reason": "三连跌回调信号",
-     "ref_price": 458.13,
-     "est_shares": 2,
-     "ai": {
-      "rating": "Underweight",
-      "rating_zh": "减持",
-      "agrees": false,
-      "report": "ai/2026-11-23_ROP.html"
-     }
+     "reason": "收盘高于前一天最高价",
+     "ref_price": 476.48,
+     "ai": null
     }
    ],
    "position": {
-    "symbol": "MRNA",
-    "entry_date": "2026-11-16",
-    "entry_price": 216.85,
-    "shares": 6.0,
-    "last": 212.08,
-    "held_days": 6,
+    "symbol": "ROP",
+    "entry_date": "2026-11-24",
+    "entry_price": 458.36,
+    "shares": 2.0,
+    "last": 476.48,
+    "held_days": 1,
     "max_hold": 10,
     "stop": null,
-    "unrealized": -28.61,
-    "unrealized_pct": -2.2,
-    "rule": "下一个交易日收盘若高于 [[$212.66]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
+    "unrealized": 36.24,
+    "unrealized_pct": 3.95,
+    "rule": "下一个交易日收盘若高于 [[$476.69]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
     "ai": {
-     "rating": "Sell",
-     "rating_zh": "卖出",
+     "rating": "Underweight",
+     "rating_zh": "减持",
      "agrees": false,
-     "report": "ai/2026-11-13_MRNA.html"
+     "report": "ai/2026-11-23_ROP.html"
     }
    },
    "candidate_cols": [
@@ -82,14 +69,7 @@
      "fmt": "pct1"
     }
    ],
-   "candidates": [
-    {
-     "symbol": "ROP",
-     "close": 458.13,
-     "chg3_pct": -2.71,
-     "above_sma200_pct": 23.5
-    }
-   ],
+   "candidates": [],
    "watch_title": "观察名单",
    "watch_sub": "已连续 2 天收跌。下一个交易日收盘低于今天收盘价，就会出现信号。",
    "watch_cols": [
@@ -110,15 +90,27 @@
      "fmt": "pct1"
     }
    ],
-   "watchlist": [
-    {
-     "symbol": "CRWD",
-     "close": 208.97,
-     "chg2_pct": -14.17,
-     "above_sma200_pct": 18.2
-    }
-   ],
+   "watchlist": [],
    "trades": [
+    {
+     "symbol": "MRNA",
+     "entry_date": "2026-11-16",
+     "entry_price": 216.85,
+     "exit_date": "2026-11-24",
+     "exit_price": 213.09,
+     "shares": 6.0,
+     "held_days": 6,
+     "reason": "收盘高于前一天最高价",
+     "fees": 0.26,
+     "pnl": -22.79,
+     "ret_pct": -1.751,
+     "ai": {
+      "rating": "Sell",
+      "rating_zh": "卖出",
+      "agrees": false,
+      "report": "ai/2026-11-13_MRNA.html"
+     }
+    },
     {
      "symbol": "MNST",
      "entry_date": "2026-11-10",
@@ -385,14 +377,19 @@
      "date": "2026-11-23",
      "equity": 1321.02,
      "qqq": 651.03
+    },
+    {
+     "date": "2026-11-24",
+     "equity": 1363.12,
+     "qqq": 638.1
     }
    ],
    "live_stats": {
-    "trades": 6,
-    "avg_ret_pct": 0.231,
-    "median_ret_pct": 2.588,
-    "win_rate": 0.833,
-    "total_pnl": 56.17
+    "trades": 7,
+    "avg_ret_pct": -0.052,
+    "median_ret_pct": 2.232,
+    "win_rate": 0.714,
+    "total_pnl": 33.38
    },
    "backtest": {
     "trades": 562,
@@ -412,8 +409,8 @@
      "avg_ret_pct": 0.776
     },
     "disagree": {
-     "trades": 5,
-     "avg_ret_pct": 0.122
+     "trades": 6,
+     "avg_ret_pct": -0.19
     }
    }
   },
@@ -431,10 +428,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1232.96,
+    "equity": 1267.68,
     "cash": 24.52,
-    "return_pct": -5.16,
-    "qqq_return_pct": -12.45,
+    "return_pct": -2.49,
+    "qqq_return_pct": -14.18,
     "fees_paid": 7.02,
     "quota_used_hkd": 9376,
     "quota_hkd": 250000,
@@ -446,13 +443,13 @@
     "entry_date": "2026-11-04",
     "entry_price": 300.5,
     "shares": 4.0,
-    "last": 302.11,
-    "held_days": 14,
+    "last": 310.79,
+    "held_days": 15,
     "max_hold": null,
     "stop": 292.29,
-    "unrealized": 6.44,
-    "unrealized_pct": 0.54,
-    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$300.67]]），下一个交易日开盘卖出。没有持有天数上限。",
+    "unrealized": 41.16,
+    "unrealized_pct": 3.42,
+    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$301.59]]），下一个交易日开盘卖出。没有持有天数上限。",
     "ai": null
    },
    "candidate_cols": [
@@ -474,11 +471,18 @@
    ],
    "candidates": [
     {
-     "symbol": "REGN",
-     "close": 942.24,
-     "stop": 916.33,
-     "stop_pct": -2.75,
-     "ret63_pct": 13.15
+     "symbol": "ROP",
+     "close": 476.48,
+     "stop": 457.67,
+     "stop_pct": -3.95,
+     "ret63_pct": 15.58
+    },
+    {
+     "symbol": "ADP",
+     "close": 310.79,
+     "stop": 301.65,
+     "stop_pct": -2.94,
+     "ret63_pct": 11.15
     }
    ],
    "watch_title": "接近支撑的强势股",
@@ -508,17 +512,31 @@
    "watchlist": [
     {
      "symbol": "CTAS",
-     "close": 223.68,
-     "support": 222.47,
-     "gap_pct": 0.55,
-     "ret63_pct": 9.49
+     "close": 225.76,
+     "support": 223.13,
+     "gap_pct": 1.18,
+     "ret63_pct": 9.96
     },
     {
-     "symbol": "REGN",
-     "close": 942.24,
-     "support": 934.45,
-     "gap_pct": 0.83,
-     "ret63_pct": 13.15
+     "symbol": "APP",
+     "close": 381.11,
+     "support": 376.62,
+     "gap_pct": 1.19,
+     "ret63_pct": 23.69
+    },
+    {
+     "symbol": "ROP",
+     "close": 476.48,
+     "support": 469.09,
+     "gap_pct": 1.57,
+     "ret63_pct": 15.58
+    },
+    {
+     "symbol": "ADP",
+     "close": 310.79,
+     "support": 305.47,
+     "gap_pct": 1.74,
+     "ret63_pct": 11.15
     }
    ],
    "trades": [
@@ -738,6 +756,11 @@
      "date": "2026-11-23",
      "equity": 1232.96,
      "qqq": 651.03
+    },
+    {
+     "date": "2026-11-24",
+     "equity": 1267.68,
+     "qqq": 638.1
     }
    ],
    "live_stats": {
@@ -784,43 +807,17 @@
    "start_date": "2026-11-06",
    "account": {
     "capital": 1300.0,
-    "equity": 1542.12,
-    "cash": 57.56,
-    "return_pct": 18.62,
-    "qqq_return_pct": -0.77,
-    "fees_paid": 3.58,
-    "quota_used_hkd": 28911,
+    "equity": 1549.07,
+    "cash": 1549.07,
+    "return_pct": 19.16,
+    "qqq_return_pct": -2.74,
+    "fees_paid": 3.72,
+    "quota_used_hkd": 40546,
     "quota_hkd": 250000,
-    "round_trips_left": 9
+    "round_trips_left": 8
    },
-   "tonight": [
-    {
-     "action": "sell",
-     "symbol": "MRNA",
-     "reason": "收盘高于前一天最高价",
-     "ref_price": 212.08,
-     "ai": null
-    }
-   ],
-   "position": {
-    "symbol": "MRNA",
-    "entry_date": "2026-11-19",
-    "entry_price": 196.13,
-    "shares": 7.0,
-    "last": 212.08,
-    "held_days": 3,
-    "max_hold": 10,
-    "stop": null,
-    "unrealized": 111.66,
-    "unrealized_pct": 8.13,
-    "rule": "下一个交易日收盘若高于 [[$212.66]]（今天最高价），再下一个交易日开盘卖出；持满 10 天也会卖出。",
-    "ai": {
-     "rating": "Underweight",
-     "rating_zh": "减持",
-     "agrees": false,
-     "report": "ai/2026-11-18_MRNA.html"
-    }
-   },
+   "tonight": [],
+   "position": null,
    "candidate_cols": [
     {
      "key": "chg3_pct",
@@ -855,15 +852,27 @@
      "fmt": "pct1"
     }
    ],
-   "watchlist": [
-    {
-     "symbol": "CRWD",
-     "close": 208.97,
-     "chg2_pct": -14.17,
-     "above_sma200_pct": 18.2
-    }
-   ],
+   "watchlist": [],
    "trades": [
+    {
+     "symbol": "MRNA",
+     "entry_date": "2026-11-19",
+     "entry_price": 196.13,
+     "exit_date": "2026-11-24",
+     "exit_price": 213.09,
+     "shares": 7.0,
+     "held_days": 3,
+     "reason": "收盘高于前一天最高价",
+     "fees": 0.29,
+     "pnl": 118.47,
+     "ret_pct": 8.629,
+     "ai": {
+      "rating": "Underweight",
+      "rating_zh": "减持",
+      "agrees": false,
+      "report": "ai/2026-11-18_MRNA.html"
+     }
+    },
     {
      "symbol": "CRWD",
      "entry_date": "2026-11-09",
@@ -945,14 +954,19 @@
      "date": "2026-11-23",
      "equity": 1542.12,
      "qqq": 651.03
+    },
+    {
+     "date": "2026-11-24",
+     "equity": 1549.07,
+     "qqq": 638.1
     }
    ],
    "live_stats": {
-    "trades": 1,
-    "avg_ret_pct": 12.166,
-    "median_ret_pct": 12.166,
+    "trades": 2,
+    "avg_ret_pct": 10.398,
+    "median_ret_pct": 10.398,
     "win_rate": 1.0,
-    "total_pnl": 133.8
+    "total_pnl": 252.27
    },
    "backtest": {
     "trades": 361,
@@ -972,8 +986,8 @@
      "avg_ret_pct": null
     },
     "disagree": {
-     "trades": 1,
-     "avg_ret_pct": 12.166
+     "trades": 2,
+     "avg_ret_pct": 10.398
     }
    }
   }

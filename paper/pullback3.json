@@ -1,29 +1,22 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 48.53911708099804,
+ "cash": 410.16183115695185,
  "position": {
-  "symbol": "MRNA",
-  "entry_date": "2026-11-16",
-  "entry_price": 216.8484,
-  "shares": 6,
-  "held_days": 6,
-  "entry_fees": 0.13010902529754637,
+  "symbol": "ROP",
+  "entry_date": "2026-11-24",
+  "entry_price": 458.3591,
+  "shares": 2,
+  "held_days": 1,
+  "entry_fees": 0.09167181397705078,
   "stop": null
  },
  "pending": [
   {
    "action": "sell",
-   "symbol": "MRNA",
-   "reason": "收盘高于前一天最高价",
-   "ref_price": 212.08
-  },
-  {
-   "action": "buy",
    "symbol": "ROP",
-   "reason": "三连跌回调信号",
-   "ref_price": 458.13,
-   "est_shares": 2
+   "reason": "收盘高于前一天最高价",
+   "ref_price": 476.48
   }
  ],
  "trades": [
@@ -104,6 +97,19 @@
    "fees": 0.26,
    "pnl": 37.64,
    "ret_pct": 2.944
+  },
+  {
+   "symbol": "MRNA",
+   "entry_date": "2026-11-16",
+   "entry_price": 216.85,
+   "exit_date": "2026-11-24",
+   "exit_price": 213.09,
+   "shares": 6.0,
+   "held_days": 6,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.26,
+   "pnl": -22.79,
+   "ret_pct": -1.751
   }
  ],
  "skipped": [],
@@ -257,16 +263,21 @@
    "date": "2026-11-23",
    "equity": 1321.02,
    "qqq": 651.03
+  },
+  {
+   "date": "2026-11-24",
+   "equity": 1363.12,
+   "qqq": 638.1
   }
  ],
  "quota_used_hkd": {
   "2026-10": 59992.19397083817,
-  "2026-11": 58255.43960343475
+  "2026-11": 75378.61207089385
  },
  "months_charged": [
   "2026-10",
   "2026-11"
  ],
- "fees_paid": 7.9262517124906795,
- "last_processed": "2026-11-23"
+ "fees_paid": 8.145779564637591,
+ "last_processed": "2026-11-24"
 }
