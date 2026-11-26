@@ -1,24 +1,9 @@
 {
  "start_date": "2026-10-13",
  "capital": 1300.0,
- "cash": 410.16183115695185,
- "position": {
-  "symbol": "ROP",
-  "entry_date": "2026-11-24",
-  "entry_price": 458.3591,
-  "shares": 2,
-  "held_days": 1,
-  "entry_fees": 0.09167181397705078,
-  "stop": null
- },
- "pending": [
-  {
-   "action": "sell",
-   "symbol": "ROP",
-   "reason": "收盘高于前一天最高价",
-   "ref_price": 476.48
-  }
- ],
+ "cash": 1369.0462250894257,
+ "position": null,
+ "pending": [],
  "trades": [
   {
    "symbol": "AMAT",
@@ -110,6 +95,19 @@
    "fees": 0.26,
    "pnl": -22.79,
    "ret_pct": -1.751
+  },
+  {
+   "symbol": "ROP",
+   "entry_date": "2026-11-24",
+   "entry_price": 458.36,
+   "exit_date": "2026-11-25",
+   "exit_price": 479.49,
+   "shares": 2.0,
+   "held_days": 1,
+   "reason": "收盘高于前一天最高价",
+   "fees": 0.19,
+   "pnl": 42.07,
+   "ret_pct": 4.59
   }
  ],
  "skipped": [],
@@ -268,16 +266,21 @@
    "date": "2026-11-24",
    "equity": 1363.12,
    "qqq": 638.1
+  },
+  {
+   "date": "2026-11-25",
+   "equity": 1369.05,
+   "qqq": 633.93
   }
  ],
  "quota_used_hkd": {
   "2026-10": 59992.19397083817,
-  "2026-11": 75378.61207089385
+  "2026-11": 82858.65834819488
  },
  "months_charged": [
   "2026-10",
   "2026-11"
  ],
- "fees_paid": 8.145779564637591,
- "last_processed": "2026-11-24"
+ "fees_paid": 8.241677593833758,
+ "last_processed": "2026-11-25"
 }
