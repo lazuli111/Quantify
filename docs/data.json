@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-11-27T06:30+00:00",
- "as_of": "2026-11-25",
- "next_session": "2026-11-27",
- "next_open": "2026-11-27T09:30-05:00",
- "new_day": false,
+ "generated_at": "2026-11-28T04:10+00:00",
+ "as_of": "2026-11-27",
+ "next_session": "2026-11-30",
+ "next_open": "2026-11-30T09:30-05:00",
+ "new_day": true,
  "strategies": [
   {
    "key": "pullback3",
@@ -22,7 +22,7 @@
     "equity": 1369.05,
     "cash": 1369.05,
     "return_pct": 5.31,
-    "qqq_return_pct": -14.75,
+    "qqq_return_pct": -12.45,
     "fees_paid": 8.24,
     "quota_used_hkd": 82859,
     "quota_hkd": 250000,
@@ -66,10 +66,10 @@
    ],
    "watchlist": [
     {
-     "symbol": "ABNB",
-     "close": 172.15,
-     "chg2_pct": -1.04,
-     "above_sma200_pct": 13.9
+     "symbol": "KDP",
+     "close": 35.45,
+     "chg2_pct": -0.98,
+     "above_sma200_pct": 16.3
     }
    ],
    "trades": [
@@ -387,6 +387,11 @@
      "date": "2026-11-25",
      "equity": 1369.05,
      "qqq": 633.93
+    },
+    {
+     "date": "2026-11-27",
+     "equity": 1369.05,
+     "qqq": 650.99
     }
    ],
    "live_stats": {
@@ -433,10 +438,10 @@
    "start_date": "2026-10-13",
    "account": {
     "capital": 1300.0,
-    "equity": 1291.4,
+    "equity": 1302.24,
     "cash": 24.52,
-    "return_pct": -0.66,
-    "qqq_return_pct": -14.75,
+    "return_pct": 0.17,
+    "qqq_return_pct": -12.45,
     "fees_paid": 7.02,
     "quota_used_hkd": 9376,
     "quota_hkd": 250000,
@@ -448,13 +453,13 @@
     "entry_date": "2026-11-04",
     "entry_price": 300.5,
     "shares": 4.0,
-    "last": 316.72,
-    "held_days": 16,
+    "last": 319.43,
+    "held_days": 17,
     "max_hold": null,
     "stop": 292.29,
-    "unrealized": 64.88,
-    "unrealized_pct": 5.4,
-    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$302.96]]），下一个交易日开盘卖出。没有持有天数上限。",
+    "unrealized": 75.72,
+    "unrealized_pct": 6.3,
+    "rule": "止损 [[$292.29]]：盘中跌破就按止损价卖出。收盘跌破 21 日 EMA（今天 [[$304.46]]），下一个交易日开盘卖出。没有持有天数上限。",
     "ai": null
    },
    "candidate_cols": [
@@ -476,11 +481,11 @@
    ],
    "candidates": [
     {
-     "symbol": "APP",
-     "close": 378.95,
-     "stop": 355.01,
-     "stop_pct": -6.32,
-     "ret63_pct": 21.21
+     "symbol": "CTAS",
+     "close": 228.58,
+     "stop": 224.03,
+     "stop_pct": -1.99,
+     "ret63_pct": 12.21
     }
    ],
    "watch_title": "接近支撑的强势股",
@@ -509,60 +514,46 @@
    ],
    "watchlist": [
     {
-     "symbol": "APP",
-     "close": 378.95,
-     "support": 377.08,
-     "gap_pct": 0.5,
-     "ret63_pct": 21.21
-    },
-    {
-     "symbol": "GEHC",
-     "close": 83.33,
-     "support": 82.22,
-     "gap_pct": 1.35,
-     "ret63_pct": 15.03
+     "symbol": "CCEP",
+     "close": 118.06,
+     "support": 116.75,
+     "gap_pct": 1.12,
+     "ret63_pct": 9.71
     },
     {
      "symbol": "CTAS",
-     "close": 227.65,
-     "support": 224.03,
+     "close": 228.58,
+     "support": 224.94,
      "gap_pct": 1.62,
-     "ret63_pct": 11.77
-    },
-    {
-     "symbol": "IDXX",
-     "close": 709.46,
-     "support": 695.12,
-     "gap_pct": 2.06,
-     "ret63_pct": 30.16
+     "ret63_pct": 12.21
     },
     {
      "symbol": "ROP",
-     "close": 483.09,
-     "support": 471.89,
-     "gap_pct": 2.37,
-     "ret63_pct": 14.58
+     "close": 484.45,
+     "support": 474.4,
+     "gap_pct": 2.12,
+     "ret63_pct": 13.95
     },
     {
-     "symbol": "AMGN",
-     "close": 469.24,
-     "support": 457.0,
-     "gap_pct": 2.68,
-     "ret63_pct": 8.0
-    },
-    {
-     "symbol": "ADP",
-     "close": 316.72,
-     "support": 307.72,
-     "gap_pct": 2.92,
-     "ret63_pct": 11.97
+     "symbol": "GEHC",
+     "close": 84.62,
+     "support": 82.7,
+     "gap_pct": 2.32,
+     "ret63_pct": 18.04
     },
     {
      "symbol": "GILD",
-     "close": 176.74,
-     "support": 171.62,
-     "gap_pct": 2.98,
-     "ret63_pct": 19.4
+     "close": 177.0,
+     "support": 172.7,
+     "gap_pct": 2.49,
+     "ret63_pct": 22.18
+    },
+    {
+     "symbol": "AMGN",
+     "close": 474.08,
+     "support": 460.41,
+     "gap_pct": 2.97,
+     "ret63_pct": 10.27
     }
    ],
    "trades": [
@@ -792,6 +783,11 @@
      "date": "2026-11-25",
      "equity": 1291.4,
      "qqq": 633.93
+    },
+    {
+     "date": "2026-11-27",
+     "equity": 1302.24,
+     "qqq": 650.99
     }
    ],
    "live_stats": {
@@ -841,7 +837,7 @@
     "equity": 1549.07,
     "cash": 1549.07,
     "return_pct": 19.16,
-    "qqq_return_pct": -3.38,
+    "qqq_return_pct": -0.78,
     "fees_paid": 3.72,
     "quota_used_hkd": 40546,
     "quota_hkd": 250000,
@@ -995,6 +991,11 @@
      "date": "2026-11-25",
      "equity": 1549.07,
      "qqq": 633.93
+    },
+    {
+     "date": "2026-11-27",
+     "equity": 1549.07,
+     "qqq": 650.99
     }
    ],
    "live_stats": {
